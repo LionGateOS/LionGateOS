@@ -1,0 +1,1 @@
+// Wallpaper system placeholder

@@ -1,0 +1,1 @@
+icons placeholder for LionGateOS preview shell. Currently not used by the static preview.

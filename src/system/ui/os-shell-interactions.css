@@ -1,0 +1,72 @@
+/* Interactivity layer scaffolding for LionGateOS OS Shell
+   Includes hover, focus, and hybrid transition placeholders. */
+
+.lgos-interactive {
+  transition:
+    transform 140ms cubic-bezier(0.3, 0.9, 0.4, 1),
+    opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    filter 220ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 220ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Sidebar hover glow */
+.lgos-sidebar.lgos-interactive:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 24px var(--lgos-neon-primary);
+}
+
+/* Dock hover + magnification hint */
+.lgos-dock-item.lgos-interactive:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    0 0 18px var(--lgos-neon-primary);
+}
+
+/* Window focus highlight */
+.lgos-window.lgos-window-focused {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 0 32px var(--lgos-neon-primary);
+}
+
+.lgos-window:not(.lgos-window-focused) {
+  opacity: 0.9;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+/* Theme change transition scaffolding:
+   instant-on response, smooth fade-out via blur + opacity. */
+.lgos-theme-transitioning {
+  transition:
+    background-color 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    filter 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 260ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  filter: blur(0.2px);
+}
+
+.lgos-theme-transitioning-strong {
+  transition:
+    background-color 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    color 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    filter 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    opacity 360ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  filter: blur(0.8px);
+}
+
+/* Glow intensity adjustments during interaction */
+.lgos-glow-strong {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 32px var(--lgos-neon-primary);
+}
+
+.lgos-glow-soft {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 18px var(--lgos-neon-secondary);
+}
