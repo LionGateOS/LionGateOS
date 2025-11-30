@@ -1,0 +1,4 @@
+Primary=#00F0FF
+Gold=#D4AF37
+Dark=#0A0A0A
+Surface=#111

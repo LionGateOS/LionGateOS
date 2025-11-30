@@ -1,0 +1,3 @@
+Font=Inter
+Weight=400/600/700
+SizeRules=Base:14px, Titles:24px
