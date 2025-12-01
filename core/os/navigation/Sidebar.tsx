@@ -47,7 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTool, onChangeTool }) =>
           <div className="sidebar-logo-mark-inner" />
         </div>
         <div>
-          <div className="sidebar-logo-text-main">ConstructOS</div>
+          <div className="sidebar-logo-text-main">LionGateOS</div>
           <div className="sidebar-logo-text-sub">
             Estimator · Docs · Inspector (future)
           </div>

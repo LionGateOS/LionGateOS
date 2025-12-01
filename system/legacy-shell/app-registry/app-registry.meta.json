@@ -1,0 +1,42 @@
+{
+  "description": "Centralized registry metadata for OS-integrated apps.",
+  "apps": [
+    {
+      "id": "smartquoteai-pro",
+      "name": "SmartQuoteAi Pro",
+      "category": "Estimator & Proposals",
+      "status": "planned",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "apps/SmartQuoteAiPro/",
+        "notes": [
+          "Combined estimator + proposal system.",
+          "Must remain an independent project; integrated via apps/ export."
+        ]
+      }
+    },
+    {
+      "id": "smartcode-ai",
+      "name": "Smart Code AI",
+      "category": "Developer Tools",
+      "status": "planned",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "apps/SmartCodeAI/",
+        "notes": [
+          "Coding assistant tool.",
+          "Must remain an independent project; integrated via apps/ export."
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "Do not hard-code app details in the shell UI.",
+    "Use this registry as the single source of truth for OS-exposed apps.",
+    "Future update packs will add code that reads this file and renders a dynamic app list."
+  ]
+}

@@ -7,8 +7,8 @@ export const SplashScreen: React.FC = () => {
       <div className="splash-card">
         <div className="splash-logo-wrap">
           <img
-            src="/assets/branding/ConstructOS_Logo.png"
-            alt="ConstructOS logo"
+            src="/assets/branding/LionGateOS_Logo.png"
+            alt="LionGateOS logo"
             className="splash-logo"
           />
           <div className="splash-shimmer-layer" />

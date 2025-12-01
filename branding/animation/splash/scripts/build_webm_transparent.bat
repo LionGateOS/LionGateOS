@@ -1,1 +1,0 @@
-ffmpeg -framerate 30 -i frame_%04d.png -c:v libvpx-vp9 splash_transparent.webm

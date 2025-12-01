@@ -1,1 +1,0 @@
-console.log('os-shell engine v2 active');

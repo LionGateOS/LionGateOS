@@ -19,7 +19,7 @@ export const Topbar: React.FC<TopbarProps> = ({ activeTool }) => {
       <div>
         <div className="topbar-title-main">{toolTitle[activeTool]}</div>
         <div className="topbar-title-sub">
-          ConstructOS core shell — navigation, layout and shared tooling.
+          LionGateOS core shell — navigation, layout and shared tooling.
         </div>
       </div>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>

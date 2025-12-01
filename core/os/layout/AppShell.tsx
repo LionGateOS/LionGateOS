@@ -27,7 +27,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           <section className="app-main-column">{children}</section>
           <aside className="app-main-column-secondary">
             <h3 style={{ marginTop: 0, fontSize: 13, opacity: 0.9 }}>
-              ConstructOS Activity
+              LionGateOS Activity
             </h3>
             <p style={{ fontSize: 12, opacity: 0.8 }}>
               This panel will later show backups, sync status, AI insight, and

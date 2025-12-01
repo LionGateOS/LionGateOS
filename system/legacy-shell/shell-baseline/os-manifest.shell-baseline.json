@@ -1,0 +1,50 @@
+{
+  "osName": "LionGateOS",
+  "tagline": "Your Industry Workspace",
+  "channel": "shell-baseline-01",
+  "version": "0.1.0-shell-baseline",
+  "apps": [
+    {
+      "id": "smartquoteai-pro",
+      "name": "SmartQuoteAi Pro",
+      "description": "Estimator + proposal engine that can run inside LionGateOS or standalone.",
+      "integration": {
+        "runsInsideOs": true,
+        "runsStandalone": true,
+        "entryPath": "apps/SmartQuoteAiPro/",
+        "status": "planned"
+      }
+    },
+    {
+      "id": "smartcode-ai",
+      "name": "Smart Code AI",
+      "description": "Coding assistant that can run as a separate tool or a docked OS app.",
+      "integration": {
+        "runsInsideOs": true,
+        "runsStandalone": true,
+        "entryPath": "apps/SmartCodeAI/",
+        "status": "planned"
+      }
+    }
+  ],
+  "themeEngine": {
+    "iconPacksPath": "theme/iconpacks/",
+    "wallpapersPath": "theme/wallpapers/",
+    "engineConfigPath": "theme/engine/",
+    "styleModes": [
+      "default-frame",
+      "high-glow",
+      "low-motion"
+    ]
+  },
+  "notes": {
+    "summary": "Shell baseline config describing OS role, modular apps, and theme engine integration points.",
+    "guidance": [
+      "Apps must not mix their internal logic with OS shell code.",
+      "Each app exports into LionGateOS/apps/<AppName>/ as a self-contained module.",
+      "Theme packs share icons, wallpapers, and palettes across OS and apps.",
+      "Style modes remain an internal OS-level framework."
+    ]
+  },
+  "defaultStyleMode": "soft-slate-os-default"
+}

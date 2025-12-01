@@ -1,0 +1,33 @@
+{
+  "channel": "shell-baseline-02",
+  "description": "Central controller metadata for the LionGateOS shell.",
+  "entry": {
+    "type": "react-shell",
+    "suggestedRootComponent": "OSWorkspaceShell",
+    "suggestedHookModule": "src/system/osShellBridge.ts"
+  },
+  "layout": {
+    "supportsSidebar": true,
+    "supportsTopBar": true,
+    "supportsDock": true,
+    "supportsMultiAppWorkspaces": true
+  },
+  "themeIntegration": {
+    "engineConfigPath": "theme/engine/",
+    "iconPacksPath": "theme/iconpacks/",
+    "wallpapersPath": "theme/wallpapers/",
+    "styleModes": [
+      "default-frame",
+      "high-glow",
+      "low-motion"
+    ]
+  },
+  "appsModel": {
+    "registryConfigPath": "system/app-registry/app-registry.meta.json",
+    "notes": [
+      "Apps are independent projects with their own repositories.",
+      "Each app exports into LionGateOS/apps/<AppName>/ for OS integration.",
+      "OS shell must not contain app business logic; only integration surfaces."
+    ]
+  }
+}

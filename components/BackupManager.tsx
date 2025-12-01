@@ -18,7 +18,7 @@ export const BackupManager: React.FC = () => {
         <div>
           <div style={{ fontSize: 13, fontWeight: 550 }}>Local Backup Plan</div>
           <div style={{ fontSize: 11, opacity: 0.8 }}>
-            For now, zip your <code>constructos</code> folder and push to GitHub.
+            For now, zip your <code>liongateos</code> folder and push to GitHub.
             Later this will connect to cloud storage automatically.
           </div>
         </div>

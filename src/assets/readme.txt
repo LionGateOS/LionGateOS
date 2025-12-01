@@ -1,1 +1,0 @@
-ConstructOS Option 3 Master Logo Pack placeholder. Actual assets would be generated here.

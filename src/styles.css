@@ -379,3 +379,34 @@ body {
     border-radius: 20px;
   }
 }
+
+/* === LionGateOS Neutral Visual Override (Option A) ===========================
+   This block intentionally simplifies background styling to a neutral,
+   professional dark workspace and removes heavy radial/blurred effects.
+   It does not change layout or component structure.
+============================================================================= */
+
+body {
+  background: #020617 !important;
+  color: #e5e7eb;
+}
+
+.app-shell-root,
+.app-shell-main,
+.app-shell,
+.app-root-layout,
+.sidebar-root,
+.topbar-root {
+  background: #020617 !important;
+  backdrop-filter: none !important;
+}
+
+.glass-panel,
+.glass-surface,
+.surface-glass {
+  background: rgba(15,23,42,0.96) !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.55);
+}
+
+/* ======================================================================= */

@@ -1,5 +1,5 @@
 {
-  "name": "constructos-os-shell",
+  "name": "liongateos-os-shell",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -20,5 +20,6 @@
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
-  }
+  },
+  "main": "main.cjs"
 }

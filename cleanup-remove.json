@@ -1,0 +1,7 @@
+{
+  "remove": [
+    "legacy-shell",
+    "os-shell-legacy",
+    "preview"
+  ]
+}

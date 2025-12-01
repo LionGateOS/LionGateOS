@@ -6,7 +6,7 @@ export const EstimatorPage: React.FC = () => {
     <>
       <h2 style={{ marginTop: 0 }}>Estimator Tool</h2>
       <p style={{ fontSize: 13, opacity: 0.85 }}>
-        This is the first ConstructOS app. It will grow to include presets,
+        This is the first LionGateOS app. It will grow to include presets,
         bundles, quantity helpers, market pricing, and camera-based AI.
       </p>
       <div style={{ marginTop: 12 }}>
