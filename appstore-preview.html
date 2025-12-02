@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LionGateOS – App Store Framework Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #141926 0, #05060a 40%, #020308 100%);
+      color: #f5f7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .shell {
+      width: 100%;
+      max-width: 1200px;
+      backdrop-filter: blur(26px);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(15,25,45,0.92));
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow:
+        0 24px 80px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(0,0,0,0.7);
+      padding: 20px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0,190,255,0.28) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,70,180,0.22) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .shell-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-pill {
+      height: 32px;
+      width: 32px;
+      border-radius: 12px;
+      background: conic-gradient(from 210deg, #58e1ff, #ff74e0, #ffd46a, #58e1ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-pill::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.48), transparent 55%);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+    }
+    .logo-letter {
+      font-weight: 700;
+      font-size: 16px;
+      color: rgba(8,10,15,0.96);
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 3px rgba(255,255,255,0.8);
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .title span.sub {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0.7;
+    }
+    .subtitle {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.16), rgba(10,20,40,0.9));
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.92;
+    }
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #48ffb3;
+      box-shadow: 0 0 0 4px rgba(1,255,175,0.2);
+    }
+    .btn {
+      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.2), rgba(4,10,24,0.95));
+      color: #f9fbff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+      backdrop-filter: blur(6px);
+      white-space: nowrap;
+    }
+    .btn span.icon {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .btn-primary {
+      background: linear-gradient(120deg, #3df0ff, #ff7fd9);
+      color: #05060a;
+      border-color: rgba(4,10,24,0.2);
+      font-weight: 600;
+    }
+    .btn:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.9);
+      border-color: rgba(255,255,255,0.8);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(120deg, #50f3ff, #ff9ae2);
+    }
+    .tabs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tabs {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.14), rgba(12,18,34,0.9));
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5);
+    }
+    .tab {
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: rgba(238,242,255,0.78);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .tab span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.3);
+    }
+    .tab.active {
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.8), rgba(11,24,48,0.96));
+      color: #05060a;
+      font-weight: 600;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.8);
+    }
+    .tab.active span.dot {
+      background: #05060a;
+    }
+    .search-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .search-box {
+      position: relative;
+      min-width: 210px;
+      max-width: 260px;
+      flex: 1;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 7px 26px 7px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.2), rgba(2,6,23,0.95));
+      color: #f5f7ff;
+      font-size: 12px;
+      outline: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+    }
+    .search-box input::placeholder {
+      color: rgba(203,213,245,0.8);
+    }
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 9px;
+      transform: translateY(-50%);
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .search-badge {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(15,23,42,0.9);
+      opacity: 0.9;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .content {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.12), rgba(7,10,24,0.98));
+      padding: 10px 11px 11px;
+      position: relative;
+      box-shadow:
+        0 14px 40px rgba(0,0,0,0.9),
+        inset 0 0 0 1px rgba(0,0,0,0.7);
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+    .panel-subtitle {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .panel-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .chip {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,255,0.65);
+      background: radial-gradient(circle at 0 0, rgba(129,140,248,0.32), rgba(15,23,42,0.95));
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+    .chip-muted {
+      border-color: rgba(148,163,255,0.25);
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.15), rgba(15,23,42,0.96));
+      opacity: 0.8;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 1080px) {
+      .apps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .apps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .app-card {
+      border-radius: 16px;
+      padding: 8px 9px;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.18), rgba(15,23,42,0.98));
+      border: 1px solid rgba(255,255,255,0.24);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.9),
+        inset 0 0 0 1px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-pill {
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      background: conic-gradient(from 210deg, rgba(88,225,255,0.85), rgba(255,116,205,0.9), rgba(255,212,106,0.9), rgba(88,225,255,0.85));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .app-pill::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 20% 0, rgba(255,255,255,0.6), transparent 60%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+    .app-icon-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(6,8,14,0.96);
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 3px rgba(255,255,255,0.9);
+    }
+    .app-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .app-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .app-badge {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(45,212,191,0.8);
+      background: radial-gradient(circle at 0 0, rgba(45,212,191,0.35), rgba(15,23,42,0.96));
+    }
+    .app-body {
+      font-size: 10px;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+    .app-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .app-footer-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .app-stat {
+      font-size: 9px;
+      opacity: 0.76;
+    }
+    .install-btn {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,230,217,0.9);
+      background: linear-gradient(120deg, rgba(56,189,248,0.9), rgba(52,211,153,0.9));
+      color: #020617;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.85);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .install-btn.secondary {
+      border-color: rgba(148,163,255,0.9);
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.9), rgba(79,70,229,0.95));
+      color: #f9fafb;
+    }
+    .install-btn.disabled {
+      opacity: 0.45;
+      cursor: default;
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.25), rgba(15,23,42,0.95));
+      border-color: rgba(148,163,255,0.3);
+      color: rgba(148,163,255,0.8);
+      box-shadow: none;
+    }
+    .apps-footer-note {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+    .meta-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 720px) {
+      .meta-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .meta-block {
+      border-radius: 16px;
+      border: 1px solid rgba(129,140,248,0.55);
+      background: radial-gradient(circle at 0 0, rgba(129,140,248,0.25), rgba(15,23,42,0.96));
+      padding: 9px 10px 10px;
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.9),
+        inset 0 0 0 1px rgba(0,0,0,0.8);
+    }
+    .meta-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    .meta-tagline {
+      font-size: 10px;
+      opacity: 0.76;
+      margin-bottom: 6px;
+    }
+    .meta-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 6px 10px;
+      font-size: 10px;
+    }
+    .meta-label {
+      opacity: 0.7;
+    }
+    .meta-value {
+      font-weight: 500;
+    }
+    .preview-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 10px;
+    }
+    .preview-mock {
+      border-radius: 14px;
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.25), rgba(15,23,42,0.96));
+      border: 1px solid rgba(56,189,248,0.9);
+      padding: 8px 9px;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 9px;
+    }
+    .preview-bars {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .bar {
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(34,211,238,0.9), rgba(59,130,246,0.95));
+      box-shadow: 0 4px 10px rgba(15,23,42,0.9);
+    }
+    .bar-muted {
+      background: linear-gradient(90deg, rgba(148,163,255,0.5), rgba(30,64,175,0.9));
+      opacity: 0.8;
+    }
+    .preview-pill {
+      font-size: 9px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.9);
+      background: rgba(15,23,42,0.92);
+      opacity: 0.94;
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 10px;
+    }
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .timeline-marks {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tick {
+      width: 8px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(148,163,255,0.8);
+    }
+    .tick.current {
+      width: 18px;
+      background: linear-gradient(90deg, rgba(56,189,248,0.95), rgba(52,211,153,0.95));
+      box-shadow: 0 0 0 4px rgba(34,211,238,0.3);
+    }
+    .timeline-label {
+      opacity: 0.75;
+    }
+    .timeline-pill {
+      font-size: 9px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,230,217,0.85);
+      background: radial-gradient(circle at 0 0, rgba(45,212,191,0.3), rgba(15,23,42,0.96));
+    }
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+      font-size: 10px;
+      opacity: 0.8;
+      flex-wrap: wrap;
+    }
+    .footer-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.25);
+    }
+    .footer-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .linkish {
+      text-decoration: underline;
+      opacity: 0.85;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="shell-inner">
+      <div class="shell-header">
+        <div class="title-group">
+          <div class="title-row">
+            <div class="logo-pill">
+              <div class="logo-letter">L</div>
+            </div>
+            <div class="title">
+              LionGateOS
+              <span class="sub">App Store · Framework Preview</span>
+            </div>
+          </div>
+          <div class="subtitle">Visual skeleton only · No live installs yet · Safe to ship as UI placeholder.</div>
+        </div>
+        <div class="header-controls">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            Framework status: <strong>DESIGN PREVIEW</strong>
+          </div>
+          <button class="btn">
+            <span class="icon">◦</span>
+            Switch style mode
+          </button>
+          <button class="btn btn-primary">
+            <span class="icon">★</span>
+            Open App Store
+          </button>
+        </div>
+      </div>
+
+      <div class="tabs-row">
+        <div class="tabs">
+          <button class="tab active">
+            <span class="dot"></span>
+            Store
+          </button>
+          <button class="tab">
+            <span class="dot"></span>
+            Installed
+          </button>
+          <button class="tab">
+            <span class="dot"></span>
+            Updates
+          </button>
+          <button class="tab">
+            <span class="dot"></span>
+            Theme Packs
+          </button>
+        </div>
+        <div class="search-area">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input placeholder="Search apps, packs, or suites…" />
+            <span class="search-badge">Meta only · Preview</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="column">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">LionGate app catalog</div>
+                <div class="panel-subtitle">High-value, work-ready modules designed around your industry.</div>
+              </div>
+              <div class="panel-chips">
+                <span class="chip">Internal registry</span>
+                <span class="chip-muted">Remote catalogs (future)</span>
+              </div>
+            </div>
+
+            <div class="apps-grid">
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">SQ</div>
+                    </div>
+                    <div>
+                      <div class="app-title">SmartQuoteAi Pro</div>
+                      <div class="app-body">Estimator · Proposals · Scope · Export.</div>
+                    </div>
+                  </div>
+                  <div class="app-badge">Core app</div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Status: wired via external repo</div>
+                  </div>
+                  <button class="install-btn secondary">Manage in OS</button>
+                </div>
+              </div>
+
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">SP</div>
+                    </div>
+                    <div>
+                      <div class="app-title">Safety & Compliance Pack</div>
+                      <div class="app-body">JHAs · toolbox talks · safety forms & logs.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Planned: v1.0</div>
+                  </div>
+                  <button class="install-btn disabled">Coming soon</button>
+                </div>
+              </div>
+
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">TR</div>
+                    </div>
+                    <div>
+                      <div class="app-title">Travel & Field Logistics</div>
+                      <div class="app-body">Trips, crews, hotels, mileage, per diem.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Priority: revenue fast-track</div>
+                  </div>
+                  <button class="install-btn disabled">Design phase</button>
+                </div>
+              </div>
+
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">WF</div>
+                    </div>
+                    <div>
+                      <div class="app-title">Workforce Hub</div>
+                      <div class="app-body">Crews, timesheets, tasks, assignments.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Draft: internal spec</div>
+                  </div>
+                  <button class="install-btn disabled">Not wired yet</button>
+                </div>
+              </div>
+
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">TH</div>
+                    </div>
+                    <div>
+                      <div class="app-title">Theme Packs</div>
+                      <div class="app-body">Icons, wallpapers, palettes, accents.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Linked to Theme Engine</div>
+                  </div>
+                  <button class="install-btn disabled">Engine-first</button>
+                </div>
+              </div>
+
+              <div class="app-card">
+                <div class="app-header-row">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <div class="app-pill">
+                      <div class="app-icon-text">OS</div>
+                    </div>
+                    <div>
+                      <div class="app-title">LionGateOS Shell</div>
+                      <div class="app-body">Dashboards, layouts, style modes.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-footer">
+                  <div class="app-footer-left">
+                    <div class="app-stat">Protected: cannot uninstall</div>
+                  </div>
+                  <button class="install-btn disabled">System app</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="apps-footer-note">
+              This grid is a visual placeholder. Actual install, update, and registry logic will come later inside the OS shell.
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Framework meta</div>
+                <div class="panel-subtitle">How the App Store will connect to LionGateOS and your repos.</div>
+              </div>
+              <div class="panel-chips">
+                <span class="chip">Read-only preview</span>
+              </div>
+            </div>
+
+            <div class="meta-layout">
+              <div class="meta-block">
+                <div class="meta-title">Registry schema</div>
+                <div class="meta-tagline">Each app is described once, then wired everywhere consistently.</div>
+                <div class="meta-fields">
+                  <div class="meta-label">Source</div>
+                  <div class="meta-value">Local + external repos</div>
+                  <div class="meta-label">App ID pattern</div>
+                  <div class="meta-value">lion.app.&lt;name&gt;</div>
+                  <div class="meta-label">Channels</div>
+                  <div class="meta-value">stable · beta (future)</div>
+                  <div class="meta-label">Theme binding</div>
+                  <div class="meta-value">Icon packs + style modes</div>
+                </div>
+              </div>
+              <div class="meta-block">
+                <div class="meta-title">OS integration</div>
+                <div class="meta-tagline">The store becomes another pane inside the LionGateOS shell.</div>
+                <div class="preview-row">
+                  <div class="preview-mock">
+                    <div class="preview-topline">
+                      <span>Shell · App Store pane</span>
+                      <span class="preview-pill">Glass & chrome layout</span>
+                    </div>
+                    <div class="preview-bars">
+                      <div class="bar"></div>
+                      <div class="bar bar-muted"></div>
+                    </div>
+                    <div class="preview-bars" style="margin-top:4px;">
+                      <div class="bar bar-muted"></div>
+                      <div class="bar"></div>
+                    </div>
+                  </div>
+                  <div>Later, this mock becomes a real route/view that plugs directly into your main OS UI.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Roadmap snapshot</div>
+                <div class="panel-subtitle">Where this preview sits in the larger LionGateOS plan.</div>
+              </div>
+              <div class="panel-chips">
+                <span class="chip">You are here</span>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="timeline-row">
+                <div class="timeline-label">Step 1 · Visual skeleton</div>
+                <div class="timeline-marks">
+                  <div class="tick current"></div>
+                  <div class="tick"></div>
+                  <div class="tick"></div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">Step 2 · OS shell wiring</div>
+                <div class="timeline-pill">Requires current LionGateOS ZIP</div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">Step 3 · App registry logic</div>
+                <div class="timeline-pill">SmartQuoteAi Pro first</div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">Step 4 · Packs & upgrades</div>
+                <div class="timeline-pill">Travel · Safety · Themes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-row">
+        <div class="footer-left">
+          <div class="status-dot"></div>
+          <div>Preview layer only · No code changes to your real OS shell yet.</div>
+        </div>
+        <div class="footer-right">
+          <span class="linkish">Next: send current LionGateOS ZIP for live integration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
