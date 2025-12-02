@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LionGateOS – Preview Shell (Soft Neon)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body class="lgos-body theme-neon">
+  <div class="lgos-wallpaper"></div>
+  <div class="lgos-wallpaper-glow"></div>
+
+  <div id="lgos-root">
+    <div class="lgos-shell">
+      <div class="lgos-shell-blur">
+        <div class="lgos-shell-inner">
+          <aside class="lgos-sidebar">
+            <section class="lgos-card">
+              <div class="lgos-card-title">LIONGATEOS · STATUS</div>
+              <div class="lgos-time-row">
+                <div class="lgos-time-main">12:34</div>
+                <div class="lgos-time-sub">Thursday · Preview Build</div>
+              </div>
+              <div class="lgos-metrics">
+                <div class="lgos-metric">
+                  <div class="lgos-metric-dot cpu"></div>
+                  <div class="lgos-metric-label">CPU</div>
+                  <div class="lgos-metric-value">24%</div>
+                </div>
+                <div class="lgos-metric">
+                  <div class="lgos-metric-dot ram"></div>
+                  <div class="lgos-metric-label">RAM</div>
+                  <div class="lgos-metric-value">43%</div>
+                </div>
+                <div class="lgos-metric">
+                  <div class="lgos-metric-dot ssd"></div>
+                  <div class="lgos-metric-label">Storage</div>
+                  <div class="lgos-metric-value">68%</div>
+                </div>
+              </div>
+              <div class="lgos-theme-row">
+                <div class="lgos-theme-label">Theme</div>
+                <div class="lgos-pill-group">
+                  <button class="lgos-pill" data-theme="light">Light</button>
+                  <button class="lgos-pill" data-theme="dark">Dark</button>
+                  <button class="lgos-pill is-active" data-theme="neon">Neon</button>
+                </div>
+              </div>
+              <div class="lgos-avatar-row">
+                <div class="lgos-avatar-ring"></div>
+                <div class="lgos-avatar-text">
+                  <div class="lgos-avatar-text-main">Preview User</div>
+                  <div class="lgos-avatar-text-sub">LionGateOS Shell</div>
+                </div>
+              </div>
+            </section>
+          </aside>
+
+          <main class="lgos-window">
+            <header class="lgos-window-header">
+              <div class="lgos-window-title">LIONGATEOS PREVIEW WINDOW</div>
+              <div class="lgos-window-controls">
+                <div class="lgos-win-dot close"></div>
+                <div class="lgos-win-dot minimize"></div>
+                <div class="lgos-win-dot maximize"></div>
+              </div>
+            </header>
+            <section class="lgos-window-body">
+              Launcher and sidebar now use the LionGateOS soft‑neon hybrid design. Use the Launcher icon in the dock to open the app grid.
+            </section>
+            <div class="lgos-launcher-backdrop" id="lgos-launcher">
+              <div class="lgos-launcher-inner">
+                <div class="lgos-launcher-top">
+                  <div class="lgos-search">
+                    <div class="lgos-search-icon"></div>
+                    <input class="lgos-search-input" type="text" placeholder="Search apps, tools, or workspaces…" />
+                  </div>
+                </div>
+                <aside class="lgos-launcher-categories">
+                  <div class="lgos-category-label">CATEGORIES</div>
+                  <div class="lgos-category-list">
+                    <button class="lgos-category-pill is-active">All</button>
+                    <button class="lgos-category-pill">Workspace</button>
+                    <button class="lgos-category-pill">Construction</button>
+                    <button class="lgos-category-pill">AI Tools</button>
+                    <button class="lgos-category-pill">System</button>
+                  </div>
+                </aside>
+                <section class="lgos-launcher-grid">
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Project Hub</div>
+                    <div class="lgos-app-meta">Workspace</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Blueprint Studio</div>
+                    <div class="lgos-app-meta">Construction</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Estimator AI</div>
+                    <div class="lgos-app-meta">AI Tools</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Shell Settings</div>
+                    <div class="lgos-app-meta">System</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Client Portal</div>
+                    <div class="lgos-app-meta">Workspace</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Field Reports</div>
+                    <div class="lgos-app-meta">Construction</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Smart Schedules</div>
+                    <div class="lgos-app-meta">Workspace</div>
+                  </div>
+                  <div class="lgos-app-tile">
+                    <div class="lgos-app-icon"></div>
+                    <div class="lgos-app-label">Theme Designer</div>
+                    <div class="lgos-app-meta">System</div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </main>
+
+          <div class="lgos-dock-row">
+            <div class="lgos-dock">
+              <button class="lgos-dock-icon is-ai">
+                <div class="lgos-dock-glyph"></div>
+                <div>AI</div>
+              </button>
+              <button class="lgos-dock-icon is-launcher" id="lgos-launcher-toggle">
+                <div class="lgos-dock-glyph"></div>
+                <div>Launcher</div>
+              </button>
+              <button class="lgos-dock-icon">
+                <div class="lgos-dock-glyph"></div>
+                <div>Workspace</div>
+              </button>
+              <button class="lgos-dock-icon">
+                <div class="lgos-dock-glyph"></div>
+                <div>Docs</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="lgos-brand-footer">
+            <div class="lgos-brand-mark"></div>
+            <div>LionGateOS Shell · Preview</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="shell.js"></script>
+</body>
+</html>

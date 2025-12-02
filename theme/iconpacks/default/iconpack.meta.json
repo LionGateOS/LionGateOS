@@ -1,0 +1,16 @@
+{
+  "id": "default",
+  "name": "LionGateOS Core Icons",
+  "description": "Logical icon pack that maps shell concepts to lucide-react and system glyphs. No bundled SVG files required.",
+  "version": "1.0.0",
+  "icons": {
+    "os.dashboard": "layout-dashboard",
+    "os.workspace": "grid-3x3",
+    "os.apps": "boxes",
+    "os.theme": "sparkles",
+    "os.branding": "badge-check",
+    "os.shellSettings": "settings",
+    "os.notifications": "bell",
+    "os.timeline": "clock-4"
+  }
+}

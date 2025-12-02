@@ -1,1 +1,0 @@
-console.log('Shell v2 loaded');

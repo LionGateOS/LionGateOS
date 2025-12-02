@@ -1,10 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import { App } from "./App";
-import "./styles.css";
+import { SoundEngine } from "./system/SoundEngine";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  const root = createRoot(rootElement);
+  SoundEngine.playBoot();
+  root.render(<App />);
+}
