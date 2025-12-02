@@ -1,9 +1,10 @@
 import React from "react";
+import "./theme/neonshell.theme.css";
 import { ThemeProvider } from "./theme/provider/ThemeProvider";
 import { OSModeGate } from "./system/OSModeGate";
 import { AppShellWrapper } from "./system/AppShellWrapper";
 
-export function App() {
+export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <OSModeGate>
@@ -11,4 +12,6 @@ export function App() {
       </OSModeGate>
     </ThemeProvider>
   );
-}
+};
+
+export default App;
