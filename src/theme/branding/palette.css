@@ -1,1 +1,5 @@
-/* branding palette */
+
+/* Deprecated palette stub. Palette is now defined inside
+ * src/theme/neonshell.theme.css and consumed globally.
+ */
+@import "./src/theme/neonshell.theme.css";
