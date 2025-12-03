@@ -1,6 +1,12 @@
 @import "./nav-colors.css";
 
 :root {
+--lgos-card-radius: 12px;
+--lgos-card-surface: rgba(12, 16, 28, 0.42);
+--lgos-card-glow: rgba(42, 184, 255, 0.45);
+--lgos-card-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+--lgos-card-blur: 18px;
+
   --lgos-color-bg-deep: #0b122b;
   --lgos-color-bg-deep-2: #0a1126;
   --lgos-color-bg-deep-3: #070d20;
@@ -306,10 +312,33 @@ body {
   pointer-events: none;
 }
 
-.lgos-nav-label {
-  font-size: 14px;
-  font-weight: 500;
+
+.lgos-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lgos-space-md);
 }
+
+.lgos-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  box-shadow: 0 0 18px var(--lgos-nav-glow-hover);
+}
+
+.lgos-nav-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Icon-only nav: hide labels but keep layout tight */
+.lgos-nav-label {
+  display: none;
+}
+
 
 /* Workspace */
 .lgos-workspace {
@@ -331,23 +360,36 @@ body {
   box-shadow: var(--lgos-glow-workspace);
 }
 
+
 .lgos-workspace__inner {
   position: relative;
   z-index: 1;
-  max-width: 1120px;
+  max-width: 960px;
   margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--lgos-space-xl);
 }
 
+
 /* Placeholder text only, no big white panel */
+
 .lgos-workspace__placeholder {
-  margin-top: 40px;
-  padding: 16px 20px;
-  border-radius: 16px;
-  border: 1px dashed rgba(148, 163, 255, 0.3);
-  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(8, 12, 28, 0.96));
-  color: var(--lgos-color-text-secondary);
   max-width: 520px;
+  width: 100%;
+  border-radius: var(--lgos-card-radius);
+  padding: 24px 26px;
+  border: 1px solid rgba(148, 163, 255, 0.32);
+  background:
+    radial-gradient(circle at top left, rgba(42, 184, 255, 0.14), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.96), rgba(8, 12, 28, 0.98));
+  box-shadow: var(--lgos-card-shadow);
+  backdrop-filter: blur(var(--lgos-card-blur));
+  color: var(--lgos-color-text-secondary);
 }
+
 
 .lgos-text-muted {
   color: var(--lgos-color-text-muted);
