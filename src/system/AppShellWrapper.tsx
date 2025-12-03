@@ -1,17 +1,8 @@
 import React from "react";
 import "../theme/neonshell.theme.css";
 import SplashGate from "../splash/SplashGate";
-
-type NavItem = {
-  id: string;
-  label: string;
-};
-
-const NAV_ITEMS: NavItem[] = [
-  { id: "overview", label: "System Overview" },
-  { id: "workspaces", label: "Workspaces" },
-  { id: "theme", label: "Theme Engine" },
-];
+import { TOP_NAV_ITEMS, BOTTOM_NAV_ITEMS } from "../../components/AppRegistry";
+import { NavItemRenderer } from "../../components/NavItemRenderer";
 
 export const AppShellWrapper: React.FC = () => {
   const activeId = "overview";
@@ -20,10 +11,8 @@ export const AppShellWrapper: React.FC = () => {
     <div className="lgos-shell">
       <header className="lgos-topbar">
         <div className="lgos-topbar__left">
-          <div className="lgos-topbar__title">Workspace</div>
-          <div className="lgos-topbar__subtitle">
-            LionGateOS · NeonShell Dark Frost
-          </div>
+          <div className="lgos-topbar__title">LionGateOS</div>
+          <div className="lgos-topbar__subtitle">NeonShell · Workspace OS</div>
         </div>
         <div className="lgos-topbar__right">
           <div className="lgos-topbar__chip">
@@ -38,30 +27,38 @@ export const AppShellWrapper: React.FC = () => {
           <div className="lgos-sidebar__brand">
             <div className="lgos-sidebar__brand-logo" />
             <div className="lgos-sidebar__brand-title">
-              <div className="lgos-sidebar__brand-title-main">LIONGATEOS</div>
-              <div className="lgos-sidebar__brand-title-sub">Shell · Neon Core</div>
+              <span className="lgos-sidebar__brand-title-main">LIONGATEOS</span>
+              <span className="lgos-sidebar__brand-title-sub">
+                NeonShell Environment
+              </span>
             </div>
           </div>
 
           <nav className="lgos-sidebar__nav">
-            <div className="lgos-nav-header">Navigation</div>
-            <div className="lgos-nav-list">
-              {NAV_ITEMS.map((item) => {
-                const isActive = item.id === activeId;
-                const classes = ["lgos-nav-softsquare"];
-                if (isActive) classes.push("lgos-nav-softsquare--active");
-
-                return (
-                  <button
+            <div className="lgos-sidebar__nav-top">
+              <div className="lgos-nav-header">Workspace</div>
+              <div className="lgos-nav-list">
+                {TOP_NAV_ITEMS.map((item) => (
+                  <NavItemRenderer
                     key={item.id}
-                    type="button"
-                    className={classes.join(" ")}
-                  >
-                    <div className="lgos-nav-icon" />
-                    <span className="lgos-nav-label">{item.label}</span>
-                  </button>
-                );
-              })}
+                    item={item}
+                    isActive={item.id === activeId}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="lgos-sidebar__nav-bottom">
+              <div className="lgos-nav-header">System</div>
+              <div className="lgos-nav-list">
+                {BOTTOM_NAV_ITEMS.map((item) => (
+                  <NavItemRenderer
+                    key={item.id}
+                    item={item}
+                    isActive={item.id === activeId}
+                  />
+                ))}
+              </div>
             </div>
           </nav>
         </aside>
@@ -69,6 +66,7 @@ export const AppShellWrapper: React.FC = () => {
         <section className="lgos-workspace">
           <div className="lgos-workspace__inner">
             <div className="lgos-workspace__placeholder">
+              <h2>System Overview</h2>
               <p className="lgos-text-muted">
                 LionGateOS NeonShell is ready. Open apps and workspaces will appear as
                 floating panels here.
