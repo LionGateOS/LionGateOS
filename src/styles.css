@@ -51,7 +51,7 @@ body {
   gap: 10px;
 }
 
-.os-phase-6-1 {
+.os-phase-6-2 {
   animation: os-shell-fade-in 220ms var(--os-ease-soft);
 }
 
@@ -444,5 +444,32 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+
+/* Phase 6.2 workspace panel container + transitions */
+
+.os-workspace-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+/* Fade + lift transition for workspace changes */
+.os-animate-panel {
+  animation: os-panel-fade-lift 220ms var(--os-ease-soft);
+  will-change: transform, opacity;
+}
+
+@keyframes os-panel-fade-lift {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -86,35 +86,42 @@ const WorkspaceHostComponent: React.FC = () => {
   const panel = panels[activePanelId] ?? panels[DEFAULT_PANEL_ID];
 
   return (
-    <main className="os-workspace-host os-animate-panel os-perf-balanced">
-      <div className="os-workspace-header">
-        <h1 className="os-workspace-title">{panel.title}</h1>
-        <span className="os-workspace-tag">Workspace</span>
-      </div>
-      <section className="os-workspace-body">
-        <p className="os-workspace-text">{panel.body}</p>
-        <div className="os-workspace-status-card">
-          <div className="os-status-pill os-status-pill-ok">Shell Online</div>
-          <div className="os-status-row">
-            <span className="os-status-label">Phase</span>
-            <span className="os-status-value">
-              6.1 · Workspace Registry & Persistence (Hybrid)
-            </span>
-          </div>
-          <div className="os-status-row">
-            <span className="os-status-label">Sidebar</span>
-            <span className="os-status-value">
-              Expanded · Persistent
-            </span>
-          </div>
-          <div className="os-status-row">
-            <span className="os-status-label">Protection</span>
-            <span className="os-status-value">
-              SECL · Error boundaries active
-            </span>
-          </div>
+    <main className="os-workspace-host os-perf-balanced">
+      <div
+        key={activePanelId}
+        className="os-workspace-panel os-animate-panel"
+      >
+        <div className="os-workspace-header">
+          <h1 className="os-workspace-title">{panel.title}</h1>
+          <span className="os-workspace-tag">Workspace</span>
         </div>
-      </section>
+        <section className="os-workspace-body">
+          <p className="os-workspace-text">{panel.body}</p>
+          <div className="os-workspace-status-card">
+            <div className="os-status-pill os-status-pill-ok">
+              Shell Online
+            </div>
+            <div className="os-status-row">
+              <span className="os-status-label">Phase</span>
+              <span className="os-status-value">
+                6.2 · Workspace Transition Engine (Fade + Lift)
+              </span>
+            </div>
+            <div className="os-status-row">
+              <span className="os-status-label">Sidebar</span>
+              <span className="os-status-value">
+                Expanded · Persistent
+              </span>
+            </div>
+            <div className="os-status-row">
+              <span className="os-status-label">Protection</span>
+              <span className="os-status-value">
+                SECL · Error boundaries active
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   );
 };

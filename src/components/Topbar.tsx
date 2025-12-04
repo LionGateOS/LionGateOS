@@ -10,7 +10,7 @@ const Topbar: React.FC = () => {
         <div className="os-topbar-text">
           <span className="os-topbar-title">LionGateOS Shell</span>
           <span className="os-topbar-subtitle">
-            Phase 6.1 · Workspace Registry & Persistence
+            Phase 6.2 · Workspace Transition Engine
           </span>
         </div>
       </div>
