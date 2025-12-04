@@ -36,17 +36,39 @@ const PANELS: Record<string, PanelConfig> = {
   },
 };
 
+const STORAGE_KEY = "lgos.shell.activePanel";
 const DEFAULT_PANEL_ID = "dashboard";
 
+const getInitialPanelId = (): string => {
+  if (typeof window === "undefined") return DEFAULT_PANEL_ID;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored || DEFAULT_PANEL_ID;
+  } catch {
+    return DEFAULT_PANEL_ID;
+  }
+};
+
 const WorkspaceHost: React.FC = () => {
-  const [activePanelId, setActivePanelId] = useState<string>(DEFAULT_PANEL_ID);
+  const [activePanelId, setActivePanelId] = useState<string>(() =>
+    getInitialPanelId()
+  );
 
   useEffect(() => {
     const handler = (event: Event) => {
       const custom = event as CustomEvent<{ routeId?: string }>;
       const routeId = custom.detail?.routeId;
       if (!routeId) return;
+
       setActivePanelId(routeId);
+
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(STORAGE_KEY, routeId);
+        }
+      } catch {
+        // ignore storage failures
+      }
     };
 
     window.addEventListener("os-shell:navigate", handler as EventListener);
@@ -69,15 +91,17 @@ const WorkspaceHost: React.FC = () => {
           <div className="os-status-pill os-status-pill-ok">Shell Online</div>
           <div className="os-status-row">
             <span className="os-status-label">Phase</span>
-            <span className="os-status-value">5 · Recovery</span>
+            <span className="os-status-value">5.2 · Stabilization</span>
           </div>
           <div className="os-status-row">
             <span className="os-status-label">Sidebar</span>
-            <span className="os-status-value">Expanded</span>
+            <span className="os-status-value">Expanded · Persistent</span>
           </div>
           <div className="os-status-row">
             <span className="os-status-label">Routing</span>
-            <span className="os-status-value">Local event bus</span>
+            <span className="os-status-value">
+              Local event bus + persisted route
+            </span>
           </div>
         </div>
       </section>

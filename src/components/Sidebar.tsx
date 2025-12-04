@@ -39,17 +39,31 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-declare global {
-  interface Window {
-    dispatchEvent(event: Event): boolean;
+const STORAGE_KEY = "lgos.shell.activePanel";
+
+const getInitialActiveId = (): string => {
+  if (typeof window === "undefined") return "dashboard";
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored || "dashboard";
+  } catch {
+    return "dashboard";
   }
-}
+};
 
 const Sidebar: React.FC = () => {
-  const [activeId, setActiveId] = useState<string>("dashboard");
+  const [activeId, setActiveId] = useState<string>(() => getInitialActiveId());
 
   const handleNavClick = (id: string) => {
     setActiveId(id);
+
+    try {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(STORAGE_KEY, id);
+      }
+    } catch {
+      // ignore storage failures, shell should still function
+    }
 
     const event = new CustomEvent("os-shell:navigate", {
       detail: { routeId: id },
