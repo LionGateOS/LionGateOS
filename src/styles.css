@@ -51,9 +51,8 @@ body {
   gap: 10px;
 }
 
-/* subtle entrance */
-.os-phase-5-5 {
-  animation: os-shell-fade-in 260ms var(--os-ease-soft);
+.os-phase-5-6 {
+  animation: os-shell-fade-in 220ms var(--os-ease-soft);
 }
 
 .os-main {
@@ -121,6 +120,7 @@ body {
   transition: background var(--os-transition-fast) var(--os-ease-fast),
     transform var(--os-transition-fast) var(--os-ease-fast),
     box-shadow var(--os-transition-fast) var(--os-ease-fast);
+  will-change: transform, box-shadow, background;
 }
 
 .os-topbar-pill:hover {
@@ -211,6 +211,7 @@ body {
     color var(--os-transition-med) var(--os-ease-soft),
     transform var(--os-transition-fast) var(--os-ease-fast),
     box-shadow var(--os-transition-fast) var(--os-ease-fast);
+  will-change: transform, box-shadow, background, color;
 }
 
 .os-sidebar-item:hover {
@@ -253,10 +254,16 @@ body {
   min-height: 0;
 }
 
-/* panel animation */
+/* panel animation, tuned for balanced mode */
 
 .os-animate-panel {
-  animation: os-panel-fade 220ms var(--os-ease-soft);
+  animation: os-panel-fade 180ms var(--os-ease-soft);
+  will-change: transform, opacity;
+}
+
+.os-perf-balanced {
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .os-workspace-header {
@@ -305,7 +312,8 @@ body {
   flex-direction: column;
   gap: 6px;
   transform-origin: top right;
-  animation: os-card-pop 220ms var(--os-ease-fast);
+  animation: os-card-pop 200ms var(--os-ease-fast);
+  will-change: transform, opacity;
 }
 
 .os-status-pill {

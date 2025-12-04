@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 type NavItem = {
   id: string;
@@ -10,34 +10,6 @@ type NavSection = {
   label: string;
   items: NavItem[];
 };
-
-const NAV_SECTIONS: NavSection[] = [
-  {
-    id: "core",
-    label: "Core",
-    items: [
-      { id: "dashboard", label: "Command Center" },
-      { id: "workspace-hub", label: "Workspace Hub" },
-    ],
-  },
-  {
-    id: "apps",
-    label: "Apps",
-    items: [
-      { id: "smartquote", label: "SmartQuote AI" },
-      { id: "travel-orchestrator", label: "Travel Orchestrator" },
-    ],
-  },
-  {
-    id: "system",
-    label: "System",
-    items: [
-      { id: "settings", label: "System Settings" },
-      { id: "theme-engine", label: "Theme Engine" },
-      { id: "shell-diagnostics", label: "Shell Diagnostics" },
-    ],
-  },
-];
 
 const STORAGE_KEY = "lgos.shell.activePanel";
 
@@ -51,10 +23,41 @@ const getInitialActiveId = (): string => {
   }
 };
 
-const Sidebar: React.FC = () => {
+const SidebarComponent: React.FC = () => {
   const [activeId, setActiveId] = useState<string>(() => getInitialActiveId());
 
-  const handleNavClick = (id: string) => {
+  const sections = useMemo<NavSection[]>(
+    () => [
+      {
+        id: "core",
+        label: "Core",
+        items: [
+          { id: "dashboard", label: "Command Center" },
+          { id: "workspace-hub", label: "Workspace Hub" },
+        ],
+      },
+      {
+        id: "apps",
+        label: "Apps",
+        items: [
+          { id: "smartquote", label: "SmartQuote AI" },
+          { id: "travel-orchestrator", label: "Travel Orchestrator" },
+        ],
+      },
+      {
+        id: "system",
+        label: "System",
+        items: [
+          { id: "settings", label: "System Settings" },
+          { id: "theme-engine", label: "Theme Engine" },
+          { id: "shell-diagnostics", label: "Shell Diagnostics" },
+        ],
+      },
+    ],
+    []
+  );
+
+  const handleNavClick = useCallback((id: string) => {
     setActiveId(id);
 
     try {
@@ -69,7 +72,7 @@ const Sidebar: React.FC = () => {
       detail: { routeId: id },
     });
     window.dispatchEvent(event);
-  };
+  }, []);
 
   return (
     <aside className="os-sidebar os-sidebar-expanded">
@@ -78,7 +81,7 @@ const Sidebar: React.FC = () => {
         <span className="os-sidebar-mode">Expanded</span>
       </div>
       <nav className="os-sidebar-nav">
-        {NAV_SECTIONS.map((section) => (
+        {sections.map((section) => (
           <div key={section.id} className="os-sidebar-section">
             <div className="os-sidebar-section-label">{section.label}</div>
             <ul className="os-sidebar-list">
@@ -108,5 +111,8 @@ const Sidebar: React.FC = () => {
     </aside>
   );
 };
+
+const Sidebar = React.memo(SidebarComponent);
+Sidebar.displayName = "Sidebar";
 
 export default Sidebar;

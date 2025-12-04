@@ -10,12 +10,12 @@ const Topbar: React.FC = () => {
         <div className="os-topbar-text">
           <span className="os-topbar-title">LionGateOS Shell</span>
           <span className="os-topbar-subtitle">
-            Phase 5.5 · Interaction Polishing
+            Phase 5.6 · Performance Optimization
           </span>
         </div>
       </div>
       <div className="os-topbar-right">
-        <span className="os-topbar-pill">Default Theme</span>
+        <span className="os-topbar-pill">Balanced Mode</span>
       </div>
     </header>
   );
