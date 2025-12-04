@@ -9,7 +9,9 @@ const Topbar: React.FC = () => {
         </span>
         <div className="os-topbar-text">
           <span className="os-topbar-title">LionGateOS Shell</span>
-          <span className="os-topbar-subtitle">Phase 5.4 · Visual Restoration</span>
+          <span className="os-topbar-subtitle">
+            Phase 5.5 · Interaction Polishing
+          </span>
         </div>
       </div>
       <div className="os-topbar-right">

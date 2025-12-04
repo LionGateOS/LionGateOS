@@ -80,9 +80,11 @@ const WorkspaceHost: React.FC = () => {
   const panel = PANELS[activePanelId] ?? PANELS[DEFAULT_PANEL_ID];
 
   return (
-    <main className="os-workspace-host">
+    <main className="os-workspace-host os-animate-panel">
       <div className="os-workspace-header">
-        <h1 className="os-workspace-title">{panel.title}</h1>
+        <h1 className="os-workspace-title os-animate-panel-title">
+          {panel.title}
+        </h1>
         <span className="os-workspace-tag">Workspace</span>
       </div>
       <section className="os-workspace-body">
@@ -93,7 +95,9 @@ const WorkspaceHost: React.FC = () => {
           </div>
           <div className="os-status-row">
             <span className="os-status-label">Phase</span>
-            <span className="os-status-value">5.4 · Visual Restoration</span>
+            <span className="os-status-value">
+              5.5 · Interaction Polishing
+            </span>
           </div>
           <div className="os-status-row">
             <span className="os-status-label">Sidebar</span>
