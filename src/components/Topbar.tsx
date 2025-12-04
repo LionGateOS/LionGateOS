@@ -1,3 +1,22 @@
-
 import React from "react";
-export default ()=> <header className='os-topbar'>Topbar</header>;
+
+const Topbar: React.FC = () => {
+  return (
+    <header className="os-topbar">
+      <div className="os-topbar-left">
+        <span className="os-logo-glyph" aria-hidden="true">
+          🦁
+        </span>
+        <div className="os-topbar-text">
+          <span className="os-topbar-title">LionGateOS Shell</span>
+          <span className="os-topbar-subtitle">Phase 5.4 · Visual Restoration</span>
+        </div>
+      </div>
+      <div className="os-topbar-right">
+        <span className="os-topbar-pill">Default Theme</span>
+      </div>
+    </header>
+  );
+};
+
+export default Topbar;
