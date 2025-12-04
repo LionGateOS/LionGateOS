@@ -51,7 +51,7 @@ body {
   gap: 10px;
 }
 
-.os-phase-6-0 {
+.os-phase-6-1 {
   animation: os-shell-fade-in 220ms var(--os-ease-soft);
 }
 
@@ -180,7 +180,7 @@ body {
 .os-sidebar-section-label {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+ letter-spacing: 0.18em;
   color: var(--os-text-muted);
   margin-bottom: 6px;
 }
@@ -254,7 +254,7 @@ body {
   min-height: 0;
 }
 
-/* panel animation, tuned */
+/* panel animation */
 
 .os-animate-panel {
   animation: os-panel-fade 180ms var(--os-ease-soft);

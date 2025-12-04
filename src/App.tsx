@@ -8,7 +8,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
-      <div className="os-root os-phase-6-0">
+      <div className="os-root os-phase-6-1">
         <Topbar />
         <WorkspaceSwitcher />
         <div className="os-main">

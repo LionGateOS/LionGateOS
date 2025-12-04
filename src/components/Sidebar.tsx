@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import orchestrator from "./WorkspaceOrchestrator";
 
 type NavItem = {
   id: string;
@@ -57,9 +58,10 @@ const SidebarComponent: React.FC = () => {
     []
   );
 
-  const handleNavClick = useCallback((id: string) => {
+  const handleNavClick = useCallback((id: string, label: string) => {
     setActiveId(id);
 
+    // Persist active panel for WorkspaceHost
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(STORAGE_KEY, id);
@@ -68,6 +70,27 @@ const SidebarComponent: React.FC = () => {
       // ignore storage issues
     }
 
+    // Hybrid registration: ensure workspace exists in orchestrator
+    if (id === "smartquote") {
+      orchestrator.register({
+        id: "smartquote",
+        title: "SmartQuote AI",
+        app: "smartquote",
+      });
+    } else if (id === "travel-orchestrator") {
+      orchestrator.register({
+        id: "travel-orchestrator",
+        title: "Travel Orchestrator",
+        app: "travel-orchestrator",
+      });
+    } else {
+      // Core/system workspaces were pre-registered at boot by orchestrator
+    }
+
+    // Sync active workspace with orchestrator
+    orchestrator.activate(id);
+
+    // Notify WorkspaceHost via shell event
     const event = new CustomEvent("os-shell:navigate", {
       detail: { routeId: id },
     });
@@ -93,7 +116,7 @@ const SidebarComponent: React.FC = () => {
                       "os-sidebar-item" +
                       (activeId === item.id ? " os-sidebar-item-active" : "")
                     }
-                    onClick={() => handleNavClick(item.id)}
+                    onClick={() => handleNavClick(item.id, item.label)}
                   >
                     <span className="os-sidebar-bullet" aria-hidden="true">
                       •
