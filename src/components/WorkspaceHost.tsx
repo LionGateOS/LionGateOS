@@ -87,10 +87,7 @@ const WorkspaceHostComponent: React.FC = () => {
 
   return (
     <main className="os-workspace-host os-perf-balanced">
-      <div
-        key={activePanelId}
-        className="os-workspace-panel os-animate-panel"
-      >
+      <div key={activePanelId} className="os-workspace-panel os-animate-panel">
         <div className="os-workspace-header">
           <h1 className="os-workspace-title">{panel.title}</h1>
           <span className="os-workspace-tag">Workspace</span>
@@ -104,7 +101,7 @@ const WorkspaceHostComponent: React.FC = () => {
             <div className="os-status-row">
               <span className="os-status-label">Phase</span>
               <span className="os-status-value">
-                6.2 · Workspace Transition Engine (Fade + Lift)
+                6.3 · Workspace Keyboard Navigation + Transitions
               </span>
             </div>
             <div className="os-status-row">

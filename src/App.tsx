@@ -3,13 +3,15 @@ import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import WorkspaceHost from "./components/WorkspaceHost";
 import WorkspaceSwitcher from "./components/WorkspaceSwitcher";
+import KeyboardNavigator from "./components/KeyboardNavigator";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
-      <div className="os-root os-phase-6-2">
+      <div className="os-root os-phase-6-3">
         <Topbar />
+        <KeyboardNavigator />
         <WorkspaceSwitcher />
         <div className="os-main">
           <ErrorBoundary>

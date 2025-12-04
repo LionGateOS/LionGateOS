@@ -13,6 +13,21 @@ const WorkspaceSwitcher: React.FC = () => {
     return null;
   }
 
+  const handleClick = (id: string) => {
+    orchestrator.activate(id);
+
+    const shellEvent = new CustomEvent("os-shell:navigate", {
+      detail: { routeId: id },
+    });
+    window.dispatchEvent(shellEvent);
+
+    try {
+      window.localStorage.setItem("lgos.shell.activePanel", id);
+    } catch {
+      // ignore storage issues
+    }
+  };
+
   return (
     <div className="os-ws-switcher">
       {state.list.map((ws) => (
@@ -22,7 +37,7 @@ const WorkspaceSwitcher: React.FC = () => {
           className={
             "os-ws-tab" + (ws.id === state.activeId ? " os-ws-tab-active" : "")
           }
-          onClick={() => orchestrator.activate(ws.id)}
+          onClick={() => handleClick(ws.id)}
         >
           {ws.title}
         </button>
