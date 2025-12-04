@@ -51,7 +51,7 @@ body {
   gap: 10px;
 }
 
-.os-phase-5-6 {
+.os-phase-6-0 {
   animation: os-shell-fade-in 220ms var(--os-ease-soft);
 }
 
@@ -254,7 +254,7 @@ body {
   min-height: 0;
 }
 
-/* panel animation, tuned for balanced mode */
+/* panel animation, tuned */
 
 .os-animate-panel {
   animation: os-panel-fade 180ms var(--os-ease-soft);
@@ -344,6 +344,41 @@ body {
 
 .os-status-value {
   font-weight: 500;
+}
+
+/* Workspace switcher (Hybrid Mode) */
+
+.os-ws-switcher {
+  display: flex;
+  gap: 6px;
+  padding: 4px 8px 0;
+}
+
+.os-ws-tab {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 42, 59, 0.9);
+  background: rgba(5, 7, 18, 0.9);
+  color: var(--os-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background var(--os-transition-fast) var(--os-ease-fast),
+    color var(--os-transition-fast) var(--os-ease-fast),
+    border-color var(--os-transition-fast) var(--os-ease-fast),
+    transform var(--os-transition-fast) var(--os-ease-fast);
+}
+
+.os-ws-tab:hover {
+  background: rgba(15, 23, 42, 0.95);
+  color: var(--os-text);
+  transform: translateY(-1px);
+}
+
+.os-ws-tab-active {
+  background: var(--os-accent-soft);
+  color: var(--os-text);
+  border-color: rgba(79, 140, 255, 0.9);
 }
 
 /* Fallback view */

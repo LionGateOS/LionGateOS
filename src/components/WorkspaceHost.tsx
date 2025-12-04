@@ -98,7 +98,7 @@ const WorkspaceHostComponent: React.FC = () => {
           <div className="os-status-row">
             <span className="os-status-label">Phase</span>
             <span className="os-status-value">
-              5.6 · Performance Optimization (Balanced)
+              6.0 · Workspace Orchestrator (Hybrid)
             </span>
           </div>
           <div className="os-status-row">
