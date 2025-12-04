@@ -4,6 +4,7 @@ import type { AppNavItem } from "./AppRegistry";
 type NavItemRendererProps = {
   item: AppNavItem;
   isActive?: boolean;
+  onClick?: () => void;
 };
 
 const iconSize = 18;
@@ -190,6 +191,7 @@ const iconFor = (icon: AppNavItem["icon"]): JSX.Element => {
 export const NavItemRenderer: React.FC<NavItemRendererProps> = ({
   item,
   isActive,
+  onClick,
 }) => {
   const navClasses = [
     "lgos-nav-softsquare",
@@ -205,6 +207,7 @@ export const NavItemRenderer: React.FC<NavItemRendererProps> = ({
         className={navClasses}
         aria-label={item.label}
         title={item.label}
+        onClick={onClick}
       >
         <span className="lgos-nav-icon">{iconFor(item.icon)}</span>
         <span className="lgos-nav-label">{item.label}</span>

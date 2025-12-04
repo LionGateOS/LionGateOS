@@ -1,0 +1,10 @@
+
+.lgos-shell--expanded .lgos-nav-label {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+}
+
+.lgos-nav-label {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}

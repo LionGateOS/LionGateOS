@@ -3,7 +3,7 @@ import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import WorkspaceHost from "./components/WorkspaceHost";
 
-const App: React.FC = () => {
+export default function App() {
   return (
     <div className="os-root">
       <Topbar />
@@ -13,6 +13,4 @@ const App: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default App;
+}

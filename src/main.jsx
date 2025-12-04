@@ -1,10 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import { ThemeProvider } from "./theme/provider/ThemeProvider";
+import App from "./App";
+import "./styles.css";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <ThemeProvider>
-    <App />
-  </ThemeProvider>
-);
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  console.error("Root element #root not found. OS Shell failed to mount.");
+}

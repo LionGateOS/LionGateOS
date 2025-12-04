@@ -1,11 +1,17 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
-import { App } from "./App";
-import { SoundEngine } from "./system/SoundEngine";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./styles.css";
 
 const rootElement = document.getElementById("root");
-if (rootElement) {
-  const root = createRoot(rootElement);
-  SoundEngine.playBoot();
-  root.render(<App />);
+
+if (!rootElement) {
+  console.error("Root element #root not found. OS Shell failed to mount.");
+} else {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
