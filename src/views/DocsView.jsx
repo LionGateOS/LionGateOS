@@ -1,0 +1,1 @@
+export default function DocsView(){return <div>Docs</div>;}

@@ -1,0 +1,7 @@
+{
+  "osName": "LionGateOS",
+  "tagline": "Your Industry Workspace",
+  "channel": "shell-react-v1",
+  "version": "1.0.0-react-shell",
+  "defaultStyleMode": "soft-slate-os-default"
+}

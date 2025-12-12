@@ -1,0 +1,41 @@
+/* Z-index & layering scaffolding for LionGateOS windows and shell */
+
+.lgos-layer-wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.lgos-layer-brand {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.lgos-layer-windows {
+  position: relative;
+  z-index: 20;
+}
+
+.lgos-layer-dock {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.lgos-layer-sidebar {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  z-index: 40;
+}
+
+.lgos-layer-system-alerts {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 50;
+}

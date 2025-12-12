@@ -1,0 +1,27 @@
+/* Phase 6.4.3 — Sidebar Dynamic Resizing & Stability */
+
+.lg-sidebar {
+  backdrop-filter: blur(16px);
+}
+
+/* Medium window: tighten sidebar safely */
+@media (max-width: 1250px) {
+  :root {
+    --lg-sidebar-width: 240px;
+  }
+  .lg-sidebar {
+    padding: 12px 10px;
+  }
+}
+
+/* Smaller but still desktop: maintain structure */
+@media (max-width: 1120px) {
+  :root {
+    --lg-sidebar-width: 220px;
+  }
+  .lg-sidebar {
+    padding: 10px 8px;
+  }
+}
+
+/* Layout remains horizontal scroll container (no UI squish) */

@@ -1,0 +1,65 @@
+
+/* Global layout grid & positioning system for LionGateOS */
+
+:root {
+  --lgos-grid-gap: 16px;
+  --lgos-shell-padding: 24px;
+}
+
+/* Root grid container */
+.lgos-root-grid {
+  display: grid;
+  grid-template-areas:
+    "sidebar   window   window"
+    "sidebar   window   window"
+    "sidebar   dock     dock";
+  grid-template-columns: 260px 1fr 1fr;
+  grid-template-rows: 1fr auto auto;
+  width: 100%;
+  height: 100%;
+  padding: var(--lgos-shell-padding);
+  position: relative;
+}
+
+/* Sidebar placement */
+.lgos-grid-sidebar {
+  grid-area: sidebar;
+  align-self: start;
+  justify-self: start;
+}
+
+/* Dock placement */
+.lgos-grid-dock {
+  grid-area: dock;
+  justify-self: center;
+  align-self: end;
+}
+
+/* Window placement */
+.lgos-grid-window {
+  grid-area: window;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--lgos-grid-gap);
+}
+
+/* Widgets / system-info placement */
+.lgos-grid-widgets {
+  position: absolute;
+  top: var(--lgos-shell-padding);
+  left: calc(var(--lgos-shell-padding) + 260px + var(--lgos-grid-gap));
+  display: flex;
+  gap: var(--lgos-grid-gap);
+}
+
+/* Z-index hierarchy */
+.lgos-layer-wallpaper { z-index: 0; }
+.lgos-layer-sidebar { z-index: 30; }
+.lgos-layer-dock { z-index: 40; }
+.lgos-layer-windows { z-index: 50; }
+.lgos-layer-alerts { z-index: 60; }
+
+/* Cleanup overlapping placeholders */
+.lgos-layer { pointer-events: none; }
+.lgos-sidebar, .lgos-dock, .lgos-window { pointer-events: auto; }

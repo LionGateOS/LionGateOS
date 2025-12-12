@@ -1,0 +1,127 @@
+/* shared os theme */
+/* B24 — App permission catalog and sandbox indicators */
+
+.lgos-settings-section {
+  margin-top: 1.75rem;
+}
+
+.lgos-settings-section h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.lgos-app-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.lgos-app-permission-card {
+  border-radius: var(--lgos-card-radius, 12px);
+  background: var(--lgos-card-surface, rgba(12, 16, 28, 0.6));
+  box-shadow: var(--lgos-card-shadow, 0 6px 24px rgba(0, 0, 0, 0.45));
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 0.75rem 1rem;
+  backdrop-filter: blur(var(--lgos-card-blur, 18px));
+}
+
+.lgos-app-permission-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.lgos-app-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.lgos-app-meta-row {
+  margin-top: 0.1rem;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.lgos-app-category {
+  text-transform: capitalize;
+}
+
+.lgos-app-status {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  font-size: 0.7rem;
+}
+
+.lgos-app-status-stable {
+  border-color: rgba(45, 212, 191, 0.65);
+  color: rgba(45, 212, 191, 0.9);
+}
+
+.lgos-app-status-beta {
+  border-color: rgba(250, 204, 21, 0.75);
+  color: rgba(250, 204, 21, 0.95);
+}
+
+.lgos-app-status-alpha {
+  border-color: rgba(244, 63, 94, 0.7);
+  color: rgba(248, 113, 113, 0.95);
+}
+
+.lgos-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.lgos-badge-sandbox {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.25));
+  border-color: rgba(56, 189, 248, 0.75);
+  color: rgba(191, 219, 254, 0.95);
+}
+
+.lgos-badge-system {
+  background: rgba(34, 197, 94, 0.09);
+  border-color: rgba(34, 197, 94, 0.7);
+  color: rgba(187, 247, 208, 0.9);
+}
+
+.lgos-app-permission-body {
+  margin-top: 0.65rem;
+  font-size: 0.8rem;
+}
+
+.lgos-permission-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.8;
+  margin-bottom: 0.35rem;
+}
+
+.lgos-permission-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lgos-permission-chip {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  font-size: 0.7rem;
+  backdrop-filter: blur(8px);
+}

@@ -1,0 +1,133 @@
+{
+  "version": "b27-security-shell-1",
+  "apps": [
+    {
+      "id": "home",
+      "name": "Home",
+      "category": "system",
+      "status": "stable",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "home",
+        "sandbox": false,
+        "permissions": [
+          "storage"
+        ]
+      }
+    },
+    {
+      "id": "ai",
+      "name": "AI Workspace",
+      "category": "ai",
+      "status": "stable",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "ai",
+        "sandbox": true,
+        "permissions": [
+          "storage"
+        ]
+      }
+    },
+    {
+      "id": "business",
+      "name": "Business Control Hub",
+      "category": "business",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "business",
+        "sandbox": true,
+        "permissions": [
+          "storage"
+        ]
+      }
+    },
+    {
+      "id": "smartquoteai",
+      "name": "SmartQuoteAI",
+      "category": "apps",
+      "status": "alpha",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "smartquoteai",
+        "sandbox": true,
+        "permissions": [
+          "storage",
+          "network"
+        ]
+      }
+    },
+    {
+      "id": "travel-orchestrator",
+      "name": "Travel Orchestrator",
+      "category": "apps",
+      "status": "alpha",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "travel-orchestrator",
+        "sandbox": true,
+        "permissions": [
+          "storage",
+          "network"
+        ]
+      }
+    },
+    {
+      "id": "documents",
+      "name": "Document Generator",
+      "category": "tools",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "documents",
+        "sandbox": true,
+        "permissions": [
+          "storage"
+        ]
+      }
+    },
+    {
+      "id": "estimator",
+      "name": "Estimator",
+      "category": "tools",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "estimator",
+        "sandbox": true,
+        "permissions": [
+          "storage"
+        ]
+      }
+    },
+    {
+      "id": "security-events",
+      "name": "Security Events",
+      "category": "system",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "security-events",
+        "sandbox": false,
+        "permissions": []
+      }
+    }
+  ]
+}

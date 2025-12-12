@@ -1,0 +1,1 @@
+export default function AppStoreView(){return <div>App Store</div>;}
