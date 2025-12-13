@@ -1,5 +1,5 @@
 {
-  "version": "b27-security-shell-1",
+  "version": "b29-security-center-ui-1",
   "apps": [
     {
       "id": "home",
@@ -125,6 +125,19 @@
       "integration": {
         "osSlot": "workspace",
         "path": "security-events",
+        "sandbox": false,
+        "permissions": []
+      }
+    },
+    {
+      "id": "security-center",
+      "name": "Security Center",
+      "category": "system",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "integration": {
+        "osSlot": "workspace",
+        "path": "security-center",
         "sandbox": false,
         "permissions": []
       }

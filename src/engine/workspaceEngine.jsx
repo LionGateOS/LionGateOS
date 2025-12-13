@@ -7,6 +7,7 @@ import SettingsView from '../views/SettingsView.jsx';
 import SystemLogsView from '../views/SystemLogsView.jsx';
 import DocsView from '../views/DocsView.jsx';
 import SecurityEventsView from '../views/SecurityEventsView.jsx';
+import SecurityCenterView from '../views/SecurityCenterView.jsx';
 
 const WORKSPACE_PERSIST_KEY = 'liongateos_workspace_phase_6_4';
 
@@ -40,6 +41,11 @@ const viewRegistry = {
     id: 'system-logs',
     title: 'System Logs',
     component: SystemLogsView,
+  },
+  'security-center': {
+    id: 'security-center',
+    title: 'Security Center',
+    component: SecurityCenterView,
   },
   'security-events': {
     id: 'security-events',
