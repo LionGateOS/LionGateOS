@@ -39,26 +39,7 @@ function getSeverityStyle(severityRaw) {
         border: "1px solid rgba(255, 90, 90, 0.35)",
         background: "rgba(255, 90, 90, 0.10)",
       },
-      row: {
-        borderLeft: "3px solid rgba(255, 90, 90, 0.55)",
-      },
-    };
-  }
-
-  if (severity === "warning") {
-    return {
-      label: "WARN",
-      pill: {
-        padding: "2px 8px",
-        borderRadius: 999,
-        fontWeight: 700,
-        letterSpacing: 0.5,
-        border: "1px solid rgba(255, 200, 80, 0.35)",
-        background: "rgba(255, 200, 80, 0.10)",
-      },
-      row: {
-        borderLeft: "3px solid rgba(255, 200, 80, 0.55)",
-      },
+      row: { borderLeft: "3px solid rgba(255, 90, 90, 0.55)" },
     };
   }
 
@@ -72,9 +53,7 @@ function getSeverityStyle(severityRaw) {
       border: "1px solid rgba(170, 190, 255, 0.25)",
       background: "rgba(170, 190, 255, 0.08)",
     },
-    row: {
-      borderLeft: "3px solid rgba(170, 190, 255, 0.35)",
-    },
+    row: { borderLeft: "3px solid rgba(170, 190, 255, 0.35)" },
   };
 }
 
@@ -102,11 +81,9 @@ export default function SecurityEventsView() {
       if (message.type === "security:event") {
         event = message.payload;
       }
-
       if (message.type === "os:security:permission") {
         event = normalizePermissionEvent(message);
       }
-
       if (!event) return;
 
       const normalized = {
@@ -133,12 +110,31 @@ export default function SecurityEventsView() {
     return events.filter((e) => e.severity === filter);
   }, [events, filter]);
 
+  function clearSession() {
+    sessionStorage.removeItem(STORAGE_KEY);
+    setEvents([]);
+  }
+
+  function exportJson() {
+    const blob = new Blob([JSON.stringify(events, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `liongateos-security-events-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div style={{ padding: 16 }}>
       <h2>Security Events</h2>
 
-      {/* Filters */}
-      <div style={{ marginBottom: 12, display: "flex", gap: 8 }}>
+      {/* Controls */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         {FILTERS.map((f) => (
           <button
             key={f.key}
@@ -160,6 +156,34 @@ export default function SecurityEventsView() {
             {f.label}
           </button>
         ))}
+
+        <div style={{ flex: 1 }} />
+
+        <button
+          onClick={exportJson}
+          style={{
+            padding: "6px 10px",
+            borderRadius: 8,
+            cursor: "pointer",
+            border: "1px solid rgba(255,255,255,0.15)",
+            background: "rgba(255,255,255,0.04)",
+          }}
+        >
+          Export JSON
+        </button>
+
+        <button
+          onClick={clearSession}
+          style={{
+            padding: "6px 10px",
+            borderRadius: 8,
+            cursor: "pointer",
+            border: "1px solid rgba(255,90,90,0.35)",
+            background: "rgba(255,90,90,0.10)",
+          }}
+        >
+          Clear
+        </button>
       </div>
 
       {visibleEvents.length === 0 ? (
