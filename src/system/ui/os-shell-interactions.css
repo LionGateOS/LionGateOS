@@ -1,72 +1,116 @@
-/* Interactivity layer scaffolding for LionGateOS OS Shell
-   Includes hover, focus, and hybrid transition placeholders. */
+/* LionGateOS OS Shell — Interaction Layer
+   Hover, focus, and transition behavior ONLY.
+   B51: OS UI interaction consistency (NON-SECURITY).
+*/
+
+/* =========================
+   Global Interaction Defaults
+   ========================= */
 
 .lgos-interactive {
   transition:
-    transform 140ms cubic-bezier(0.3, 0.9, 0.4, 1),
-    opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
-    filter 220ms cubic-bezier(0.25, 0.1, 0.25, 1),
-    box-shadow 220ms cubic-bezier(0.25, 0.1, 0.25, 1);
+    background-color 120ms ease,
+    color 120ms ease,
+    box-shadow 120ms ease,
+    outline-color 120ms ease,
+    transform 120ms ease;
 }
 
-/* Sidebar hover glow — softened */
-.lgos-sidebar.lgos-interactive:hover {
+/* =========================
+   Hover States (Unified)
+   ========================= */
+
+.lgos-hoverable:hover {
+  background-color: var(--lgos-hover-bg);
+}
+
+/* =========================
+   Focus States (Keyboard First)
+   ========================= */
+
+.lgos-focusable:focus-visible {
+  outline: 2px solid var(--lgos-focus-ring);
+  outline-offset: 0;
+  box-shadow: 0 0 0 2px rgba(42, 184, 255, 0.18);
+}
+
+.lgos-focusable:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* =========================
+   Click / Active Feedback
+   ========================= */
+
+.lgos-pressable:active {
+  transform: translateY(1px);
+}
+
+/* =========================
+   Sidebar Navigation
+   ========================= */
+
+.lgos-sidebar .lgos-nav-item {
+  border-radius: 6px;
+}
+
+.lgos-sidebar .lgos-nav-item:hover {
+  background-color: var(--lgos-hover-bg);
+}
+
+.lgos-sidebar .lgos-nav-item.is-active {
+  background-color: rgba(42, 184, 255, 0.12);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 12px rgba(42, 184, 255, 0.28);
+    inset 2px 0 0 var(--lgos-neon-primary);
 }
 
-/* Dock hover + magnification hint — reduced neon */
-.lgos-dock-item.lgos-interactive:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow:
-    0 5px 12px rgba(0, 0, 0, 0.35),
-    0 0 10px rgba(42, 184, 255, 0.26);
+/* =========================
+   Dock Items
+   ========================= */
+
+.lgos-dock-item:hover {
+  transform: translateY(-2px);
 }
 
-/* Window focus highlight — professional, non-neon */
-.lgos-window.lgos-window-focused {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 0 16px rgba(42, 184, 255, 0.32);
+.lgos-dock-item:active {
+  transform: translateY(0);
 }
 
-.lgos-window:not(.lgos-window-focused) {
-  opacity: 0.92;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 0 14px rgba(0, 0, 0, 0.75);
+/* =========================
+   Window Controls
+   ========================= */
+
+.lgos-window-control {
+  cursor: pointer;
+  opacity: 0.85;
 }
 
-/* Theme change transition scaffolding:
-   instant-on response, smooth fade-out via blur + opacity. */
-.lgos-theme-transitioning {
-  transition:
-    background-color 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
-    color 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
-    filter 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
-    opacity 260ms cubic-bezier(0.25, 0.1, 0.25, 1);
-  filter: blur(0.15px);
+.lgos-window-control:hover {
+  opacity: 1;
 }
 
-.lgos-theme-transitioning-strong {
-  transition:
-    background-color 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
-    color 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
-    filter 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
-    opacity 360ms cubic-bezier(0.4, 0.0, 0.2, 1);
-  filter: blur(0.5px);
+/* =========================
+   Launcher Items
+   ========================= */
+
+.lgos-launcher-item {
+  border-radius: 8px;
 }
 
-/* Glow intensity adjustments during interaction — B38-Lite */
-.lgos-glow-strong {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 14px rgba(42, 184, 255, 0.34);
+.lgos-launcher-item:hover {
+  background-color: var(--lgos-hover-bg);
 }
 
-.lgos-glow-soft {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 0 8px rgba(42, 184, 255, 0.22);
+/* =========================
+   Disabled State
+   ========================= */
+
+.lgos-disabled,
+.lgos-disabled:hover,
+.lgos-disabled:active {
+  opacity: 0.45;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
 }
