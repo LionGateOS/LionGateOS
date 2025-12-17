@@ -1,41 +1,35 @@
 /* LionGateOS — Neon Shell Theme
-   Shared visual accents, chips, and glow primitives.
-   B51: OS UI consistency pass (NON-SECURITY).
+   Global accent colors, glow rules, and severity chips.
+   B53: OS visual consistency pass (NON-SECURITY).
 */
 
-/* =========================
-   Base Neon Tokens
-   ========================= */
-
 :root {
+  /* =========================
+     Core Neon Palette
+     ========================= */
+
   --lgos-neon-blue: #2ab8ff;
-  --lgos-neon-blue-soft: rgba(42, 184, 255, 0.35);
+  --lgos-neon-blue-soft: rgba(42, 184, 255, 0.45);
   --lgos-neon-blue-faint: rgba(42, 184, 255, 0.18);
 
   --lgos-neon-gold: #d9a441;
   --lgos-neon-gold-soft: rgba(217, 164, 65, 0.45);
 
-  --lgos-neon-red: #ef4444;
-  --lgos-neon-red-soft: rgba(239, 68, 68, 0.35);
+  --lgos-neon-red: #ff6b6b;
+  --lgos-neon-red-soft: rgba(255, 107, 107, 0.45);
+
+  /* =========================
+     Chip Base
+     ========================= */
 
   --lgos-chip-radius: 999px;
-  --lgos-chip-font-size: 0.75rem;
+  --lgos-chip-font-size: 11px;
+  --lgos-chip-pad-y: 4px;
+  --lgos-chip-pad-x: 10px;
 }
 
 /* =========================
-   Generic Glow Helpers
-   ========================= */
-
-.lgos-glow-soft {
-  box-shadow: 0 0 18px var(--lgos-neon-blue-soft);
-}
-
-.lgos-glow-faint {
-  box-shadow: 0 0 12px var(--lgos-neon-blue-faint);
-}
-
-/* =========================
-   Chips / Pills (Generic)
+   Base Chip
    ========================= */
 
 .lgos-chip {
@@ -43,53 +37,63 @@
   align-items: center;
   gap: 6px;
 
-  padding: 4px 10px;
-  border-radius: var(--lgos-chip-radius);
+  padding:
+    var(--lgos-chip-pad-y)
+    var(--lgos-chip-pad-x);
 
+  border-radius: var(--lgos-chip-radius);
   font-size: var(--lgos-chip-font-size);
-  line-height: 1;
+  font-weight: 600;
   white-space: nowrap;
 
-  background: rgba(12, 16, 28, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid transparent;
+  background: rgba(15, 23, 42, 0.75);
   color: #e5edff;
+
+  backdrop-filter: blur(12px);
 }
 
 /* =========================
-   Chip Variants
+   INFO
    ========================= */
 
 .lgos-chip--info {
   border-color: var(--lgos-neon-blue-soft);
-  box-shadow: 0 0 10px var(--lgos-neon-blue-soft);
+  color: #e6f6ff;
+
+  box-shadow:
+    0 0 10px var(--lgos-neon-blue-faint);
 }
+
+/* =========================
+   WARN
+   ========================= */
 
 .lgos-chip--warn {
   border-color: var(--lgos-neon-gold-soft);
-  box-shadow: 0 0 10px var(--lgos-neon-gold-soft);
+  color: #fff1d6;
+
+  box-shadow:
+    0 0 10px rgba(217, 164, 65, 0.22);
 }
+
+/* =========================
+   ERROR
+   ========================= */
 
 .lgos-chip--error {
   border-color: var(--lgos-neon-red-soft);
-  box-shadow: 0 0 10px var(--lgos-neon-red-soft);
+  color: #ffe3e3;
+
+  box-shadow:
+    0 0 10px rgba(255, 107, 107, 0.22);
 }
 
 /* =========================
-   Chip Dots
+   Focus Ring (Global)
    ========================= */
 
-.lgos-chip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background-color: currentColor;
-  box-shadow: 0 0 6px currentColor;
-}
-
-/* =========================
-   Safety
-   ========================= */
-
-.lgos-chip * {
-  pointer-events: none;
+:focus-visible {
+  outline: 2px solid var(--lgos-neon-blue);
+  outline-offset: 2px;
 }
