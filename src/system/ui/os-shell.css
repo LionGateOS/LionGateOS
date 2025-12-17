@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B45: Density presets (compact / comfortable) via CSS variables (CSS-only).
+   B46: Severity icon size & baseline normalization (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -15,7 +15,7 @@
      Density Presets (B45)
      ========================= */
 
-  /* Default = COMFORTABLE (current look) */
+  /* Default = COMFORTABLE */
   --lgos-density-row-pad-y: 6px;
   --lgos-density-row-pad-x: 8px;
   --lgos-density-row-gap: 6px;
@@ -23,7 +23,7 @@
   --lgos-density-sidebar-gap: 10px;
   --lgos-density-launcher-gap: 14px;
 
-  /* Compact overrides (opt-in via class) */
+  /* Compact overrides */
   --lgos-density-compact-row-pad-y: 4px;
   --lgos-density-compact-row-pad-x: 6px;
   --lgos-density-compact-row-gap: 4px;
@@ -35,14 +35,22 @@
   --lgos-row-divider: rgba(255, 255, 255, 0.08);
   --lgos-row-divider-soft: rgba(255, 255, 255, 0.04);
 
-  /* Hover / focus (restrained, accessible) */
+  /* Hover / focus */
   --lgos-row-hover-bg: rgba(255, 255, 255, 0.03);
   --lgos-row-hover-outline: rgba(255, 255, 255, 0.08);
   --lgos-row-focus-ring: rgba(42, 184, 255, 0.55);
 
-  /* Column spacing & timestamp alignment */
+  /* Column spacing & timestamp */
   --lgos-event-col-gap: 10px;
   --lgos-event-timestamp-fg: rgba(201, 209, 255, 0.65);
+
+  /* =========================
+     B46 — Severity Icon Rules
+     ========================= */
+
+  --lgos-event-icon-size: 14px;
+  --lgos-event-icon-line-height: 1;
+  --lgos-event-icon-offset-y: 1px; /* baseline optical correction */
 }
 
 /* =========================
@@ -59,7 +67,7 @@
 }
 
 /* =========================
-   Glass + Neon Foundations
+   Foundations
    ========================= */
 
 .lgos-glass {
@@ -67,83 +75,6 @@
   background: var(--lgos-glass-bg);
   border-radius: var(--lgos-radius-xl);
   border: 1px solid var(--lgos-glass-border);
-}
-
-.lgos-neon-border {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 14px var(--lgos-neon-primary);
-}
-
-.lgos-neon-underline {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 18px var(--lgos-neon-primary);
-}
-
-/* =========================
-   Sidebar Layout
-   ========================= */
-
-.lgos-sidebar {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  width: 260px;
-  gap: var(--lgos-density-sidebar-gap);
-}
-
-.lgos-sidebar-section {
-  padding: 6px 4px;
-}
-
-.lgos-sidebar-time-placeholder {
-  font-size: 1.5rem;
-}
-
-.lgos-sidebar-date-placeholder {
-  opacity: 0.7;
-  font-size: 0.85rem;
-}
-
-.lgos-metric {
-  font-size: 0.82rem;
-  opacity: 0.78;
-}
-
-.lgos-avatar-placeholder {
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 30% 0%, var(--lgos-neon-primary), transparent),
-    radial-gradient(circle at 70% 120%, var(--lgos-neon-secondary), transparent);
-}
-
-/* =========================
-   Dock Layout
-   ========================= */
-
-.lgos-dock {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 999px;
-}
-
-.lgos-dock-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 8px;
-  border-radius: 10px;
-  font-size: 0.78rem;
-}
-
-.lgos-dock-icon-placeholder {
-  font-size: 0.95rem;
 }
 
 /* =========================
@@ -156,32 +87,8 @@
   padding: var(--lgos-density-window-pad);
 }
 
-.lgos-window-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.lgos-window-controls {
-  display: flex;
-  gap: 6px;
-}
-
-.lgos-window-control {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  border: none;
-}
-
-.lgos-window-close { background: #ff5f57; }
-.lgos-window-minimize { background: #febc2e; }
-.lgos-window-expand { background: #28c840; }
-
 /* =========================
-   CONTENT + EVENT ROW LAYOUT
+   CONTENT + EVENT ROWS
    ========================= */
 
 .lgos-window-content-placeholder {
@@ -201,7 +108,7 @@
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  align-items: center;
+  align-items: baseline;
   column-gap: var(--lgos-event-col-gap);
 
   padding:
@@ -217,16 +124,43 @@
     box-shadow 120ms ease;
 }
 
-/* Timestamp */
+/* =========================
+   B46 — Severity Icon Normalization
+   ========================= */
+
+/* Icon container (first column) */
+.lgos-window-content-placeholder > * > .lgos-event-icon,
+.lgos-window-content-placeholder > * > .lgos-event-severity {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--lgos-event-icon-size);
+  height: var(--lgos-event-icon-size);
+  font-size: var(--lgos-event-icon-size);
+  line-height: var(--lgos-event-icon-line-height);
+  transform: translateY(var(--lgos-event-icon-offset-y));
+  flex-shrink: 0;
+}
+
+/* SVG safety */
+.lgos-window-content-placeholder > * > .lgos-event-icon svg,
+.lgos-window-content-placeholder > * > .lgos-event-severity svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Message column */
+.lgos-window-content-placeholder > * > .lgos-event-message {
+  min-width: 0;
+}
+
+/* Timestamp column */
 .lgos-window-content-placeholder > * > .lgos-event-timestamp {
   justify-self: end;
   font-size: 0.78rem;
   color: var(--lgos-event-timestamp-fg);
   white-space: nowrap;
-}
-
-.lgos-window-content-placeholder > * > .lgos-event-message {
-  min-width: 0;
 }
 
 /* Divider */
