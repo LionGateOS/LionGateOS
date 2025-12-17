@@ -1,13 +1,12 @@
-/* LionGateOS — Shell Layering
-   Z-index and visual stacking ONLY.
-   B51: OS UI layering consistency (NON-SECURITY).
+/* LionGateOS — OS Shell Layering & Safety
+   Z-index ordering and pointer-event guarantees only.
+   B51: OS-wide layering consistency (NON-SECURITY).
 */
 
 /* =========================
-   Base Layer Order
+   Ambient / Background
    ========================= */
 
-/* Wallpaper / ambient effects */
 .lgos-wallpaper-layer {
   position: absolute;
   inset: 0;
@@ -22,18 +21,19 @@
 .lgos-workspace {
   position: relative;
   z-index: 1;
+  pointer-events: auto;
 }
 
 /* =========================
-   Windows
+   Application Windows
    ========================= */
 
 .lgos-window {
   position: absolute;
   z-index: 10;
+  pointer-events: auto;
 }
 
-/* Focused window rises above others */
 .lgos-window.is-focused {
   z-index: 20;
 }
@@ -45,6 +45,7 @@
 .lgos-dock {
   position: relative;
   z-index: 25;
+  pointer-events: auto;
 }
 
 /* =========================
@@ -54,6 +55,7 @@
 .lgos-sidebar {
   position: relative;
   z-index: 30;
+  pointer-events: auto;
 }
 
 /* =========================
@@ -63,10 +65,11 @@
 .lgos-topbar {
   position: relative;
   z-index: 40;
+  pointer-events: auto;
 }
 
 /* =========================
-   Overlays / Modals
+   Overlay / Modal Layer
    ========================= */
 
 .lgos-overlay,
@@ -74,10 +77,11 @@
   position: fixed;
   inset: 0;
   z-index: 60;
+  pointer-events: auto;
 }
 
 /* =========================
-   Drag / Resize Helpers
+   Drag / Resize Capture
    ========================= */
 
 .lgos-drag-layer {
@@ -88,7 +92,7 @@
 }
 
 /* =========================
-   Debug / Dev Overlays
+   Debug / Dev Visuals
    ========================= */
 
 .lgos-debug-layer {
@@ -96,4 +100,15 @@
   inset: 0;
   z-index: 100;
   pointer-events: none;
+}
+
+/* =========================
+   Safety Catch-All
+   ========================= */
+
+/* Prevent invisible children from blocking input */
+.lgos-wallpaper-layer *,
+.lgos-debug-layer *,
+.lgos-drag-layer * {
+  pointer-events: none !important;
 }
