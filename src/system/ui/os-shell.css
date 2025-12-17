@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B43: Security Events hover & focus states (CSS-only).
+   B44: Severity column spacing & timestamp alignment (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -19,6 +19,10 @@
   --lgos-row-hover-bg: rgba(255, 255, 255, 0.03);
   --lgos-row-hover-outline: rgba(255, 255, 255, 0.08);
   --lgos-row-focus-ring: rgba(42, 184, 255, 0.55);
+
+  /* Column spacing & timestamp alignment */
+  --lgos-event-col-gap: 10px;
+  --lgos-event-timestamp-fg: rgba(201, 209, 255, 0.65);
 }
 
 /* =========================
@@ -152,7 +156,7 @@
 }
 
 /* =========================
-   CONTENT + ROW GROUPING
+   CONTENT + EVENT ROW LAYOUT
    ========================= */
 
 .lgos-window-content-placeholder {
@@ -162,29 +166,51 @@
   padding: 6px 8px;
 }
 
-/* Generic list container used by Security Events */
+/* Stack rows with breathing room */
 .lgos-window-content-placeholder > * + * {
   margin-top: 6px;
 }
 
-/* Treat immediate children as rows */
+/* Treat immediate children as event rows */
 .lgos-window-content-placeholder > * {
   position: relative;
-  padding: 6px 6px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: var(--lgos-event-col-gap);
+
+  padding: 6px 8px;
   border-radius: 6px;
   outline: 1px solid transparent;
+
   transition:
     background-color 120ms ease,
     outline-color 120ms ease,
     box-shadow 120ms ease;
 }
 
+/* Column expectations:
+   [severity badge] [message/body] [timestamp] */
+
+/* Timestamp alignment */
+.lgos-window-content-placeholder > * > .lgos-event-timestamp {
+  justify-self: end;
+  font-size: 0.78rem;
+  color: var(--lgos-event-timestamp-fg);
+  white-space: nowrap;
+}
+
+/* Message column flex safety */
+.lgos-window-content-placeholder > * > .lgos-event-message {
+  min-width: 0;
+}
+
 /* Subtle divider between rows */
 .lgos-window-content-placeholder > *::after {
   content: "";
   position: absolute;
-  left: 6px;
-  right: 6px;
+  left: 8px;
+  right: 8px;
   bottom: 0;
   height: 1px;
   background: linear-gradient(
@@ -207,16 +233,14 @@
 }
 
 /* =========================
-   B43 — Hover & Focus States
+   Hover & Focus States
    ========================= */
 
-/* Mouse hover */
 .lgos-window-content-placeholder > *:hover {
   background-color: var(--lgos-row-hover-bg);
   outline-color: var(--lgos-row-hover-outline);
 }
 
-/* Keyboard focus (accessibility) */
 .lgos-window-content-placeholder > *:focus-visible {
   background-color: var(--lgos-row-hover-bg);
   outline: 2px solid var(--lgos-row-focus-ring);
@@ -225,7 +249,6 @@
     0 0 0 2px rgba(42, 184, 255, 0.18);
 }
 
-/* Prevent focus styles on mouse click */
 .lgos-window-content-placeholder > *:focus:not(:focus-visible) {
   outline: none;
   box-shadow: none;
