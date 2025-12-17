@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B39: UI spacing & density refinement (CSS-only).
+   B41: Security Events row grouping & subtle dividers (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -10,6 +10,10 @@
   --lgos-neon-secondary: #b57bff;
   --lgos-blur-strong: 24px;
   --lgos-radius-xl: 18px;
+
+  /* B41 grouping helpers */
+  --lgos-row-divider: rgba(255, 255, 255, 0.08);
+  --lgos-row-divider-soft: rgba(255, 255, 255, 0.04);
 }
 
 /* =========================
@@ -36,7 +40,7 @@
 }
 
 /* =========================
-   Sidebar Layout (Tighter)
+   Sidebar Layout
    ========================= */
 
 .lgos-sidebar {
@@ -75,7 +79,7 @@
 }
 
 /* =========================
-   Dock Layout (Balanced)
+   Dock Layout
    ========================= */
 
 .lgos-dock {
@@ -101,7 +105,7 @@
 }
 
 /* =========================
-   Window Layout (B39 Focus)
+   Window Layout
    ========================= */
 
 .lgos-window {
@@ -142,14 +146,54 @@
   background: #28c840;
 }
 
-/* CONTENT DENSITY REFINEMENT (KEY B39 CHANGE)
-   This directly improves Security Events readability */
+/* =========================
+   CONTENT + ROW GROUPING
+   (B41 CORE CHANGE)
+   ========================= */
 
 .lgos-window-content-placeholder {
   opacity: 0.88;
   font-size: 0.88rem;
   line-height: 1.45;
   padding: 6px 8px;
+}
+
+/* Generic list container used by Security Events */
+.lgos-window-content-placeholder > * + * {
+  margin-top: 6px;
+}
+
+/* Treat immediate children as rows */
+.lgos-window-content-placeholder > * {
+  position: relative;
+  padding: 6px 4px;
+}
+
+/* Subtle divider between rows */
+.lgos-window-content-placeholder > *::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--lgos-row-divider),
+    transparent
+  );
+  opacity: 0.6;
+}
+
+/* Remove divider on last row */
+.lgos-window-content-placeholder > *:last-child::after {
+  display: none;
+}
+
+/* Visual grouping for bursts of events */
+.lgos-window-content-placeholder > * + * + * {
+  border-top: 1px solid var(--lgos-row-divider-soft);
 }
 
 /* =========================
@@ -167,7 +211,7 @@
 }
 
 /* =========================
-   Launcher Layout (Refined)
+   Launcher Layout
    ========================= */
 
 .lgos-launcher {
