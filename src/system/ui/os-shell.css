@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B41: Security Events row grouping & subtle dividers (CSS-only).
+   B43: Security Events hover & focus states (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -11,9 +11,14 @@
   --lgos-blur-strong: 24px;
   --lgos-radius-xl: 18px;
 
-  /* B41 grouping helpers */
+  /* Row grouping + interaction helpers */
   --lgos-row-divider: rgba(255, 255, 255, 0.08);
   --lgos-row-divider-soft: rgba(255, 255, 255, 0.04);
+
+  /* Hover / focus (restrained, accessible) */
+  --lgos-row-hover-bg: rgba(255, 255, 255, 0.03);
+  --lgos-row-hover-outline: rgba(255, 255, 255, 0.08);
+  --lgos-row-focus-ring: rgba(42, 184, 255, 0.55);
 }
 
 /* =========================
@@ -148,7 +153,6 @@
 
 /* =========================
    CONTENT + ROW GROUPING
-   (B41 CORE CHANGE)
    ========================= */
 
 .lgos-window-content-placeholder {
@@ -166,15 +170,21 @@
 /* Treat immediate children as rows */
 .lgos-window-content-placeholder > * {
   position: relative;
-  padding: 6px 4px;
+  padding: 6px 6px;
+  border-radius: 6px;
+  outline: 1px solid transparent;
+  transition:
+    background-color 120ms ease,
+    outline-color 120ms ease,
+    box-shadow 120ms ease;
 }
 
 /* Subtle divider between rows */
 .lgos-window-content-placeholder > *::after {
   content: "";
   position: absolute;
-  left: 4px;
-  right: 4px;
+  left: 6px;
+  right: 6px;
   bottom: 0;
   height: 1px;
   background: linear-gradient(
@@ -194,6 +204,31 @@
 /* Visual grouping for bursts of events */
 .lgos-window-content-placeholder > * + * + * {
   border-top: 1px solid var(--lgos-row-divider-soft);
+}
+
+/* =========================
+   B43 — Hover & Focus States
+   ========================= */
+
+/* Mouse hover */
+.lgos-window-content-placeholder > *:hover {
+  background-color: var(--lgos-row-hover-bg);
+  outline-color: var(--lgos-row-hover-outline);
+}
+
+/* Keyboard focus (accessibility) */
+.lgos-window-content-placeholder > *:focus-visible {
+  background-color: var(--lgos-row-hover-bg);
+  outline: 2px solid var(--lgos-row-focus-ring);
+  outline-offset: 0;
+  box-shadow:
+    0 0 0 2px rgba(42, 184, 255, 0.18);
+}
+
+/* Prevent focus styles on mouse click */
+.lgos-window-content-placeholder > *:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
 }
 
 /* =========================
