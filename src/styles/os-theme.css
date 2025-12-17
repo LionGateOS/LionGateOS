@@ -1,127 +1,136 @@
-/* shared os theme */
-/* B24 — App permission catalog and sandbox indicators */
+/* LionGateOS — OS Theme Tokens
+   Global colors, typography, and surface definitions.
+   B51: OS UI consistency pass (NON-SECURITY).
+*/
 
-.lgos-settings-section {
-  margin-top: 1.75rem;
+:root {
+  /* =========================
+     Core Backgrounds
+     ========================= */
+
+  --lgos-bg-deep: #0b122b;
+  --lgos-bg-deep-2: #0a1126;
+  --lgos-bg-deep-3: #070d20;
+
+  /* =========================
+     Glass / Surface
+     ========================= */
+
+  --lgos-surface-glass: rgba(24, 30, 65, 0.88);
+  --lgos-surface-glass-border: rgba(255, 255, 255, 0.22);
+  --lgos-surface-panel: rgba(12, 16, 28, 0.55);
+
+  /* =========================
+     Text
+     ========================= */
+
+  --lgos-text-primary: #ffffff;
+  --lgos-text-secondary: #c9d1ff;
+  --lgos-text-muted: #9aa4c4;
+
+  /* =========================
+     Accent / Neon
+     ========================= */
+
+  --lgos-neon-primary: #3cf4ff;
+  --lgos-neon-secondary: #b57bff;
+  --lgos-neon-gold: #d9a441;
+
+  /* =========================
+     Topbar
+     ========================= */
+
+  --lgos-topbar-bg: linear-gradient(
+    to bottom,
+    rgba(20, 30, 60, 0.92),
+    rgba(10, 14, 32, 0.96)
+  );
+
+  --lgos-topbar-border: rgba(255, 255, 255, 0.08);
+  --lgos-topbar-text: var(--lgos-text-primary);
+  --lgos-topbar-muted: var(--lgos-text-secondary);
+
+  /* =========================
+     Sidebar
+     ========================= */
+
+  --lgos-sidebar-bg: linear-gradient(
+    to bottom,
+    var(--lgos-bg-deep),
+    var(--lgos-bg-deep-2),
+    var(--lgos-bg-deep-3)
+  );
+
+  --lgos-sidebar-border: rgba(5, 8, 20, 0.75);
+
+  /* =========================
+     Hover / Focus
+     ========================= */
+
+  --lgos-hover-bg: rgba(255, 255, 255, 0.03);
+  --lgos-hover-outline: rgba(255, 255, 255, 0.08);
+  --lgos-focus-ring: rgba(42, 184, 255, 0.55);
+
+  /* =========================
+     Shadows / Glow
+     ========================= */
+
+  --lgos-shadow-soft: 0 6px 12px rgba(0, 0, 0, 0.32);
+  --lgos-shadow-panel: 0 12px 24px rgba(0, 0, 0, 0.65);
+
+  --lgos-glow-topbar: 0 10px 16px rgba(42, 184, 255, 0.18);
+  --lgos-glow-workspace: 0 0 60px rgba(42, 184, 255, 0.12);
+
+  /* =========================
+     Typography
+     ========================= */
+
+  --lgos-font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Inter",
+    "Segoe UI",
+    sans-serif;
+
+  --lgos-font-size-base: 14px;
+  --lgos-font-size-xs: 12px;
+  --lgos-font-size-sm: 13px;
+  --lgos-font-size-lg: 15px;
+
+  /* =========================
+     Radius
+     ========================= */
+
+  --lgos-radius-soft: 10px;
+  --lgos-radius-panel: 22px;
 }
 
-.lgos-settings-section h3 {
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
-}
+/* =========================
+   Global Body
+   ========================= */
 
-.lgos-app-grid {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
-.lgos-app-permission-card {
-  border-radius: var(--lgos-card-radius, 12px);
-  background: var(--lgos-card-surface, rgba(12, 16, 28, 0.6));
-  box-shadow: var(--lgos-card-shadow, 0 6px 24px rgba(0, 0, 0, 0.45));
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  padding: 0.75rem 1rem;
-  backdrop-filter: blur(var(--lgos-card-blur, 18px));
-}
-
-.lgos-app-permission-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.lgos-app-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.lgos-app-meta-row {
-  margin-top: 0.1rem;
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  opacity: 0.8;
-}
-
-.lgos-app-category {
-  text-transform: capitalize;
-}
-
-.lgos-app-status {
-  padding: 0.05rem 0.4rem;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  font-size: 0.7rem;
-}
-
-.lgos-app-status-stable {
-  border-color: rgba(45, 212, 191, 0.65);
-  color: rgba(45, 212, 191, 0.9);
-}
-
-.lgos-app-status-beta {
-  border-color: rgba(250, 204, 21, 0.75);
-  color: rgba(250, 204, 21, 0.95);
-}
-
-.lgos-app-status-alpha {
-  border-color: rgba(244, 63, 94, 0.7);
-  color: rgba(248, 113, 113, 0.95);
-}
-
-.lgos-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.1rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  letter-spacing: 0.02em;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.lgos-badge-sandbox {
-  background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.25));
-  border-color: rgba(56, 189, 248, 0.75);
-  color: rgba(191, 219, 254, 0.95);
-}
-
-.lgos-badge-system {
-  background: rgba(34, 197, 94, 0.09);
-  border-color: rgba(34, 197, 94, 0.7);
-  color: rgba(187, 247, 208, 0.9);
-}
-
-.lgos-app-permission-body {
-  margin-top: 0.65rem;
-  font-size: 0.8rem;
-}
-
-.lgos-permission-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  opacity: 0.8;
-  margin-bottom: 0.35rem;
-}
-
-.lgos-permission-chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  list-style: none;
-  padding: 0;
+html,
+body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
-.lgos-permission-chip {
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.55);
-  font-size: 0.7rem;
-  backdrop-filter: blur(8px);
+body {
+  font-family: var(--lgos-font-family);
+  font-size: var(--lgos-font-size-base);
+  color: var(--lgos-text-primary);
+
+  background:
+    radial-gradient(circle at top left, #101938 0, transparent 50%),
+    radial-gradient(circle at bottom right, #050814 0, transparent 50%),
+    linear-gradient(to bottom, var(--lgos-bg-deep), var(--lgos-bg-deep-3));
+
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
 }
