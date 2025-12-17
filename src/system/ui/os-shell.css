@@ -1,6 +1,7 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B47: Severity text weight & truncation behavior (CSS-only).
+   B48: Multi-line expansion on hover / focus (CSS-only).
+   Includes B45–B47 with no regressions.
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -31,7 +32,7 @@
   --lgos-density-compact-sidebar-gap: 8px;
   --lgos-density-compact-launcher-gap: 10px;
 
-  /* Row grouping + interaction helpers */
+  /* Row grouping + interaction */
   --lgos-row-divider: rgba(255, 255, 255, 0.08);
   --lgos-row-divider-soft: rgba(255, 255, 255, 0.04);
 
@@ -40,27 +41,23 @@
   --lgos-row-hover-outline: rgba(255, 255, 255, 0.08);
   --lgos-row-focus-ring: rgba(42, 184, 255, 0.55);
 
-  /* Column spacing & timestamp */
+  /* Columns */
   --lgos-event-col-gap: 10px;
   --lgos-event-timestamp-fg: rgba(201, 209, 255, 0.65);
 
-  /* =========================
-     B46 — Severity Icon Rules
-     ========================= */
-
+  /* Severity icon (B46) */
   --lgos-event-icon-size: 14px;
   --lgos-event-icon-line-height: 1;
   --lgos-event-icon-offset-y: 1px;
 
-  /* =========================
-     B47 — Severity Text Rules
-     ========================= */
-
+  /* Severity text (B47) */
   --lgos-severity-font-weight-info: 500;
   --lgos-severity-font-weight-warn: 600;
   --lgos-severity-font-weight-error: 600;
 
-  --lgos-event-message-max-lines: 1; /* single-line truncation */
+  /* Message behavior (B48) */
+  --lgos-event-message-max-lines: 1;
+  --lgos-event-message-expanded-max-height: 6.5em;
 }
 
 /* =========================
@@ -162,30 +159,36 @@
    Severity Text (B47)
    ========================= */
 
-/* INFO */
 .lgos-event-severity.is-info {
   font-weight: var(--lgos-severity-font-weight-info);
 }
 
-/* WARN */
 .lgos-event-severity.is-warn {
   font-weight: var(--lgos-severity-font-weight-warn);
 }
 
-/* ERROR */
 .lgos-event-severity.is-error {
   font-weight: var(--lgos-severity-font-weight-error);
 }
 
 /* =========================
-   Message Truncation (B47)
+   Message Truncation + Expansion (B48)
    ========================= */
 
 .lgos-window-content-placeholder > * > .lgos-event-message {
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  max-height: 1.4em;
+  transition: max-height 140ms ease, white-space 140ms ease;
+}
+
+/* Expand on hover or keyboard focus */
+.lgos-window-content-placeholder > *:hover > .lgos-event-message,
+.lgos-window-content-placeholder > *:focus-visible > .lgos-event-message {
+  white-space: normal;
+  max-height: var(--lgos-event-message-expanded-max-height);
 }
 
 /* =========================
@@ -228,7 +231,7 @@
 }
 
 /* =========================
-   Hover & Focus
+   Hover & Focus Row States
    ========================= */
 
 .lgos-window-content-placeholder > *:hover {
