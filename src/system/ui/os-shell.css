@@ -1,77 +1,40 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B49: Density toggle wiring (compact / comfortable) — CSS-only.
-   All values remain placeholders and will be wired to theme variables later. */
+   B51: OS-wide UI consistency pass (NON-SECURITY).
+   This file intentionally excludes SecurityCenterView styling.
+*/
 
 :root {
+  /* Core surfaces */
   --lgos-glass-bg: rgba(24, 30, 65, 0.88);
   --lgos-glass-border: rgba(255, 255, 255, 0.22);
-  --lgos-neon-primary: #3cf4ff;
-  --lgos-neon-secondary: #b57bff;
   --lgos-blur-strong: 24px;
   --lgos-radius-xl: 18px;
 
-  /* =========================
-     Density Presets
-     ========================= */
+  /* Neon palette */
+  --lgos-neon-primary: #3cf4ff;
+  --lgos-neon-secondary: #b57bff;
 
-  /* Default = COMFORTABLE */
-  --lgos-density-row-pad-y: 6px;
-  --lgos-density-row-pad-x: 8px;
-  --lgos-density-row-gap: 6px;
-  --lgos-density-window-pad: 8px;
-  --lgos-density-sidebar-gap: 10px;
-  --lgos-density-launcher-gap: 14px;
+  /* Density — comfortable (default) */
+  --lgos-pad-window: 8px;
+  --lgos-pad-row-y: 6px;
+  --lgos-pad-row-x: 8px;
+  --lgos-gap-rows: 6px;
+  --lgos-gap-sidebar: 10px;
+  --lgos-gap-launcher: 14px;
 
-  /* Compact overrides */
-  --lgos-density-compact-row-pad-y: 4px;
-  --lgos-density-compact-row-pad-x: 6px;
-  --lgos-density-compact-row-gap: 4px;
-  --lgos-density-compact-window-pad: 6px;
-  --lgos-density-compact-sidebar-gap: 8px;
-  --lgos-density-compact-launcher-gap: 10px;
+  /* Interaction */
+  --lgos-hover-bg: rgba(255, 255, 255, 0.03);
+  --lgos-hover-outline: rgba(255, 255, 255, 0.08);
+  --lgos-focus-ring: rgba(42, 184, 255, 0.55);
 
-  /* Row grouping + interaction */
-  --lgos-row-divider: rgba(255, 255, 255, 0.08);
-  --lgos-row-divider-soft: rgba(255, 255, 255, 0.04);
-
-  /* Hover / focus */
-  --lgos-row-hover-bg: rgba(255, 255, 255, 0.03);
-  --lgos-row-hover-outline: rgba(255, 255, 255, 0.08);
-  --lgos-row-focus-ring: rgba(42, 184, 255, 0.55);
-
-  /* Event columns */
-  --lgos-event-col-gap: 10px;
-  --lgos-event-timestamp-fg: rgba(201, 209, 255, 0.65);
-
-  /* Severity icon */
-  --lgos-event-icon-size: 14px;
-  --lgos-event-icon-line-height: 1;
-  --lgos-event-icon-offset-y: 1px;
-
-  /* Severity text */
-  --lgos-severity-font-weight-info: 500;
-  --lgos-severity-font-weight-warn: 600;
-  --lgos-severity-font-weight-error: 600;
+  /* Dividers */
+  --lgos-divider: rgba(255, 255, 255, 0.08);
+  --lgos-divider-soft: rgba(255, 255, 255, 0.04);
 }
 
 /* =========================
-   Density Toggle Wiring (B49)
-   ========================= */
-
-/* Compact mode via class */
-.lgos-density-compact,
-[data-density="compact"] {
-  --lgos-density-row-pad-y: var(--lgos-density-compact-row-pad-y);
-  --lgos-density-row-pad-x: var(--lgos-density-compact-row-pad-x);
-  --lgos-density-row-gap: var(--lgos-density-compact-row-gap);
-  --lgos-density-window-pad: var(--lgos-density-compact-window-pad);
-  --lgos-density-sidebar-gap: var(--lgos-density-compact-sidebar-gap);
-  --lgos-density-launcher-gap: var(--lgos-density-compact-launcher-gap);
-}
-
-/* =========================
-   Foundations
+   Glass Base
    ========================= */
 
 .lgos-glass {
@@ -82,111 +45,153 @@
 }
 
 /* =========================
-   Window Layout
+   Sidebar
+   ========================= */
+
+.lgos-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  padding: 10px;
+  gap: var(--lgos-gap-sidebar);
+}
+
+.lgos-sidebar-section {
+  padding: 6px 4px;
+}
+
+.lgos-sidebar-time {
+  font-size: 1.5rem;
+}
+
+.lgos-sidebar-date {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* =========================
+   Dock
+   ========================= */
+
+.lgos-dock {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+}
+
+.lgos-dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  border-radius: 10px;
+}
+
+/* =========================
+   Windows (Generic)
    ========================= */
 
 .lgos-window {
   min-width: 480px;
   min-height: 280px;
-  padding: var(--lgos-density-window-pad);
+  padding: var(--lgos-pad-window);
 }
+
+.lgos-window-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.lgos-window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.lgos-window-control {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: none;
+}
+
+.lgos-window-close { background: #ff5f57; }
+.lgos-window-minimize { background: #febc2e; }
+.lgos-window-expand { background: #28c840; }
 
 /* =========================
-   CONTENT + EVENT ROWS
+   Window Content (Generic)
    ========================= */
 
-.lgos-window-content-placeholder {
-  opacity: 0.88;
+.lgos-window-content {
   font-size: 0.88rem;
   line-height: 1.45;
-  padding: 6px 8px;
 }
 
-.lgos-window-content-placeholder > * + * {
-  margin-top: var(--lgos-density-row-gap);
+/* Stack children consistently */
+.lgos-window-content > * + * {
+  margin-top: var(--lgos-gap-rows);
 }
 
-.lgos-window-content-placeholder > * {
+/* Generic row */
+.lgos-window-content > * {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: baseline;
-  column-gap: var(--lgos-event-col-gap);
-  padding: var(--lgos-density-row-pad-y) var(--lgos-density-row-pad-x);
+  padding: var(--lgos-pad-row-y) var(--lgos-pad-row-x);
   border-radius: 6px;
   outline: 1px solid transparent;
-  transition: background-color 120ms ease, outline-color 120ms ease, box-shadow 120ms ease;
+  transition:
+    background-color 120ms ease,
+    outline-color 120ms ease,
+    box-shadow 120ms ease;
 }
 
-/* Severity icon */
-.lgos-window-content-placeholder > * > .lgos-event-icon,
-.lgos-window-content-placeholder > * > .lgos-event-severity {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--lgos-event-icon-size);
-  height: var(--lgos-event-icon-size);
-  font-size: var(--lgos-event-icon-size);
-  line-height: var(--lgos-event-icon-line-height);
-  transform: translateY(var(--lgos-event-icon-offset-y));
-  flex-shrink: 0;
+/* Hover / focus */
+.lgos-window-content > *:hover {
+  background-color: var(--lgos-hover-bg);
+  outline-color: var(--lgos-hover-outline);
 }
 
-.lgos-window-content-placeholder > * > .lgos-event-severity.is-info {
-  font-weight: var(--lgos-severity-font-weight-info);
-}
-.lgos-window-content-placeholder > * > .lgos-event-severity.is-warn {
-  font-weight: var(--lgos-severity-font-weight-warn);
-}
-.lgos-window-content-placeholder > * > .lgos-event-severity.is-error {
-  font-weight: var(--lgos-severity-font-weight-error);
+.lgos-window-content > *:focus-visible {
+  outline: 2px solid var(--lgos-focus-ring);
+  box-shadow: 0 0 0 2px rgba(42, 184, 255, 0.18);
 }
 
-/* Message */
-.lgos-window-content-placeholder > * > .lgos-event-message {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Timestamp */
-.lgos-window-content-placeholder > * > .lgos-event-timestamp {
-  justify-self: end;
-  font-size: 0.78rem;
-  color: var(--lgos-event-timestamp-fg);
-  white-space: nowrap;
-}
-
-/* Dividers */
-.lgos-window-content-placeholder > *::after {
+/* Divider */
+.lgos-window-content > *::after {
   content: "";
   position: absolute;
   left: 8px;
   right: 8px;
   bottom: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--lgos-row-divider), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--lgos-divider),
+    transparent
+  );
   opacity: 0.6;
 }
 
-.lgos-window-content-placeholder > *:last-child::after {
+.lgos-window-content > *:last-child::after {
   display: none;
 }
 
-/* Hover & focus */
-.lgos-window-content-placeholder > *:hover {
-  background-color: var(--lgos-row-hover-bg);
-  outline-color: var(--lgos-row-hover-outline);
+/* =========================
+   Launcher
+   ========================= */
+
+.lgos-launcher {
+  padding: 14px;
+  max-width: 860px;
 }
 
-.lgos-window-content-placeholder > *:focus-visible {
-  background-color: var(--lgos-row-hover-bg);
-  outline: 2px solid var(--lgos-row-focus-ring);
-  box-shadow: 0 0 0 2px rgba(42, 184, 255, 0.18);
-}
-
-.lgos-window-content-placeholder > *:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: none;
+.lgos-launcher-body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--lgos-gap-launcher);
 }
