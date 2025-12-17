@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B44: Severity column spacing & timestamp alignment (CSS-only).
+   B45: Density presets (compact / comfortable) via CSS variables (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -10,6 +10,26 @@
   --lgos-neon-secondary: #b57bff;
   --lgos-blur-strong: 24px;
   --lgos-radius-xl: 18px;
+
+  /* =========================
+     Density Presets (B45)
+     ========================= */
+
+  /* Default = COMFORTABLE (current look) */
+  --lgos-density-row-pad-y: 6px;
+  --lgos-density-row-pad-x: 8px;
+  --lgos-density-row-gap: 6px;
+  --lgos-density-window-pad: 8px;
+  --lgos-density-sidebar-gap: 10px;
+  --lgos-density-launcher-gap: 14px;
+
+  /* Compact overrides (opt-in via class) */
+  --lgos-density-compact-row-pad-y: 4px;
+  --lgos-density-compact-row-pad-x: 6px;
+  --lgos-density-compact-row-gap: 4px;
+  --lgos-density-compact-window-pad: 6px;
+  --lgos-density-compact-sidebar-gap: 8px;
+  --lgos-density-compact-launcher-gap: 10px;
 
   /* Row grouping + interaction helpers */
   --lgos-row-divider: rgba(255, 255, 255, 0.08);
@@ -23,6 +43,19 @@
   /* Column spacing & timestamp alignment */
   --lgos-event-col-gap: 10px;
   --lgos-event-timestamp-fg: rgba(201, 209, 255, 0.65);
+}
+
+/* =========================
+   Compact Density Mode
+   ========================= */
+
+.lgos-density-compact {
+  --lgos-density-row-pad-y: var(--lgos-density-compact-row-pad-y);
+  --lgos-density-row-pad-x: var(--lgos-density-compact-row-pad-x);
+  --lgos-density-row-gap: var(--lgos-density-compact-row-gap);
+  --lgos-density-window-pad: var(--lgos-density-compact-window-pad);
+  --lgos-density-sidebar-gap: var(--lgos-density-compact-sidebar-gap);
+  --lgos-density-launcher-gap: var(--lgos-density-compact-launcher-gap);
 }
 
 /* =========================
@@ -57,7 +90,7 @@
   flex-direction: column;
   padding: 10px;
   width: 260px;
-  gap: 10px;
+  gap: var(--lgos-density-sidebar-gap);
 }
 
 .lgos-sidebar-section {
@@ -120,7 +153,7 @@
 .lgos-window {
   min-width: 480px;
   min-height: 280px;
-  padding: 8px;
+  padding: var(--lgos-density-window-pad);
 }
 
 .lgos-window-header {
@@ -143,17 +176,9 @@
   border: none;
 }
 
-.lgos-window-close {
-  background: #ff5f57;
-}
-
-.lgos-window-minimize {
-  background: #febc2e;
-}
-
-.lgos-window-expand {
-  background: #28c840;
-}
+.lgos-window-close { background: #ff5f57; }
+.lgos-window-minimize { background: #febc2e; }
+.lgos-window-expand { background: #28c840; }
 
 /* =========================
    CONTENT + EVENT ROW LAYOUT
@@ -166,12 +191,12 @@
   padding: 6px 8px;
 }
 
-/* Stack rows with breathing room */
+/* Stack rows */
 .lgos-window-content-placeholder > * + * {
-  margin-top: 6px;
+  margin-top: var(--lgos-density-row-gap);
 }
 
-/* Treat immediate children as event rows */
+/* Event rows */
 .lgos-window-content-placeholder > * {
   position: relative;
   display: grid;
@@ -179,7 +204,10 @@
   align-items: center;
   column-gap: var(--lgos-event-col-gap);
 
-  padding: 6px 8px;
+  padding:
+    var(--lgos-density-row-pad-y)
+    var(--lgos-density-row-pad-x);
+
   border-radius: 6px;
   outline: 1px solid transparent;
 
@@ -189,10 +217,7 @@
     box-shadow 120ms ease;
 }
 
-/* Column expectations:
-   [severity badge] [message/body] [timestamp] */
-
-/* Timestamp alignment */
+/* Timestamp */
 .lgos-window-content-placeholder > * > .lgos-event-timestamp {
   justify-self: end;
   font-size: 0.78rem;
@@ -200,12 +225,11 @@
   white-space: nowrap;
 }
 
-/* Message column flex safety */
 .lgos-window-content-placeholder > * > .lgos-event-message {
   min-width: 0;
 }
 
-/* Subtle divider between rows */
+/* Divider */
 .lgos-window-content-placeholder > *::after {
   content: "";
   position: absolute;
@@ -222,20 +246,15 @@
   opacity: 0.6;
 }
 
-/* Remove divider on last row */
 .lgos-window-content-placeholder > *:last-child::after {
   display: none;
 }
 
-/* Visual grouping for bursts of events */
 .lgos-window-content-placeholder > * + * + * {
   border-top: 1px solid var(--lgos-row-divider-soft);
 }
 
-/* =========================
-   Hover & Focus States
-   ========================= */
-
+/* Hover & Focus */
 .lgos-window-content-placeholder > *:hover {
   background-color: var(--lgos-row-hover-bg);
   outline-color: var(--lgos-row-hover-outline);
@@ -244,28 +263,12 @@
 .lgos-window-content-placeholder > *:focus-visible {
   background-color: var(--lgos-row-hover-bg);
   outline: 2px solid var(--lgos-row-focus-ring);
-  outline-offset: 0;
-  box-shadow:
-    0 0 0 2px rgba(42, 184, 255, 0.18);
+  box-shadow: 0 0 0 2px rgba(42, 184, 255, 0.18);
 }
 
 .lgos-window-content-placeholder > *:focus:not(:focus-visible) {
   outline: none;
   box-shadow: none;
-}
-
-/* =========================
-   Wallpaper Placeholder
-   ========================= */
-
-.lgos-wallpaper-layer {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 10%, #3cf4ff 0, transparent 50%),
-    radial-gradient(circle at 80% 90%, #b57bff 0, transparent 55%),
-    radial-gradient(circle at 50% 50%, #111633 0, #05081a 60%);
-  z-index: 0;
 }
 
 /* =========================
@@ -277,55 +280,8 @@
   max-width: 860px;
 }
 
-.lgos-launcher-header {
-  margin-bottom: 10px;
-}
-
-.lgos-launcher-search {
-  width: 100%;
-  padding: 7px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(0, 0, 0, 0.3);
-}
-
 .lgos-launcher-body {
   display: grid;
   grid-template-columns: 180px 1fr;
-  gap: 14px;
-}
-
-.lgos-launcher-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.lgos-launcher-category {
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  opacity: 0.75;
-}
-
-.lgos-launcher-category.is-active {
-  opacity: 1;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.16),
-    0 0 12px var(--lgos-neon-primary);
-}
-
-.lgos-launcher-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.lgos-launcher-app-card {
-  padding: 9px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background:
-    radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 55%);
-  font-size: 0.88rem;
+  gap: var(--lgos-density-launcher-gap);
 }
