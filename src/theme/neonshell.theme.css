@@ -1,162 +1,95 @@
-@import "./nav-colors.css";
+/* LionGateOS — Neon Shell Theme
+   Shared visual accents, chips, and glow primitives.
+   B51: OS UI consistency pass (NON-SECURITY).
+*/
 
-/* ============================================================
-   LionGateOS NeonShell Theme
-   B42 — Severity badges & icon alignment polish (CSS-only)
-   Purpose:
-   - Normalize badge height, padding, and alignment
-   - Ensure icon + text vertical centering
-   - Preserve accessibility & restrained aesthetic
-   ============================================================ */
+/* =========================
+   Base Neon Tokens
+   ========================= */
 
 :root {
-  /* Cards */
-  --lgos-card-radius: 12px;
-  --lgos-card-surface: rgba(12, 16, 28, 0.42);
-  --lgos-card-glow: rgba(42, 184, 255, 0.45);
-  --lgos-card-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
-  --lgos-card-blur: 18px;
+  --lgos-neon-blue: #2ab8ff;
+  --lgos-neon-blue-soft: rgba(42, 184, 255, 0.35);
+  --lgos-neon-blue-faint: rgba(42, 184, 255, 0.18);
 
-  /* Backgrounds */
-  --lgos-color-bg-deep: #0b122b;
-  --lgos-color-bg-deep-2: #0a1126;
-  --lgos-color-bg-deep-3: #070d20;
+  --lgos-neon-gold: #d9a441;
+  --lgos-neon-gold-soft: rgba(217, 164, 65, 0.45);
 
-  --lgos-color-sidebar-frost-top: #0b122a;
-  --lgos-color-sidebar-frost-mid: #0a1126;
-  --lgos-color-sidebar-frost-bottom: #080e20;
+  --lgos-neon-red: #ef4444;
+  --lgos-neon-red-soft: rgba(239, 68, 68, 0.35);
 
-  /* Panels & text */
-  --lgos-color-panel-surface: #f8faff;
-  --lgos-color-panel-border: rgba(10, 15, 30, 0.2);
-
-  --lgos-color-text-primary: #ffffff;
-  --lgos-color-text-secondary: #c9d1ff;
-  --lgos-color-text-muted: #9aa4c4;
-  --lgos-color-text-dark: #0d1124;
-
-  /* Brand & neon */
-  --lgos-color-neon-blue: #2ab8ff;
-  --lgos-color-neon-blue-strong: #0090e0;
-  --lgos-color-brand-gold: #d9a441;
-
-  /* Severity semantics */
-  --lgos-severity-info-fg: #cfe9ff;
-  --lgos-severity-info-bg: rgba(42, 184, 255, 0.14);
-  --lgos-severity-info-border: rgba(42, 184, 255, 0.38);
-
-  --lgos-severity-warn-fg: #ffe6b3;
-  --lgos-severity-warn-bg: rgba(255, 184, 77, 0.16);
-  --lgos-severity-warn-border: rgba(255, 184, 77, 0.42);
-
-  --lgos-severity-error-fg: #ffd6d6;
-  --lgos-severity-error-bg: rgba(239, 68, 68, 0.16);
-  --lgos-severity-error-border: rgba(239, 68, 68, 0.45);
-
-  /* Radius, spacing, typography */
-  --lgos-radius-panel-lg: 22px;
-  --lgos-radius-softsquare: 10px;
-
-  --lgos-space-sm: 8px;
-  --lgos-space-md: 12px;
-  --lgos-space-lg: 16px;
-  --lgos-space-xl: 24px;
-
-  --lgos-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
-  --lgos-font-size-base: 14px;
-  --lgos-font-size-xs: 12px;
+  --lgos-chip-radius: 999px;
+  --lgos-chip-font-size: 0.75rem;
 }
 
-/* ============================================================
-   Base document
-   ============================================================ */
+/* =========================
+   Generic Glow Helpers
+   ========================= */
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
+.lgos-glow-soft {
+  box-shadow: 0 0 18px var(--lgos-neon-blue-soft);
 }
 
-body {
-  font-family: var(--lgos-font-family);
-  font-size: var(--lgos-font-size-base);
-  color: var(--lgos-color-text-primary);
-  background:
-    radial-gradient(circle at top left, #101938 0, transparent 50%),
-    radial-gradient(circle at bottom right, #050814 0, transparent 50%),
-    linear-gradient(to bottom, var(--lgos-color-bg-deep), var(--lgos-color-bg-deep-3));
-  background-attachment: fixed;
+.lgos-glow-faint {
+  box-shadow: 0 0 12px var(--lgos-neon-blue-faint);
 }
 
-#root {
-  min-height: 100vh;
-}
+/* =========================
+   Chips / Pills (Generic)
+   ========================= */
 
-.lgos-shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ============================================================
-   Severity Chips / Badges (B42 CORE)
-   ============================================================ */
-
-/* Base chip */
 .lgos-chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
 
-  height: 22px;
-  padding: 0 10px;
+  padding: 4px 10px;
+  border-radius: var(--lgos-chip-radius);
 
-  border-radius: 999px;
-  border: 1px solid transparent;
-
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--lgos-chip-font-size);
   line-height: 1;
-
   white-space: nowrap;
+
+  background: rgba(12, 16, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e5edff;
 }
 
-/* Optional icon inside chip */
-.lgos-chip svg,
-.lgos-chip .lgos-chip-icon {
-  width: 12px;
-  height: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
+/* =========================
+   Chip Variants
+   ========================= */
 
-/* INFO */
 .lgos-chip--info {
-  color: var(--lgos-severity-info-fg);
-  background: var(--lgos-severity-info-bg);
-  border-color: var(--lgos-severity-info-border);
+  border-color: var(--lgos-neon-blue-soft);
+  box-shadow: 0 0 10px var(--lgos-neon-blue-soft);
 }
 
-/* WARN */
 .lgos-chip--warn {
-  color: var(--lgos-severity-warn-fg);
-  background: var(--lgos-severity-warn-bg);
-  border-color: var(--lgos-severity-warn-border);
+  border-color: var(--lgos-neon-gold-soft);
+  box-shadow: 0 0 10px var(--lgos-neon-gold-soft);
 }
 
-/* ERROR */
 .lgos-chip--error {
-  color: var(--lgos-severity-error-fg);
-  background: var(--lgos-severity-error-bg);
-  border-color: var(--lgos-severity-error-border);
+  border-color: var(--lgos-neon-red-soft);
+  box-shadow: 0 0 10px var(--lgos-neon-red-soft);
 }
 
-/* Muted text helper */
-.lgos-text-muted {
-  color: var(--lgos-color-text-muted);
+/* =========================
+   Chip Dots
+   ========================= */
+
+.lgos-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* =========================
+   Safety
+   ========================= */
+
+.lgos-chip * {
+  pointer-events: none;
 }
