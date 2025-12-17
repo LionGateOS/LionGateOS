@@ -1,14 +1,40 @@
+/* LionGateOS — Navigation Color Tokens
+   Sidebar spine, nav highlights, and accent glows.
+   B51: OS UI consistency pass (NON-SECURITY).
+*/
+
 :root {
-  --lgos-nav-softsquare-bg: rgba(12, 16, 28, 0.55);
-  --lgos-nav-softsquare-bg-hover: rgba(18, 22, 36, 0.7);
-  --lgos-nav-softsquare-bg-active: rgba(18, 22, 40, 0.86);
-  --lgos-nav-softsquare-border: rgba(255, 255, 255, 0.06);
-  --lgos-nav-label: #c9d1ff;
-  --lgos-nav-label-active: #f9fafb;
-  --lgos-nav-spine-blue: rgba(42, 184, 255, 0.55);
-  --lgos-nav-spine-glow: rgba(42, 184, 255, 0.7);
-  --lgos-nav-gold-accent: #d9a441;
-  --lgos-nav-gold-glow: rgba(217, 164, 65, 0.45);
-  --lgos-nav-glow-hover: rgba(42, 184, 255, 0.35);
-  --lgos-nav-glow-active: rgba(217, 164, 65, 0.3);
+  /* =========================
+     Primary Navigation Accents
+     ========================= */
+
+  --lgos-nav-spine-glow: rgba(42, 184, 255, 0.55);
+  --lgos-nav-spine-glow-soft: rgba(42, 184, 255, 0.35);
+
+  --lgos-nav-hover-bg: rgba(42, 184, 255, 0.08);
+  --lgos-nav-hover-outline: rgba(42, 184, 255, 0.25);
+
+  /* =========================
+     Active State
+     ========================= */
+
+  --lgos-nav-active-bg: rgba(18, 22, 40, 0.86);
+  --lgos-nav-active-text: #f9fafb;
+
+  --lgos-nav-active-glow: rgba(217, 164, 65, 0.45);
+  --lgos-nav-active-glow-soft: rgba(217, 164, 65, 0.25);
+
+  /* =========================
+     Icon Glow
+     ========================= */
+
+  --lgos-nav-icon-glow-hover: rgba(42, 184, 255, 0.35);
+  --lgos-nav-icon-glow-active: rgba(217, 164, 65, 0.45);
+
+  /* =========================
+     Muted / Inactive
+     ========================= */
+
+  --lgos-nav-muted-text: rgba(201, 209, 255, 0.75);
+  --lgos-nav-muted-icon: rgba(201, 209, 255, 0.65);
 }
