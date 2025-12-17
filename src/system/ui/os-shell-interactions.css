@@ -1,10 +1,10 @@
-/* LionGateOS OS Shell — Interaction Layer
-   Hover, focus, and transition behavior ONLY.
-   B51: OS UI interaction consistency (NON-SECURITY).
+/* LionGateOS — OS Shell Interactions
+   Hover, focus, active, disabled, and tooltip polish.
+   B52: OS UX micro-polish (NON-SECURITY).
 */
 
 /* =========================
-   Global Interaction Defaults
+   Transition Baseline
    ========================= */
 
 .lgos-interactive {
@@ -13,11 +13,12 @@
     color 120ms ease,
     box-shadow 120ms ease,
     outline-color 120ms ease,
-    transform 120ms ease;
+    transform 120ms ease,
+    opacity 120ms ease;
 }
 
 /* =========================
-   Hover States (Unified)
+   Hover Affordance
    ========================= */
 
 .lgos-hoverable:hover {
@@ -25,7 +26,7 @@
 }
 
 /* =========================
-   Focus States (Keyboard First)
+   Keyboard Focus (Primary UX)
    ========================= */
 
 .lgos-focusable:focus-visible {
@@ -40,7 +41,7 @@
 }
 
 /* =========================
-   Click / Active Feedback
+   Active / Press Feedback
    ========================= */
 
 .lgos-pressable:active {
@@ -48,7 +49,21 @@
 }
 
 /* =========================
-   Sidebar Navigation
+   Disabled State (Clear)
+   ========================= */
+
+.lgos-disabled,
+.lgos-disabled:hover,
+.lgos-disabled:active {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================
+   Sidebar Navigation UX
    ========================= */
 
 .lgos-sidebar .lgos-nav-item {
@@ -61,13 +76,16 @@
 
 .lgos-sidebar .lgos-nav-item.is-active {
   background-color: rgba(42, 184, 255, 0.12);
-  box-shadow:
-    inset 2px 0 0 var(--lgos-neon-primary);
+  box-shadow: inset 2px 0 0 var(--lgos-neon-primary);
 }
 
 /* =========================
-   Dock Items
+   Dock UX
    ========================= */
+
+.lgos-dock-item {
+  cursor: pointer;
+}
 
 .lgos-dock-item:hover {
   transform: translateY(-2px);
@@ -91,26 +109,28 @@
 }
 
 /* =========================
-   Launcher Items
+   Tooltip Micro-Polish
+   (for existing tooltip elements)
    ========================= */
 
-.lgos-launcher-item {
-  border-radius: 8px;
+.lgos-tooltip {
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
 }
 
-.lgos-launcher-item:hover {
-  background-color: var(--lgos-hover-bg);
+.lgos-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* =========================
-   Disabled State
+   Safety
    ========================= */
 
-.lgos-disabled,
-.lgos-disabled:hover,
-.lgos-disabled:active {
-  opacity: 0.45;
+.lgos-tooltip,
+.lgos-tooltip * {
   pointer-events: none;
-  transform: none;
-  box-shadow: none;
 }
