@@ -1,10 +1,103 @@
+/* LionGateOS — Sidebar Expanded State
+   Expanded sidebar behavior & tooltip UX.
+   B52: OS UX micro-polish (NON-SECURITY).
+*/
 
-.lgos-shell--expanded .lgos-nav-label {
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-    pointer-events: auto !important;
+/* =========================
+   Expanded Sidebar Container
+   ========================= */
+
+.lgos-sidebar.is-expanded {
+  width: 260px;
+  transition: width 160ms ease;
 }
 
-.lgos-nav-label {
-    transition: opacity 0.25s ease, transform 0.25s ease;
+/* =========================
+   Collapsed Sidebar
+   ========================= */
+
+.lgos-sidebar:not(.is-expanded) {
+  width: 72px;
+  transition: width 160ms ease;
+}
+
+/* =========================
+   Nav Item Base
+   ========================= */
+
+.lgos-sidebar .lgos-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* =========================
+   Label Visibility
+   ========================= */
+
+.lgos-sidebar:not(.is-expanded) .lgos-nav-label {
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.lgos-sidebar.is-expanded .lgos-nav-label {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+/* =========================
+   Tooltip (Collapsed Only)
+   ========================= */
+
+.lgos-sidebar:not(.is-expanded) .lgos-nav-tooltip {
+  position: absolute;
+  left: 56px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-2px);
+
+  opacity: 0;
+  pointer-events: none;
+
+  padding: 6px 10px;
+  border-radius: 999px;
+
+  font-size: 11px;
+  white-space: nowrap;
+
+  background: rgba(15, 23, 42, 0.88);
+  color: #e5edff;
+
+  box-shadow:
+    0 0 16px rgba(42, 184, 255, 0.45),
+    0 10px 30px rgba(0, 0, 0, 0.75);
+
+  backdrop-filter: blur(18px);
+
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+/* Reveal tooltip on hover */
+.lgos-sidebar:not(.is-expanded)
+.lgos-nav-item:hover .lgos-nav-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* =========================
+   Safety
+   ========================= */
+
+.lgos-nav-tooltip,
+.lgos-nav-tooltip * {
+  pointer-events: none;
 }
