@@ -9,33 +9,33 @@
     box-shadow 220ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* Sidebar hover glow */
+/* Sidebar hover glow — softened */
 .lgos-sidebar.lgos-interactive:hover {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    0 0 24px var(--lgos-neon-primary);
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 12px rgba(42, 184, 255, 0.28);
 }
 
-/* Dock hover + magnification hint */
+/* Dock hover + magnification hint — reduced neon */
 .lgos-dock-item.lgos-interactive:hover {
-  transform: translateY(-4px) scale(1.06);
+  transform: translateY(-3px) scale(1.04);
   box-shadow:
-    0 6px 14px rgba(0, 0, 0, 0.4),
-    0 0 18px var(--lgos-neon-primary);
+    0 5px 12px rgba(0, 0, 0, 0.35),
+    0 0 10px rgba(42, 184, 255, 0.26);
 }
 
-/* Window focus highlight */
+/* Window focus highlight — professional, non-neon */
 .lgos-window.lgos-window-focused {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.16),
-    0 0 32px var(--lgos-neon-primary);
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 16px rgba(42, 184, 255, 0.32);
 }
 
 .lgos-window:not(.lgos-window-focused) {
-  opacity: 0.9;
+  opacity: 0.92;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 0 18px rgba(0, 0, 0, 0.8);
+    0 0 14px rgba(0, 0, 0, 0.75);
 }
 
 /* Theme change transition scaffolding:
@@ -46,7 +46,7 @@
     color 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
     filter 260ms cubic-bezier(0.25, 0.1, 0.25, 1),
     opacity 260ms cubic-bezier(0.25, 0.1, 0.25, 1);
-  filter: blur(0.2px);
+  filter: blur(0.15px);
 }
 
 .lgos-theme-transitioning-strong {
@@ -55,18 +55,18 @@
     color 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
     filter 360ms cubic-bezier(0.4, 0.0, 0.2, 1),
     opacity 360ms cubic-bezier(0.4, 0.0, 0.2, 1);
-  filter: blur(0.8px);
+  filter: blur(0.5px);
 }
 
-/* Glow intensity adjustments during interaction */
+/* Glow intensity adjustments during interaction — B38-Lite */
 .lgos-glow-strong {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 0 32px var(--lgos-neon-primary);
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 14px rgba(42, 184, 255, 0.34);
 }
 
 .lgos-glow-soft {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 18px var(--lgos-neon-secondary);
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 8px rgba(42, 184, 255, 0.22);
 }
