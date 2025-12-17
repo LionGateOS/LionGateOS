@@ -1,65 +1,94 @@
+/* LionGateOS — Layout Grid
+   Structural layout and pointer-event layering ONLY.
+   B51: OS UI layout consistency (NON-SECURITY).
+*/
 
-/* Global layout grid & positioning system for LionGateOS */
+/* =========================
+   Root Layout Grid
+   ========================= */
 
-:root {
-  --lgos-grid-gap: 16px;
-  --lgos-shell-padding: 24px;
-}
-
-/* Root grid container */
-.lgos-root-grid {
+.lgos-layout {
   display: grid;
-  grid-template-areas:
-    "sidebar   window   window"
-    "sidebar   window   window"
-    "sidebar   dock     dock";
-  grid-template-columns: 260px 1fr 1fr;
-  grid-template-rows: 1fr auto auto;
-  width: 100%;
-  height: 100%;
-  padding: var(--lgos-shell-padding);
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* =========================
+   Topbar
+   ========================= */
+
+.lgos-topbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+/* =========================
+   Sidebar
+   ========================= */
+
+.lgos-sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* =========================
+   Workspace
+   ========================= */
+
+.lgos-workspace {
+  grid-column: 2;
+  grid-row: 2;
   position: relative;
+  overflow: hidden;
+  pointer-events: auto;
 }
 
-/* Sidebar placement */
-.lgos-grid-sidebar {
-  grid-area: sidebar;
-  align-self: start;
-  justify-self: start;
-}
+/* =========================
+   Wallpaper / Effects Layers
+   ========================= */
 
-/* Dock placement */
-.lgos-grid-dock {
-  grid-area: dock;
-  justify-self: center;
-  align-self: end;
-}
-
-/* Window placement */
-.lgos-grid-window {
-  grid-area: window;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: var(--lgos-grid-gap);
-}
-
-/* Widgets / system-info placement */
-.lgos-grid-widgets {
+.lgos-layer {
   position: absolute;
-  top: var(--lgos-shell-padding);
-  left: calc(var(--lgos-shell-padding) + 260px + var(--lgos-grid-gap));
-  display: flex;
-  gap: var(--lgos-grid-gap);
+  inset: 0;
+  pointer-events: none;
 }
 
-/* Z-index hierarchy */
-.lgos-layer-wallpaper { z-index: 0; }
-.lgos-layer-sidebar { z-index: 30; }
-.lgos-layer-dock { z-index: 40; }
-.lgos-layer-windows { z-index: 50; }
-.lgos-layer-alerts { z-index: 60; }
+/* =========================
+   Windows Layer
+   ========================= */
 
-/* Cleanup overlapping placeholders */
-.lgos-layer { pointer-events: none; }
-.lgos-sidebar, .lgos-dock, .lgos-window { pointer-events: auto; }
+.lgos-windows-layer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  pointer-events: auto;
+}
+
+/* =========================
+   Modal / Overlay Layer
+   ========================= */
+
+.lgos-overlay-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: auto;
+}
+
+/* =========================
+   Safety Defaults
+   ========================= */
+
+/* Prevent invisible layers from blocking input */
+.lgos-layer *,
+.lgos-layer::before,
+.lgos-layer::after {
+  pointer-events: none;
+}
