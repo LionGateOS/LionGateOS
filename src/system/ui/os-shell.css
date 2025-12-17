@@ -1,6 +1,6 @@
 /* LionGateOS OS Shell visual scaffolding
    Glassmorphism layers, neon edges, and layout scaffolding only.
-   B46: Severity icon size & baseline normalization (CSS-only).
+   B47: Severity text weight & truncation behavior (CSS-only).
    All values remain placeholders and will be wired to theme variables later. */
 
 :root {
@@ -50,7 +50,17 @@
 
   --lgos-event-icon-size: 14px;
   --lgos-event-icon-line-height: 1;
-  --lgos-event-icon-offset-y: 1px; /* baseline optical correction */
+  --lgos-event-icon-offset-y: 1px;
+
+  /* =========================
+     B47 — Severity Text Rules
+     ========================= */
+
+  --lgos-severity-font-weight-info: 500;
+  --lgos-severity-font-weight-warn: 600;
+  --lgos-severity-font-weight-error: 600;
+
+  --lgos-event-message-max-lines: 1; /* single-line truncation */
 }
 
 /* =========================
@@ -125,10 +135,9 @@
 }
 
 /* =========================
-   B46 — Severity Icon Normalization
+   Severity Icon (B46)
    ========================= */
 
-/* Icon container (first column) */
 .lgos-window-content-placeholder > * > .lgos-event-icon,
 .lgos-window-content-placeholder > * > .lgos-event-severity {
   display: inline-flex;
@@ -142,7 +151,6 @@
   flex-shrink: 0;
 }
 
-/* SVG safety */
 .lgos-window-content-placeholder > * > .lgos-event-icon svg,
 .lgos-window-content-placeholder > * > .lgos-event-severity svg {
   width: 100%;
@@ -150,12 +158,40 @@
   display: block;
 }
 
-/* Message column */
-.lgos-window-content-placeholder > * > .lgos-event-message {
-  min-width: 0;
+/* =========================
+   Severity Text (B47)
+   ========================= */
+
+/* INFO */
+.lgos-event-severity.is-info {
+  font-weight: var(--lgos-severity-font-weight-info);
 }
 
-/* Timestamp column */
+/* WARN */
+.lgos-event-severity.is-warn {
+  font-weight: var(--lgos-severity-font-weight-warn);
+}
+
+/* ERROR */
+.lgos-event-severity.is-error {
+  font-weight: var(--lgos-severity-font-weight-error);
+}
+
+/* =========================
+   Message Truncation (B47)
+   ========================= */
+
+.lgos-window-content-placeholder > * > .lgos-event-message {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   Timestamp
+   ========================= */
+
 .lgos-window-content-placeholder > * > .lgos-event-timestamp {
   justify-self: end;
   font-size: 0.78rem;
@@ -163,7 +199,10 @@
   white-space: nowrap;
 }
 
-/* Divider */
+/* =========================
+   Dividers & Grouping
+   ========================= */
+
 .lgos-window-content-placeholder > *::after {
   content: "";
   position: absolute;
@@ -188,7 +227,10 @@
   border-top: 1px solid var(--lgos-row-divider-soft);
 }
 
-/* Hover & Focus */
+/* =========================
+   Hover & Focus
+   ========================= */
+
 .lgos-window-content-placeholder > *:hover {
   background-color: var(--lgos-row-hover-bg);
   outline-color: var(--lgos-row-hover-outline);
