@@ -1,0 +1,5 @@
+
+# Local build/output
+dist/
+_legacy_theme_backup/
+
