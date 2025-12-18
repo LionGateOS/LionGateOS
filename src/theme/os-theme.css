@@ -1,0 +1,82 @@
+/* =========================================================
+   LionGateOS — OS Theme (AUTHORITATIVE)
+   Phase 6.4.x — Top Bar + Workspace Header Polish
+   ========================================================= */
+
+/* =========================
+   TOP BAR
+   ========================= */
+
+.os-topbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(14,20,36,0.96),
+    rgba(8,12,22,0.98)
+  );
+
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* Active title glow */
+.os-topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #e8ebff;
+  text-shadow:
+    0 0 6px rgba(120,160,255,0.55);
+}
+
+/* =========================
+   WORKSPACE HEADER
+   ========================= */
+
+.os-workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(120,160,255,0.18),
+      rgba(40,60,120,0.08)
+    );
+
+  border: 1px solid rgba(120,160,255,0.28);
+  box-shadow:
+    0 0 0 1px rgba(120,160,255,0.22),
+    0 10px 28px rgba(0,0,0,0.55);
+}
+
+/* Workspace title */
+.os-workspace-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+/* Workspace tag */
+.os-workspace-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: rgba(120,160,255,0.18);
+  border: 1px solid rgba(120,160,255,0.45);
+  color: #e8ebff;
+
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
