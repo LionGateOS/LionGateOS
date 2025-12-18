@@ -27,31 +27,38 @@ const WorkspaceHostComponent: React.FC = () => {
     () => ({
       dashboard: {
         title: "Command Center",
-        body: "High-level overview of LionGateOS activity, shell status, and global behavior.",
+        body:
+          "High-level overview of LionGateOS activity, shell status, and global behavior.",
       },
+
       "workspace-hub": {
         title: "Workspace Hub",
-        body: "Entry point for OS workspaces, shells, and tools. Phase 6 will attach dynamic workspaces here.",
+        body:
+          "Central entry point for OS workspaces. Future applications mount here.",
       },
-      smartquote: {
-        title: "SmartQuote AI",
-        body: "Shell bridge into the SmartQuote AI application surface.",
+
+      partners: {
+        title: "Partners",
+        body:
+          "This panel confirms OS navigation is working. Partner systems, affiliates, and integrations will appear here in later phases.",
       },
-      "travel-orchestrator": {
-        title: "Travel Orchestrator",
-        body: "Shell bridge into the Travel Orchestrator experience.",
-      },
+
       settings: {
         title: "System Settings",
-        body: "Global OS configuration, preferences, and automation behavior.",
+        body:
+          "Global OS configuration, preferences, and automation behavior.",
       },
+
       "theme-engine": {
         title: "Theme Engine",
-        body: "Manage palettes, wallpapers, and style modes across LionGateOS.",
+        body:
+          "Manage palettes, wallpapers, and visual modes across LionGateOS.",
       },
+
       "shell-diagnostics": {
         title: "Shell Diagnostics",
-        body: "Phase 5 Shell health, error logs, routing, and mount status.",
+        body:
+          "Shell health, routing status, error boundaries, and system diagnostics.",
       },
     }),
     []
@@ -90,30 +97,33 @@ const WorkspaceHostComponent: React.FC = () => {
       <div key={activePanelId} className="os-workspace-panel os-animate-panel">
         <div className="os-workspace-header">
           <h1 className="os-workspace-title">{panel.title}</h1>
-          <span className="os-workspace-tag">Workspace</span>
+          <span className="os-workspace-tag">OS Panel</span>
         </div>
+
         <section className="os-workspace-body">
           <p className="os-workspace-text">{panel.body}</p>
+
           <div className="os-workspace-status-card">
             <div className="os-status-pill os-status-pill-ok">
               Shell Online
             </div>
+
             <div className="os-status-row">
-              <span className="os-status-label">Phase</span>
-              <span className="os-status-value">
-                6.3 · Workspace Keyboard Navigation + Transitions
-              </span>
+              <span className="os-status-label">Active Panel</span>
+              <span className="os-status-value">{activePanelId}</span>
             </div>
+
             <div className="os-status-row">
               <span className="os-status-label">Sidebar</span>
               <span className="os-status-value">
                 Expanded · Persistent
               </span>
             </div>
+
             <div className="os-status-row">
-              <span className="os-status-label">Protection</span>
+              <span className="os-status-label">Mode</span>
               <span className="os-status-value">
-                SECL · Error boundaries active
+                OS-only · Placeholder
               </span>
             </div>
           </div>
