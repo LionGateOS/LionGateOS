@@ -1,102 +1,102 @@
-/* =========================================================
-   LionGateOS — Sidebar Expanded UX (VISIBILITY FIX)
-   Phase 6.4.x
-   PURPOSE:
-   - Strong hover visibility
-   - Obvious active (clicked) state
-   - Zero logic changes
-   ========================================================= */
+import React, { useEffect, useMemo, useState } from "react";
 
-/* --- Base Sidebar --- */
-.os-sidebar {
-  background: linear-gradient(
-    180deg,
-    rgba(16, 20, 40, 0.96),
-    rgba(10, 14, 30, 0.98)
-  );
-  border-right: 1px solid rgba(120, 140, 255, 0.15);
-}
+type PanelConfig = {
+  title: string;
+  body: string;
+};
 
-/* --- Section labels --- */
-.os-sidebar-section-label {
-  color: rgba(180, 190, 255, 0.65);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin: 14px 12px 6px;
-}
+const STORAGE_KEY = "lgos.shell.activePanel";
+const DEFAULT_PANEL_ID = "dashboard";
 
-/* --- Sidebar item base --- */
-.os-sidebar-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+const getInitialPanelId = (): string => {
+  if (typeof window === "undefined") return DEFAULT_PANEL_ID;
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) || DEFAULT_PANEL_ID;
+  } catch {
+    return DEFAULT_PANEL_ID;
+  }
+};
 
-  padding: 9px 14px;
-  border-radius: 8px;
+const WorkspaceHostComponent: React.FC = () => {
+  const [activePanelId, setActivePanelId] = useState(getInitialPanelId);
 
-  background: transparent;
-  border: 1px solid transparent;
-
-  color: rgba(235, 240, 255, 0.85);
-  cursor: pointer;
-
-  transition:
-    background 140ms ease,
-    border-color 140ms ease,
-    box-shadow 140ms ease,
-    color 140ms ease;
-}
-
-/* =========================================================
-   HOVER — MUST BE OBVIOUS
-   ========================================================= */
-.os-sidebar-item:hover {
-  background: rgba(120, 150, 255, 0.18);
-  border-color: rgba(140, 170, 255, 0.45);
-  color: #ffffff;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(160, 190, 255, 0.25),
-    0 0 12px rgba(120, 150, 255, 0.25);
-}
-
-/* =========================================================
-   ACTIVE — MUST BE UNMISTAKABLE
-   ========================================================= */
-.os-sidebar-item-active {
-  background: linear-gradient(
-    180deg,
-    rgba(140, 170, 255, 0.28),
-    rgba(110, 140, 235, 0.22)
+  const panels = useMemo<Record<string, PanelConfig>>(
+    () => ({
+      dashboard: {
+        title: "Command Center",
+        body: "High-level overview of LionGateOS activity.",
+      },
+      "workspace-hub": {
+        title: "Workspace Hub",
+        body: "Central workspace management surface.",
+      },
+      smartquote: {
+        title: "SmartQuote AI",
+        body: "SmartQuote AI workspace.",
+      },
+      "travel-orchestrator": {
+        title: "Travel Orchestrator",
+        body: "Travel orchestration workspace.",
+      },
+      settings: {
+        title: "System Settings",
+        body: "Global OS configuration.",
+      },
+      "theme-engine": {
+        title: "Theme Engine",
+        body: "Theme and appearance control.",
+      },
+      "shell-diagnostics": {
+        title: "Shell Diagnostics",
+        body: "System diagnostics and logs.",
+      },
+    }),
+    []
   );
 
-  border-color: rgba(170, 200, 255, 0.75);
-  color: #ffffff;
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const custom = event as CustomEvent<{ routeId?: string }>;
+      if (!custom.detail?.routeId) return;
 
-  box-shadow:
-    inset 4px 0 0 rgba(170, 200, 255, 0.95),
-    0 0 18px rgba(140, 170, 255, 0.45);
-}
+      setActivePanelId(custom.detail.routeId);
+      try {
+        window.localStorage.setItem(STORAGE_KEY, custom.detail.routeId);
+      } catch {}
+    };
 
-/* Active should override hover */
-.os-sidebar-item-active:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(150, 180, 255, 0.34),
-    rgba(120, 150, 245, 0.28)
+    window.addEventListener("os-shell:navigate", handler);
+    return () => window.removeEventListener("os-shell:navigate", handler);
+  }, []);
+
+  const panel = panels[activePanelId] ?? panels[DEFAULT_PANEL_ID];
+
+  return (
+    <main className="os-workspace-host">
+      <div className="os-workspace-panel">
+        <h1>{panel.title}</h1>
+
+        {/* VERY OBVIOUS CONFIRMATION */}
+        <div
+          style={{
+            marginTop: "8px",
+            marginBottom: "16px",
+            padding: "6px 12px",
+            display: "inline-block",
+            borderRadius: "999px",
+            background: "linear-gradient(90deg,#2563eb,#60a5fa)",
+            color: "white",
+            fontWeight: 600,
+            letterSpacing: "0.04em",
+          }}
+        >
+          ACTIVE WORKSPACE
+        </div>
+
+        <p>{panel.body}</p>
+      </div>
+    </main>
   );
-}
+};
 
-/* --- Bullet indicator --- */
-.os-sidebar-bullet {
-  opacity: 0.85;
-}
-
-/* --- Label text --- */
-.os-sidebar-item-label {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+export default React.memo(WorkspaceHostComponent);
