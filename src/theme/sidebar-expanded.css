@@ -1,79 +1,102 @@
-/* LionGateOS — Sidebar Expanded (Phase 6.4)
-   Purpose: Active + Hover state harmonization
-   Scope: OS UI only (no app logic)
-*/
+/* =========================================================
+   LionGateOS — Sidebar Expanded UX (VISIBILITY FIX)
+   Phase 6.4.x
+   PURPOSE:
+   - Strong hover visibility
+   - Obvious active (clicked) state
+   - Zero logic changes
+   ========================================================= */
 
+/* --- Base Sidebar --- */
 .os-sidebar {
   background: linear-gradient(
     180deg,
-    rgba(14, 18, 40, 0.98),
-    rgba(10, 12, 28, 0.98)
+    rgba(16, 20, 40, 0.96),
+    rgba(10, 14, 30, 0.98)
   );
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(120, 140, 255, 0.15);
 }
 
-/* SECTION LABELS */
+/* --- Section labels --- */
 .os-sidebar-section-label {
-  font-size: 0.7rem;
+  color: rgba(180, 190, 255, 0.65);
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.55;
-  margin: 12px 0 6px;
+  margin: 14px 12px 6px;
 }
 
-/* SIDEBAR ITEM BASE */
+/* --- Sidebar item base --- */
 .os-sidebar-item {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 10px;
+  gap: 10px;
+
+  padding: 9px 14px;
+  border-radius: 8px;
+
   background: transparent;
-  color: rgba(220, 225, 255, 0.78);
   border: 1px solid transparent;
+
+  color: rgba(235, 240, 255, 0.85);
   cursor: pointer;
+
   transition:
-    background-color 140ms ease,
+    background 140ms ease,
     border-color 140ms ease,
     box-shadow 140ms ease,
     color 140ms ease;
 }
 
-/* HOVER STATE */
+/* =========================================================
+   HOVER — MUST BE OBVIOUS
+   ========================================================= */
 .os-sidebar-item:hover {
-  background: rgba(120, 140, 255, 0.08);
-  border-color: rgba(120, 140, 255, 0.22);
-  color: rgba(240, 245, 255, 0.95);
-}
-
-/* ACTIVE / SELECTED STATE */
-.os-sidebar-item-active {
-  background: rgba(90, 120, 255, 0.18);
-  border-color: rgba(120, 160, 255, 0.45);
+  background: rgba(120, 150, 255, 0.18);
+  border-color: rgba(140, 170, 255, 0.45);
   color: #ffffff;
+
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 12px rgba(120, 160, 255, 0.35);
+    inset 0 0 0 1px rgba(160, 190, 255, 0.25),
+    0 0 12px rgba(120, 150, 255, 0.25);
 }
 
-/* ACTIVE + HOVER (NO JUMP) */
+/* =========================================================
+   ACTIVE — MUST BE UNMISTAKABLE
+   ========================================================= */
+.os-sidebar-item-active {
+  background: linear-gradient(
+    180deg,
+    rgba(140, 170, 255, 0.28),
+    rgba(110, 140, 235, 0.22)
+  );
+
+  border-color: rgba(170, 200, 255, 0.75);
+  color: #ffffff;
+
+  box-shadow:
+    inset 4px 0 0 rgba(170, 200, 255, 0.95),
+    0 0 18px rgba(140, 170, 255, 0.45);
+}
+
+/* Active should override hover */
 .os-sidebar-item-active:hover {
-  background: rgba(100, 130, 255, 0.22);
+  background: linear-gradient(
+    180deg,
+    rgba(150, 180, 255, 0.34),
+    rgba(120, 150, 245, 0.28)
+  );
 }
 
-/* BULLET */
+/* --- Bullet indicator --- */
 .os-sidebar-bullet {
-  font-size: 0.7rem;
-  opacity: 0.6;
+  opacity: 0.85;
 }
 
-.os-sidebar-item-active .os-sidebar-bullet {
-  opacity: 1;
-}
-
-/* LABEL */
+/* --- Label text --- */
 .os-sidebar-item-label {
-  font-size: 0.85rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
