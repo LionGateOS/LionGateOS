@@ -1,102 +1,86 @@
-import React, { useEffect, useMemo, useState } from "react";
+/* =========================================================
+   LionGateOS — Sidebar Expanded (AUTHORITATIVE)
+   Phase 6.4.x — CLEAR Hover + Strong Active States
+   ========================================================= */
 
-type PanelConfig = {
-  title: string;
-  body: string;
-};
+/* Base sidebar */
+.os-sidebar-expanded {
+  background: linear-gradient(180deg, #0b1220, #060b16);
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
 
-const STORAGE_KEY = "lgos.shell.activePanel";
-const DEFAULT_PANEL_ID = "dashboard";
+/* Section labels */
+.os-sidebar-section-label {
+  color: rgba(180,190,255,0.55);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 14px 10px 6px;
+}
 
-const getInitialPanelId = (): string => {
-  if (typeof window === "undefined") return DEFAULT_PANEL_ID;
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) || DEFAULT_PANEL_ID;
-  } catch {
-    return DEFAULT_PANEL_ID;
-  }
-};
+/* Base item */
+.os-sidebar-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin: 4px 6px;
+  border-radius: 10px;
 
-const WorkspaceHostComponent: React.FC = () => {
-  const [activePanelId, setActivePanelId] = useState(getInitialPanelId);
+  background: transparent;
+  color: rgba(220,225,255,0.78);
 
-  const panels = useMemo<Record<string, PanelConfig>>(
-    () => ({
-      dashboard: {
-        title: "Command Center",
-        body: "High-level overview of LionGateOS activity.",
-      },
-      "workspace-hub": {
-        title: "Workspace Hub",
-        body: "Central workspace management surface.",
-      },
-      smartquote: {
-        title: "SmartQuote AI",
-        body: "SmartQuote AI workspace.",
-      },
-      "travel-orchestrator": {
-        title: "Travel Orchestrator",
-        body: "Travel orchestration workspace.",
-      },
-      settings: {
-        title: "System Settings",
-        body: "Global OS configuration.",
-      },
-      "theme-engine": {
-        title: "Theme Engine",
-        body: "Theme and appearance control.",
-      },
-      "shell-diagnostics": {
-        title: "Shell Diagnostics",
-        body: "System diagnostics and logs.",
-      },
-    }),
-    []
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  transition:
+    background 140ms ease,
+    box-shadow 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease,
+    transform 120ms ease;
+}
+
+/* HOVER — unmistakable */
+.os-sidebar-item:hover {
+  background: rgba(80,120,255,0.14);
+  color: #ffffff;
+  border-color: rgba(120,160,255,0.35);
+  box-shadow:
+    0 0 0 1px rgba(120,160,255,0.25),
+    0 0 18px rgba(120,160,255,0.35);
+  transform: translateX(2px);
+}
+
+/* ACTIVE — stays highlighted */
+.os-sidebar-item-active {
+  background: linear-gradient(
+    90deg,
+    rgba(120,160,255,0.35),
+    rgba(80,120,255,0.18)
   );
+  color: #ffffff;
+  border-color: rgba(140,180,255,0.55);
+  box-shadow:
+    0 0 0 1px rgba(140,180,255,0.45),
+    0 0 22px rgba(120,160,255,0.45);
+}
 
-  useEffect(() => {
-    const handler = (event: Event) => {
-      const custom = event as CustomEvent<{ routeId?: string }>;
-      if (!custom.detail?.routeId) return;
+/* Bullet / indicator */
+.os-sidebar-bullet {
+  opacity: 0.7;
+}
 
-      setActivePanelId(custom.detail.routeId);
-      try {
-        window.localStorage.setItem(STORAGE_KEY, custom.detail.routeId);
-      } catch {}
-    };
+/* Active bullet glows */
+.os-sidebar-item-active .os-sidebar-bullet {
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(140,180,255,0.9);
+}
 
-    window.addEventListener("os-shell:navigate", handler);
-    return () => window.removeEventListener("os-shell:navigate", handler);
-  }, []);
-
-  const panel = panels[activePanelId] ?? panels[DEFAULT_PANEL_ID];
-
-  return (
-    <main className="os-workspace-host">
-      <div className="os-workspace-panel">
-        <h1>{panel.title}</h1>
-
-        {/* VERY OBVIOUS CONFIRMATION */}
-        <div
-          style={{
-            marginTop: "8px",
-            marginBottom: "16px",
-            padding: "6px 12px",
-            display: "inline-block",
-            borderRadius: "999px",
-            background: "linear-gradient(90deg,#2563eb,#60a5fa)",
-            color: "white",
-            fontWeight: 600,
-            letterSpacing: "0.04em",
-          }}
-        >
-          ACTIVE WORKSPACE
-        </div>
-
-        <p>{panel.body}</p>
-      </div>
-    </main>
-  );
-};
-
-export default React.memo(WorkspaceHostComponent);
+/* Labels */
+.os-sidebar-item-label {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
