@@ -1,103 +1,74 @@
-/* LionGateOS — Sidebar Expanded State
-   Expanded sidebar behavior & tooltip UX.
-   B52: OS UX micro-polish (NON-SECURITY).
-*/
+/* =========================================================
+   B54 — Sidebar Active State Persistence & Clarity
+   File: src/theme/sidebar-expanded.css
+   PURPOSE:
+   - Hover = preview
+   - Active = stays highlighted after click
+   ========================================================= */
 
-/* =========================
-   Expanded Sidebar Container
-   ========================= */
-
-.lgos-sidebar.is-expanded {
-  width: 260px;
-  transition: width 160ms ease;
-}
-
-/* =========================
-   Collapsed Sidebar
-   ========================= */
-
-.lgos-sidebar:not(.is-expanded) {
-  width: 72px;
-  transition: width 160ms ease;
-}
-
-/* =========================
-   Nav Item Base
-   ========================= */
-
-.lgos-sidebar .lgos-nav-item {
-  position: relative;
+/* Base sidebar item */
+.os-sidebar-item {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-/* =========================
-   Label Visibility
-   ========================= */
-
-.lgos-sidebar:not(.is-expanded) .lgos-nav-label {
-  opacity: 0;
-  transform: translateX(-4px);
-  pointer-events: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(220, 230, 255, 0.75);
+  cursor: pointer;
   transition:
-    opacity 120ms ease,
-    transform 120ms ease;
+    background-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
 }
 
-.lgos-sidebar.is-expanded .lgos-nav-label {
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
+/* Hover state (temporary) */
+.os-sidebar-item:hover {
+  background: rgba(42, 184, 255, 0.08);
+  color: #e9f1ff;
+  border-color: rgba(42, 184, 255, 0.25);
 }
 
-/* =========================
-   Tooltip (Collapsed Only)
-   ========================= */
-
-.lgos-sidebar:not(.is-expanded) .lgos-nav-tooltip {
-  position: absolute;
-  left: 56px;
-  top: 50%;
-  transform: translateY(-50%) translateX(-2px);
-
-  opacity: 0;
-  pointer-events: none;
-
-  padding: 6px 10px;
-  border-radius: 999px;
-
-  font-size: 11px;
-  white-space: nowrap;
-
-  background: rgba(15, 23, 42, 0.88);
-  color: #e5edff;
-
+/* ACTIVE STATE — THIS IS THE FIX */
+.os-sidebar-item-active {
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(217, 164, 65, 0.35),
+      rgba(18, 22, 40, 0.92)
+    );
+  color: #ffffff;
+  border-color: rgba(217, 164, 65, 0.65);
   box-shadow:
-    0 0 16px rgba(42, 184, 255, 0.45),
-    0 10px 30px rgba(0, 0, 0, 0.75);
-
-  backdrop-filter: blur(18px);
-
-  transition:
-    opacity 120ms ease,
-    transform 120ms ease;
+    0 0 0 1px rgba(217, 164, 65, 0.35),
+    0 0 18px rgba(217, 164, 65, 0.45);
 }
 
-/* Reveal tooltip on hover */
-.lgos-sidebar:not(.is-expanded)
-.lgos-nav-item:hover .lgos-nav-tooltip {
+/* Prevent hover from overriding active */
+.os-sidebar-item-active:hover {
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(217, 164, 65, 0.45),
+      rgba(18, 22, 40, 0.96)
+    );
+  color: #ffffff;
+}
+
+/* Bullet indicator */
+.os-sidebar-bullet {
+  opacity: 0.6;
+}
+
+/* Active bullet stronger */
+.os-sidebar-item-active .os-sidebar-bullet {
   opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
-/* =========================
-   Safety
-   ========================= */
-
-.lgos-nav-tooltip,
-.lgos-nav-tooltip * {
-  pointer-events: none;
+/* Label */
+.os-sidebar-item-label {
+  white-space: nowrap;
 }
