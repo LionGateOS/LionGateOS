@@ -42,7 +42,10 @@ const SidebarComponent: React.FC = () => {
         label: "Apps",
         items: [
           { id: "smartquote", label: "SmartQuote AI" },
-          { id: "travel-orchestrator", label: "Travel Orchestrator" },
+          {
+            id: "travel-orchestrator",
+            label: "LionGate Travels",
+          },
         ],
       },
       {
@@ -58,10 +61,9 @@ const SidebarComponent: React.FC = () => {
     []
   );
 
-  const handleNavClick = useCallback((id: string, label: string) => {
+  const handleNavClick = useCallback((id: string) => {
     setActiveId(id);
 
-    // Persist active panel for WorkspaceHost
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(STORAGE_KEY, id);
@@ -70,7 +72,6 @@ const SidebarComponent: React.FC = () => {
       // ignore storage issues
     }
 
-    // Hybrid registration: ensure workspace exists in orchestrator
     if (id === "smartquote") {
       orchestrator.register({
         id: "smartquote",
@@ -80,17 +81,13 @@ const SidebarComponent: React.FC = () => {
     } else if (id === "travel-orchestrator") {
       orchestrator.register({
         id: "travel-orchestrator",
-        title: "Travel Orchestrator",
+        title: "LionGate Travels",
         app: "travel-orchestrator",
       });
-    } else {
-      // Core/system workspaces were pre-registered at boot by orchestrator
     }
 
-    // Sync active workspace with orchestrator
     orchestrator.activate(id);
 
-    // Notify WorkspaceHost via shell event
     const event = new CustomEvent("os-shell:navigate", {
       detail: { routeId: id },
     });
@@ -103,6 +100,7 @@ const SidebarComponent: React.FC = () => {
         <span className="os-sidebar-title">Navigation</span>
         <span className="os-sidebar-mode">Expanded</span>
       </div>
+
       <nav className="os-sidebar-nav">
         {sections.map((section) => (
           <div key={section.id} className="os-sidebar-section">
@@ -116,7 +114,7 @@ const SidebarComponent: React.FC = () => {
                       "os-sidebar-item" +
                       (activeId === item.id ? " os-sidebar-item-active" : "")
                     }
-                    onClick={() => handleNavClick(item.id, item.label)}
+                    onClick={() => handleNavClick(item.id)}
                   >
                     <span className="os-sidebar-bullet" aria-hidden="true">
                       •
