@@ -1,19 +1,15 @@
-export type NotificationLevel = "info" | "warning" | "critical";
+import {
+  pushNotification,
+  getNotifications,
+  type SystemNotification,
+} from "./notificationCenter";
 
-export type SystemNotification = {
-  id: string;
-  source: string;
-  level: NotificationLevel;
-  message: string;
-  timestamp: number;
-};
+export type { SystemNotification };
 
-const notifications: SystemNotification[] = [];
-
-export function pushNotification(n: SystemNotification) {
-  notifications.push(n);
+export function notify(n: SystemNotification) {
+  pushNotification(n);
 }
 
-export function getNotifications() {
-  return notifications;
+export function listNotifications() {
+  return getNotifications();
 }
