@@ -1,80 +1,62 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Dashboard from "../system/dashboard/Dashboard";
 
-type WorkspaceKey =
-  | "command-center"
-  | "workspace-hub"
-  | "smartquote-ai"
-  | "settings"
-  | "security-center"
-  | "unknown";
-
-type WorkspaceBean = {
+export type WorkspaceBean = {
   id: string;
-  key: WorkspaceKey;
+  key: string;
   title: string;
   route: string;
   createdAt: number;
 };
 
-const ROUTE_MAP: Array<{ prefix: string; key: WorkspaceKey; title: string; route: string }> = [
-  { prefix: "/command", key: "command-center", title: "Command Center", route: "/command" },
+const ROUTE_MAP = [
   { prefix: "/hub", key: "workspace-hub", title: "Workspace Hub", route: "/hub" },
-  { prefix: "/smartquote", key: "smartquote-ai", title: "SmartQuote AI", route: "/smartquote" },
+  { prefix: "/command", key: "command-center", title: "Command Center", route: "/command" },
+  { prefix: "/smartquote", key: "smartquote", title: "SmartQuote AI", route: "/smartquote" },
+  { prefix: "/travels", key: "travels", title: "LionGate Travels", route: "/travels" },
   { prefix: "/settings", key: "settings", title: "Settings", route: "/settings" },
-  { prefix: "/security", key: "security-center", title: "Security Center", route: "/security" },
 ];
 
-function routeToWorkspace(pathname: string): { key: WorkspaceKey; title: string; route: string } {
-  const match = ROUTE_MAP.find(
-    (r) =>
-      pathname === r.route ||
-      pathname.startsWith(r.prefix + "/") ||
-      pathname.startsWith(r.prefix + "?") ||
-      pathname.startsWith(r.prefix + "#") ||
-      pathname === r.prefix
-  );
-  if (match) return { key: match.key, title: match.title, route: match.route };
-  if (pathname === "/" || pathname === "") return { key: "workspace-hub", title: "Workspace Hub", route: "/hub" };
-  return { key: "unknown", title: "Workspace", route: pathname };
-}
-
-function stableIdFor(key: WorkspaceKey, route: string): string {
-  return key === "unknown" ? `ws:${key}:${route}` : `ws:${key}`;
+function stableIdFor(key: string, route: string) {
+  return `${key}:${route}`;
 }
 
 function addOrActivateBean(
   beans: WorkspaceBean[],
   bean: WorkspaceBean
 ): { beans: WorkspaceBean[]; activeId: string } {
-  const idx = beans.findIndex((b) => b.id === bean.id);
-  if (idx >= 0) {
-    const existing = beans[idx];
-    const updated = { ...existing, title: bean.title, route: bean.route };
-    const next = [...beans.slice(0, idx), updated, ...beans.slice(idx + 1)];
-    return { beans: next, activeId: updated.id };
+  const existing = beans.find((b) => b.id === bean.id);
+  if (existing) {
+    return { beans, activeId: existing.id };
   }
   return { beans: [...beans, bean], activeId: bean.id };
 }
 
-export default function WorkspaceHost(): JSX.Element {
+export default function WorkspaceHost() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [beans, setBeans] = useState<WorkspaceBean[]>(() => []);
-  const [activeId, setActiveId] = useState<string>("");
+  const [beans, setBeans] = useState<WorkspaceBean[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-  const current = useMemo(() => routeToWorkspace(location.pathname), [location.pathname]);
+  const lastRouteRef = useRef<string | null>(null);
 
+  const current = useMemo(() => {
+    return ROUTE_MAP.find((r) => location.pathname.startsWith(r.prefix)) ?? null;
+  }, [location.pathname]);
+
+  /**
+   * CORE ROUTE → WORKSPACE SYNC
+   * This keeps navigation and workspace beans aligned.
+   */
   useEffect(() => {
-    // Force a real workspace on first load so the Outlet can render.
-    if (location.pathname === "/") {
-      navigate("/hub", { replace: true });
-      return;
-    }
+    if (!current) return;
+    if (lastRouteRef.current === current.route) return;
+
+    lastRouteRef.current = current.route;
 
     const id = stableIdFor(current.key, current.route);
+
     const bean: WorkspaceBean = {
       id,
       key: current.key,
@@ -88,70 +70,90 @@ export default function WorkspaceHost(): JSX.Element {
       setActiveId(nextActive);
       return nextBeans;
     });
-  }, [current.key, current.route, current.title, location.pathname, navigate]);
+  }, [current]);
 
-  const activate = (id: string) => {
-    const bean = beans.find((b) => b.id === id);
-    if (!bean) return;
-    setActiveId(id);
-    if (location.pathname !== bean.route) navigate(bean.route);
+  /**
+   * STEP 12 — OS-NATIVE WORKSPACE OPEN
+   * This is the single, authoritative way for the OS (including Dashboard)
+   * to open or focus a workspace.
+   */
+  const openWorkspaceByRoute = (route: string) => {
+    const def = ROUTE_MAP.find((r) => r.route === route);
+    if (!def) return;
+
+    const id = stableIdFor(def.key, def.route);
+
+    setBeans((prev) => {
+      const bean: WorkspaceBean = {
+        id,
+        key: def.key,
+        title: def.title,
+        route: def.route,
+        createdAt: Date.now(),
+      };
+
+      const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
+      setActiveId(nextActive);
+      return nextBeans;
+    });
+
+    if (location.pathname !== def.route) {
+      navigate(def.route);
+    }
   };
 
-  const close = (id: string) => {
+  /**
+   * CLOSE WORKSPACE
+   */
+  const closeWorkspace = (id: string) => {
     setBeans((prev) => {
-      const idx = prev.findIndex((b) => b.id === id);
-      if (idx < 0) return prev;
+      const next = prev.filter((b) => b.id !== id);
 
-      const next = [...prev.slice(0, idx), ...prev.slice(idx + 1)];
-      if (id === activeId) {
-        const fallback = next[idx - 1] ?? next[idx] ?? next[next.length - 1];
-        const nextActive = fallback?.id ?? "";
-        setActiveId(nextActive);
-        if (fallback && location.pathname !== fallback.route) navigate(fallback.route);
+      if (activeId === id) {
+        const fallback = next[next.length - 1];
+        if (fallback) {
+          setActiveId(fallback.id);
+          navigate(fallback.route);
+        } else {
+          setActiveId(null);
+          navigate("/hub");
+        }
       }
+
       return next;
     });
   };
 
+  /**
+   * ACTIVATE WORKSPACE
+   */
+  const activateWorkspace = (id: string) => {
+    const bean = beans.find((b) => b.id === id);
+    if (!bean) return;
+    setActiveId(id);
+    navigate(bean.route);
+  };
+
   return (
-    <div className="lg-workspace-host">
-      <div className="lg-topbar">
-        <div className="lg-topbar-beans" role="tablist" aria-label="Workspaces">
-          {beans.map((b) => {
-            const isActive = b.id === activeId;
-            return (
-              <button
-                key={b.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                className={isActive ? "lg-bean lg-bean--active" : "lg-bean"}
-                onClick={() => activate(b.id)}
-                title={b.title}
-              >
-                <span className={isActive ? "lg-bean-dot lg-bean-dot--active" : "lg-bean-dot"} aria-hidden="true" />
-                <span className="lg-bean-title">{b.title}</span>
-                <span className="lg-bean-spacer" aria-hidden="true" />
-                <span
-                  className="lg-bean-close"
-                  role="button"
-                  aria-label={`Close ${b.title}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    close(b.id);
-                  }}
-                >
-                  ×
-                </span>
-              </button>
-            );
-          })}
-        </div>
-        <div className="lg-topbar-fade" aria-hidden="true" />
+    <div className="workspace-host">
+      {/* TOP BAR BEANS */}
+      <div className="workspace-beans">
+        {beans.map((b) => (
+          <div
+            key={b.id}
+            className={`workspace-bean ${b.id === activeId ? "active" : ""}`}
+            onClick={() => activateWorkspace(b.id)}
+          >
+            <span className="dot" />
+            <span className="title">{b.title}</span>
+            <button onClick={() => closeWorkspace(b.id)}>×</button>
+          </div>
+        ))}
       </div>
 
-      <div className="lg-workspace-content">
-        {current.key === "workspace-hub" ? <Dashboard /> : <Outlet />}
+      {/* WORKSPACE CONTENT */}
+      <div className="workspace-content">
+        <Outlet context={{ openWorkspaceByRoute }} />
       </div>
     </div>
   );
