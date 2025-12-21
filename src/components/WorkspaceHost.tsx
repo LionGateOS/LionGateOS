@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+  setWorkspaceStatus,
+  getWorkspaceStatus,
+} from "../system/workspaceStatus";
 
 export type WorkspaceBean = {
   id: string;
@@ -46,8 +50,7 @@ export default function WorkspaceHost() {
   }, [location.pathname]);
 
   /**
-   * CORE ROUTE → WORKSPACE SYNC
-   * This keeps navigation and workspace beans aligned.
+   * ROUTE → WORKSPACE SYNC
    */
   useEffect(() => {
     if (!current) return;
@@ -68,14 +71,13 @@ export default function WorkspaceHost() {
     setBeans((prev) => {
       const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
       setActiveId(nextActive);
+      setWorkspaceStatus(current.key, "active");
       return nextBeans;
     });
   }, [current]);
 
   /**
-   * STEP 12 — OS-NATIVE WORKSPACE OPEN
-   * This is the single, authoritative way for the OS (including Dashboard)
-   * to open or focus a workspace.
+   * OS-NATIVE WORKSPACE OPEN
    */
   const openWorkspaceByRoute = (route: string) => {
     const def = ROUTE_MAP.find((r) => r.route === route);
@@ -94,6 +96,7 @@ export default function WorkspaceHost() {
 
       const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
       setActiveId(nextActive);
+      setWorkspaceStatus(def.key, "active");
       return nextBeans;
     });
 
@@ -107,12 +110,18 @@ export default function WorkspaceHost() {
    */
   const closeWorkspace = (id: string) => {
     setBeans((prev) => {
+      const closing = prev.find((b) => b.id === id);
+      if (closing) {
+        setWorkspaceStatus(closing.key, "idle");
+      }
+
       const next = prev.filter((b) => b.id !== id);
 
       if (activeId === id) {
         const fallback = next[next.length - 1];
         if (fallback) {
           setActiveId(fallback.id);
+          setWorkspaceStatus(fallback.key, "active");
           navigate(fallback.route);
         } else {
           setActiveId(null);
@@ -130,7 +139,9 @@ export default function WorkspaceHost() {
   const activateWorkspace = (id: string) => {
     const bean = beans.find((b) => b.id === id);
     if (!bean) return;
+
     setActiveId(id);
+    setWorkspaceStatus(bean.key, "active");
     navigate(bean.route);
   };
 
