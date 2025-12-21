@@ -2,28 +2,28 @@ import React from "react";
 import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import WorkspaceHost from "./components/WorkspaceHost";
-import WorkspaceSwitcher from "./components/WorkspaceSwitcher";
-import KeyboardNavigator from "./components/KeyboardNavigator";
-import ErrorBoundary from "./components/ErrorBoundary";
 
-const App: React.FC = () => {
+export default function App(): JSX.Element {
   return (
-    <ErrorBoundary>
-      <div className="os-root os-phase-6-3">
-        <Topbar />
-        <KeyboardNavigator />
-        <WorkspaceSwitcher />
-        <div className="os-main">
-          <ErrorBoundary>
-            <Sidebar />
-          </ErrorBoundary>
-          <ErrorBoundary>
-            <WorkspaceHost />
-          </ErrorBoundary>
-        </div>
-      </div>
-    </ErrorBoundary>
-  );
-};
+    <div className="app-shell">
+      <div className="app-shell-surface">
+        <header className="app-topbar">
+          <Topbar />
+        </header>
 
-export default App;
+        <aside className="app-sidebar" aria-label="System Sidebar">
+          <Sidebar />
+        </aside>
+
+        {/* Lower strip is intentionally de-emphasized in STEP 1; beans live in the top bar now. */}
+        <main className="app-main">
+          <div className="app-main-inner" aria-label="LionGateOS Workspace">
+            <div className="app-main-scroll">
+              <WorkspaceHost />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}

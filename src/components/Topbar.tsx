@@ -1,5 +1,5 @@
-
 import React from "react";
+import WorkspaceSwitcher from "./WorkspaceSwitcher";
 
 const Topbar: React.FC = () => {
   return (
@@ -10,9 +10,14 @@ const Topbar: React.FC = () => {
         <div className="os-topbar-text">
           <span className="os-topbar-title">LionGateOS Shell</span>
           <span className="os-topbar-subtitle">
-            Phase 6.3 · Workspace Keyboard Navigation
+            Workspaces · Top Bar Beans Restored
           </span>
         </div>
+      </div>
+
+      {/* PRIMARY: Workspace beans live in the TOP BAR */}
+      <div className="os-topbar-center" aria-label="Workspace Tabs">
+        <WorkspaceSwitcher />
       </div>
 
       <div className="os-topbar-right">
