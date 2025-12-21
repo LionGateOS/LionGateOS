@@ -6,6 +6,24 @@ export type AppRegistration = {
   defaultRoute: string;
 };
 
+export type SystemRegistration = {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  defaultRoute: string;
+};
+
+export const SYSTEM_REGISTRY: SystemRegistration[] = [
+  {
+    id: "hub",
+    name: "Workspace Hub",
+    icon: "🧭",
+    description: "Central dashboard and workspace launcher.",
+    defaultRoute: "/hub",
+  },
+];
+
 export const APP_REGISTRY: AppRegistration[] = [
   {
     id: "smartquote",

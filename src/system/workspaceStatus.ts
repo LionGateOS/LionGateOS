@@ -20,3 +20,7 @@ export function getWorkspaceStatus(
 ): WorkspaceStatus {
   return statusMap[workspaceKey] ?? "idle";
 }
+
+export function getWorkspaceStatusForId(appId: string): WorkspaceStatus {
+  return getWorkspaceStatus(appId);
+}
