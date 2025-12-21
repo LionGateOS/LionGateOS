@@ -1,192 +1,169 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { APP_REGISTRY, SYSTEM_REGISTRY } from "../system/appRegistry";
-import { setWorkspaceStatus } from "../system/workspaceStatus";
+import Dashboard from "../system/dashboard/Dashboard";
 
-type Bean = {
+type WorkspaceKey =
+  | "command-center"
+  | "workspace-hub"
+  | "smartquote-ai"
+  | "settings"
+  | "security-center"
+  | "unknown";
+
+type WorkspaceBean = {
   id: string;
-  key: string;
+  key: WorkspaceKey;
   title: string;
   route: string;
   createdAt: number;
 };
 
-function stableId(key: string, route: string) {
-  return `${key}:${route}`;
+const ROUTE_MAP: Array<{ prefix: string; key: WorkspaceKey; title: string; route: string }> = [
+  { prefix: "/command", key: "command-center", title: "Command Center", route: "/command" },
+  { prefix: "/hub", key: "workspace-hub", title: "Workspace Hub", route: "/hub" },
+  { prefix: "/smartquote", key: "smartquote-ai", title: "SmartQuote AI", route: "/smartquote" },
+  { prefix: "/settings", key: "settings", title: "Settings", route: "/settings" },
+  { prefix: "/security", key: "security-center", title: "Security Center", route: "/security" },
+];
+
+function routeToWorkspace(pathname: string): { key: WorkspaceKey; title: string; route: string } {
+  const match = ROUTE_MAP.find(
+    (r) =>
+      pathname === r.route ||
+      pathname.startsWith(r.prefix + "/") ||
+      pathname.startsWith(r.prefix + "?") ||
+      pathname.startsWith(r.prefix + "#") ||
+      pathname === r.prefix
+  );
+  if (match) return { key: match.key, title: match.title, route: match.route };
+  if (pathname === "/" || pathname === "") return { key: "workspace-hub", title: "Workspace Hub", route: "/hub" };
+  return { key: "unknown", title: "Workspace", route: pathname };
 }
 
-function getRouteDef(pathname: string) {
-  const defs = [...SYSTEM_REGISTRY, ...APP_REGISTRY];
-  // pick the first whose defaultRoute is a prefix match
-  return defs.find((d) => pathname === d.defaultRoute || pathname.startsWith(d.defaultRoute + "/")) ?? null;
+function stableIdFor(key: WorkspaceKey, route: string): string {
+  return key === "unknown" ? `ws:${key}:${route}` : `ws:${key}`;
 }
 
-function markActive(key: string) {
-  // Keep it simple: mark all known keys idle, then mark one active.
-  for (const a of APP_REGISTRY) setWorkspaceStatus(a.id, "idle");
-  for (const s of SYSTEM_REGISTRY) setWorkspaceStatus(s.id, "idle");
-  setWorkspaceStatus(key, "active");
+function addOrActivateBean(
+  beans: WorkspaceBean[],
+  bean: WorkspaceBean
+): { beans: WorkspaceBean[]; activeId: string } {
+  const idx = beans.findIndex((b) => b.id === bean.id);
+  if (idx >= 0) {
+    const existing = beans[idx];
+    const updated = { ...existing, title: bean.title, route: bean.route };
+    const next = [...beans.slice(0, idx), updated, ...beans.slice(idx + 1)];
+    return { beans: next, activeId: updated.id };
+  }
+  return { beans: [...beans, bean], activeId: bean.id };
 }
 
-export default function WorkspaceHost() {
+export default function WorkspaceHost(): JSX.Element {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [beans, setBeans] = useState<Bean[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [beans, setBeans] = useState<WorkspaceBean[]>(() => []);
+  const [activeId, setActiveId] = useState<string>("");
 
-  const lastPathRef = useRef<string>("");
-
-  const current = useMemo(() => getRouteDef(location.pathname), [location.pathname]);
+  const current = useMemo(() => routeToWorkspace(location.pathname), [location.pathname]);
 
   useEffect(() => {
-    if (!current) return;
-    if (lastPathRef.current === current.defaultRoute) return;
-    lastPathRef.current = current.defaultRoute;
-
-    const id = stableId(current.id, current.defaultRoute);
-    const bean: Bean = {
-      id,
-      key: current.id,
-      title: current.name,
-      route: current.defaultRoute,
-      createdAt: Date.now(),
-    };
-
-    setBeans((prev) => {
-      const exists = prev.some((b) => b.id === id);
-      const next = exists ? prev : [...prev, bean];
-      setActiveId(id);
-      markActive(current.id);
-      return next;
-    });
-  }, [current]);
-
-  const openWorkspaceByRoute = (route: string) => {
-    const defs = [...SYSTEM_REGISTRY, ...APP_REGISTRY];
-    const def = defs.find((d) => d.defaultRoute === route) ?? null;
-    if (!def) return;
-
-    const id = stableId(def.id, def.defaultRoute);
-    const bean: Bean = {
-      id,
-      key: def.id,
-      title: def.name,
-      route: def.defaultRoute,
-      createdAt: Date.now(),
-    };
-
-    setBeans((prev) => {
-      const exists = prev.some((b) => b.id === id);
-      const next = exists ? prev : [...prev, bean];
-      setActiveId(id);
-      markActive(def.id);
-      return next;
-    });
-
-    if (location.pathname !== def.defaultRoute) {
-      navigate(def.defaultRoute);
+    // Force a real workspace on first load so the Outlet can render.
+    if (location.pathname === "/") {
+      navigate("/hub", { replace: true });
+      return;
     }
-  };
+
+    const id = stableIdFor(current.key, current.route);
+    const bean: WorkspaceBean = {
+      id,
+      key: current.key,
+      title: current.title,
+      route: current.route,
+      createdAt: Date.now(),
+    };
+
+    setBeans((prev) => {
+      const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
+      setActiveId(nextActive);
+      return nextBeans;
+    });
+  }, [current.key, current.route, current.title, location.pathname, navigate]);
 
   const activate = (id: string) => {
     const bean = beans.find((b) => b.id === id);
     if (!bean) return;
     setActiveId(id);
-    markActive(bean.key);
-    navigate(bean.route);
+    if (location.pathname !== bean.route) navigate(bean.route);
   };
 
   const close = (id: string) => {
     setBeans((prev) => {
-      const next = prev.filter((b) => b.id !== id);
-      const closingWasActive = activeId === id;
+      const idx = prev.findIndex((b) => b.id === id);
+      if (idx < 0) return prev;
 
-      if (!closingWasActive) return next;
+      const next = [...prev.slice(0, idx), ...prev.slice(idx + 1)];
 
-      const fallback = next[next.length - 1] ?? null;
-      if (fallback) {
-        setActiveId(fallback.id);
-        markActive(fallback.key);
-        navigate(fallback.route);
-      } else {
-        // Always fall back to hub to prevent empty shell.
-        setActiveId(null);
-        markActive("hub");
-        navigate("/hub");
+      // Safety: never allow the UI to end up with zero workspaces.
+      // If the last bean is closed, fall back to Workspace Hub.
+      if (next.length === 0) {
+        const hub: WorkspaceBean = { id: "hub", label: "Workspace Hub", route: "/hub", kind: "core" };
+        setActiveId("hub");
+        if (location.pathname !== "/hub") navigate("/hub");
+        return [hub];
+      }
+
+      if (id === activeId) {
+        const fallback = next[idx - 1] ?? next[idx] ?? next[next.length - 1];
+        const nextActive = fallback?.id ?? "hub";
+        setActiveId(nextActive);
+
+        const targetRoute = fallback?.route ?? "/hub";
+        if (location.pathname !== targetRoute) navigate(targetRoute);
       }
       return next;
     });
   };
 
   return (
-    <div className="lgos-shell" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <div
-        className="lgos-topbar-beans"
-        style={{
-          display: "flex",
-          gap: 8,
-          padding: "10px 12px",
-          alignItems: "center",
-          borderBottom: "1px solid rgba(255,255,255,0.10)",
-          background: "rgba(0,0,0,0.10)",
-          overflowX: "auto",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {beans.map((b) => (
-          <div
-            key={b.id}
-            onClick={() => activate(b.id)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "6px 10px",
-              borderRadius: 999,
-              cursor: "pointer",
-              border: b.id === activeId ? "1px solid rgba(255,255,255,0.22)" : "1px solid rgba(255,255,255,0.12)",
-              background: b.id === activeId ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)",
-              color: "rgba(255,255,255,0.92)",
-              userSelect: "none",
-            }}
-            title={b.route}
-          >
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: b.id === activeId ? "#22c55e" : "rgba(255,255,255,0.35)",
-              }}
-            />
-            <span style={{ fontSize: 12, fontWeight: 700 }}>{b.title}</span>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                close(b.id);
-              }}
-              aria-label={`Close ${b.title}`}
-              style={{
-                border: "none",
-                background: "transparent",
-                color: "rgba(255,255,255,0.70)",
-                fontSize: 14,
-                lineHeight: 1,
-                cursor: "pointer",
-                padding: 0,
-                marginLeft: 2,
-              }}
-            >
-              ×
-            </button>
-          </div>
-        ))}
+    <div className="lg-workspace-host">
+      <div className="lg-topbar">
+        <div className="lg-topbar-beans" role="tablist" aria-label="Workspaces">
+          {beans.map((b) => {
+            const isActive = b.id === activeId;
+            return (
+              <button
+                key={b.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={isActive ? "lg-bean lg-bean--active" : "lg-bean"}
+                onClick={() => activate(b.id)}
+                title={b.title}
+              >
+                <span className={isActive ? "lg-bean-dot lg-bean-dot--active" : "lg-bean-dot"} aria-hidden="true" />
+                <span className="lg-bean-title">{b.title}</span>
+                <span className="lg-bean-spacer" aria-hidden="true" />
+                <span
+                  className="lg-bean-close"
+                  role="button"
+                  aria-label={`Close ${b.title}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    close(b.id);
+                  }}
+                >
+                  ×
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="lg-topbar-fade" aria-hidden="true" />
       </div>
 
-      <div style={{ flex: 1, minHeight: 0 }}>
-        <Outlet context={{ openWorkspaceByRoute }} />
+      <div className="lg-workspace-content">
+        {current.key === "workspace-hub" ? <Dashboard /> : <Outlet />}
       </div>
     </div>
   );
