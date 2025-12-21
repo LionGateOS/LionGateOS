@@ -1,63 +1,148 @@
-/* STEP 5 — UI POLISH */
-/* Global text rhythm */
-body {
-  line-height: 1.45;
+/*
+  LionGateOS — OS Theme Layer
+  STEP 1C: Ensure TOP BAR workspace beans are visible and primary.
+*/
+
+:root{
+  --lg-topbar-h: 44px;
+  --lg-bean-h: 30px;
+  --lg-bean-radius: 999px;
+
+  --lg-surface-0: rgba(8, 12, 18, 1);
+  --lg-surface-1: rgba(14, 20, 30, 1);
+  --lg-surface-2: rgba(22, 30, 44, 1);
+
+  --lg-border-1: rgba(255, 255, 255, 0.08);
+  --lg-border-2: rgba(255, 255, 255, 0.12);
+
+  --lg-text-1: rgba(255, 255, 255, 0.92);
+  --lg-text-2: rgba(255, 255, 255, 0.72);
+
+  --lg-accent: rgba(88, 166, 255, 1);
 }
 
-/* Sidebar */
-.os-sidebar {
-  padding: 12px 10px;
-}
-
-.os-sidebar h3,
-.os-sidebar .section-title {
-  display: block;
-  margin: 14px 8px 6px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: rgba(200,210,230,0.6);
-}
-
-.os-sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 10px 0;
-}
-
-.os-sidebar li {
-  margin: 6px 0;
-}
-
-.os-sidebar button,
-.os-sidebar a {
-  display: block;
+.lg-workspace-host{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
   width: 100%;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  color: rgba(235,240,255,0.9);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: var(--lg-surface-0);
 }
 
-.os-sidebar button:hover,
-.os-sidebar a:hover {
-  background: rgba(255,255,255,0.08);
+.lg-topbar{
+  position: relative;
+  height: var(--lg-topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: linear-gradient(180deg, var(--lg-surface-1), var(--lg-surface-0));
+  border-bottom: 1px solid var(--lg-border-1);
+  overflow: hidden;
+  flex: 0 0 auto;
 }
 
-/* Top bar beans */
-.os-topbar-bean {
-  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-  border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(240,245,255,0.95);
-  padding: 6px 12px;
+.lg-topbar-beans{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 6px 2px;
+  flex: 1 1 auto;
+  scrollbar-width: none;
+}
+.lg-topbar-beans::-webkit-scrollbar{ display: none; }
+
+.lg-topbar-fade{
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 28px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,0), var(--lg-surface-0));
+}
+
+.lg-bean{
+  height: var(--lg-bean-h);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border-radius: var(--lg-bean-radius);
+  border: 1px solid var(--lg-border-1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--lg-text-2);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  max-width: 240px;
+}
+
+.lg-bean:hover{
+  border-color: var(--lg-border-2);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--lg-text-1);
+}
+
+.lg-bean--active{
+  border-color: rgba(88, 166, 255, 0.35);
+  background: linear-gradient(180deg, rgba(88, 166, 255, 0.18), rgba(255, 255, 255, 0.03));
+  color: var(--lg-text-1);
+  box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.08) inset;
+}
+
+.lg-bean-title{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+.lg-bean-dot{
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
+  background: rgba(88, 166, 255, 0.28);
+  box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.25) inset;
+  flex: 0 0 auto;
+}
+.lg-bean-dot--active{
+  background: var(--lg-accent);
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.35);
 }
 
-.os-topbar-bean.inactive {
-  opacity: 0.75;
+.lg-bean-spacer{
+  flex: 1 1 auto;
+  min-width: 6px;
 }
 
-.os-topbar-bean.active {
-  box-shadow: 0 0 0 1px rgba(120,160,255,0.6);
+.lg-bean-close{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  line-height: 1;
+  font-size: 16px;
+}
+
+.lg-bean-close:hover{
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.lg-workspace-content{
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  background: var(--lg-surface-0);
 }
