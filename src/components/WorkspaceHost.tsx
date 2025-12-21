@@ -1,80 +1,158 @@
 import React, { useEffect, useMemo, useState } from "react";
-import orchestrator from "./WorkspaceOrchestrator";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Dashboard from "../system/dashboard/Dashboard";
 
-// Existing views in this codebase are JSX.
-// allowJs is enabled in tsconfig for compatibility.
-import HomeView from "../views/HomeView.jsx";
-import SmartQuoteAIView from "../views/SmartQuoteAIView.jsx";
-import SettingsView from "../views/SettingsView.jsx";
-import SecurityCenterView from "../views/SecurityCenterView.jsx";
-import SystemLogsView from "../views/SystemLogsView.jsx";
-import TravelOrchestratorView from "../views/TravelOrchestratorView.jsx";
-import DocsView from "../views/DocsView.jsx";
-import AppStoreView from "../views/AppStoreView.jsx";
+type WorkspaceKey =
+  | "command-center"
+  | "workspace-hub"
+  | "smartquote-ai"
+  | "settings"
+  | "security-center"
+  | "unknown";
 
-type ViewComponent = React.ComponentType;
-
-const VIEW_MAP: Record<string, ViewComponent> = {
-  dashboard: HomeView,
-  "workspace-hub": HomeView,
-
-  smartquote: SmartQuoteAIView,
-
-  settings: SettingsView,
-
-  "security-center": SecurityCenterView,
-
-  system: SystemLogsView,
-  "shell-diagnostics": SystemLogsView,
-
-  "travel-orchestrator": TravelOrchestratorView,
-
-  apps: AppStoreView,
-  core: DocsView,
+type WorkspaceBean = {
+  id: string;
+  key: WorkspaceKey;
+  title: string;
+  route: string;
+  createdAt: number;
 };
 
-const FallbackView: React.FC<{ id: string }> = ({ id }) => (
-  <div style={{ padding: 16, color: "rgba(255,255,255,0.92)" }}>
-    <h2 style={{ margin: "0 0 8px 0", fontSize: 18 }}>Workspace</h2>
-    <div style={{ opacity: 0.82, fontSize: 14 }}>
-      No view is mapped for workspace id: <b>{id}</b>
-    </div>
-  </div>
-);
+const ROUTE_MAP: Array<{ prefix: string; key: WorkspaceKey; title: string; route: string }> = [
+  { prefix: "/command", key: "command-center", title: "Command Center", route: "/command" },
+  { prefix: "/hub", key: "workspace-hub", title: "Workspace Hub", route: "/hub" },
+  { prefix: "/smartquote", key: "smartquote-ai", title: "SmartQuote AI", route: "/smartquote" },
+  { prefix: "/settings", key: "settings", title: "Settings", route: "/settings" },
+  { prefix: "/security", key: "security-center", title: "Security Center", route: "/security" },
+];
+
+function routeToWorkspace(pathname: string): { key: WorkspaceKey; title: string; route: string } {
+  const match = ROUTE_MAP.find(
+    (r) =>
+      pathname === r.route ||
+      pathname.startsWith(r.prefix + "/") ||
+      pathname.startsWith(r.prefix + "?") ||
+      pathname.startsWith(r.prefix + "#") ||
+      pathname === r.prefix
+  );
+  if (match) return { key: match.key, title: match.title, route: match.route };
+  if (pathname === "/" || pathname === "") return { key: "workspace-hub", title: "Workspace Hub", route: "/hub" };
+  return { key: "unknown", title: "Workspace", route: pathname };
+}
+
+function stableIdFor(key: WorkspaceKey, route: string): string {
+  return key === "unknown" ? `ws:${key}:${route}` : `ws:${key}`;
+}
+
+function addOrActivateBean(
+  beans: WorkspaceBean[],
+  bean: WorkspaceBean
+): { beans: WorkspaceBean[]; activeId: string } {
+  const idx = beans.findIndex((b) => b.id === bean.id);
+  if (idx >= 0) {
+    const existing = beans[idx];
+    const updated = { ...existing, title: bean.title, route: bean.route };
+    const next = [...beans.slice(0, idx), updated, ...beans.slice(idx + 1)];
+    return { beans: next, activeId: updated.id };
+  }
+  return { beans: [...beans, bean], activeId: bean.id };
+}
 
 export default function WorkspaceHost(): JSX.Element {
-  const [tick, setTick] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [beans, setBeans] = useState<WorkspaceBean[]>(() => []);
+  const [activeId, setActiveId] = useState<string>("");
+
+  const current = useMemo(() => routeToWorkspace(location.pathname), [location.pathname]);
 
   useEffect(() => {
-    // Subscribe to orchestrator changes; it provides subscribe(), not on().
-    const unsub = orchestrator.subscribe(() => setTick((t) => t + 1));
-
-    // Ensure we always have a visible default workspace so the UI never loads blank.
-    const active = orchestrator.getActiveId();
-    const open = orchestrator.getOpen();
-    if (!active) {
-      // Prefer dashboard; this matches orchestrator fallback logic.
-      orchestrator.register({ id: "dashboard", title: "Workspace Hub", app: "workspace-hub" });
-      orchestrator.activate("dashboard");
-    } else if (!open.find((w) => w.id === active)) {
-      // Active exists but isn't in list; repair.
-      orchestrator.register({ id: active, title: "Workspace", app: active });
+    // Force a real workspace on first load so the Outlet can render.
+    if (location.pathname === "/") {
+      navigate("/hub", { replace: true });
+      return;
     }
 
-    return unsub;
-  }, []);
+    const id = stableIdFor(current.key, current.route);
+    const bean: WorkspaceBean = {
+      id,
+      key: current.key,
+      title: current.title,
+      route: current.route,
+      createdAt: Date.now(),
+    };
 
-  const activeId = orchestrator.getActiveId() || "dashboard";
+    setBeans((prev) => {
+      const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
+      setActiveId(nextActive);
+      return nextBeans;
+    });
+  }, [current.key, current.route, current.title, location.pathname, navigate]);
 
-  const ActiveView = useMemo(() => {
-    const View = VIEW_MAP[activeId];
-    if (View) return View;
-    return () => <FallbackView id={activeId} />;
-  }, [activeId, tick]);
+  const activate = (id: string) => {
+    const bean = beans.find((b) => b.id === id);
+    if (!bean) return;
+    setActiveId(id);
+    if (location.pathname !== bean.route) navigate(bean.route);
+  };
+
+  const close = (id: string) => {
+    setBeans((prev) => {
+      const idx = prev.findIndex((b) => b.id === id);
+      if (idx < 0) return prev;
+
+      const next = [...prev.slice(0, idx), ...prev.slice(idx + 1)];
+      if (id === activeId) {
+        const fallback = next[idx - 1] ?? next[idx] ?? next[next.length - 1];
+        const nextActive = fallback?.id ?? "";
+        setActiveId(nextActive);
+        if (fallback && location.pathname !== fallback.route) navigate(fallback.route);
+      }
+      return next;
+    });
+  };
 
   return (
-    <div className="os-workspace-host" aria-label="Workspace Host">
-      <ActiveView />
+    <div className="lg-workspace-host">
+      <div className="lg-topbar">
+        <div className="lg-topbar-beans" role="tablist" aria-label="Workspaces">
+          {beans.map((b) => {
+            const isActive = b.id === activeId;
+            return (
+              <button
+                key={b.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={isActive ? "lg-bean lg-bean--active" : "lg-bean"}
+                onClick={() => activate(b.id)}
+                title={b.title}
+              >
+                <span className={isActive ? "lg-bean-dot lg-bean-dot--active" : "lg-bean-dot"} aria-hidden="true" />
+                <span className="lg-bean-title">{b.title}</span>
+                <span className="lg-bean-spacer" aria-hidden="true" />
+                <span
+                  className="lg-bean-close"
+                  role="button"
+                  aria-label={`Close ${b.title}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    close(b.id);
+                  }}
+                >
+                  ×
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="lg-topbar-fade" aria-hidden="true" />
+      </div>
+
+      <div className="lg-workspace-content">
+        {current.key === "workspace-hub" ? <Dashboard /> : <Outlet />}
+      </div>
     </div>
   );
 }
