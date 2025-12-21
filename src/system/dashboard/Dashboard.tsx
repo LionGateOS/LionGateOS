@@ -1,22 +1,31 @@
 import React, { useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { APP_REGISTRY } from "../appRegistry";
-import AppTile, { AppStatus } from "./AppTile";
+import AppTile from "./AppTile";
+import { getWorkspaceStatus } from "../workspaceStatus";
 
-function statusForRoute(currentPath: string, route: string): AppStatus {
-  if (currentPath === route || currentPath.startsWith(route + "/")) return "Active";
-  return "Idle";
-}
+type OutletCtx = {
+  openWorkspaceByRoute: (route: string) => void;
+};
 
 export default function Dashboard(): JSX.Element {
-  const navigate = useNavigate();
+  const { openWorkspaceByRoute } = useOutletContext<OutletCtx>();
   const location = useLocation();
 
   const tiles = useMemo(() => {
-    return APP_REGISTRY.map((app) => ({
-      app,
-      status: statusForRoute(location.pathname, app.defaultRoute),
-    }));
+    return APP_REGISTRY.map((app) => {
+      const status = getWorkspaceStatus(app.id);
+
+      return {
+        app,
+        status:
+          status === "active"
+            ? "Active"
+            : status === "attention"
+              ? "Needs attention"
+              : "Idle",
+      };
+    });
   }, [location.pathname]);
 
   return (
@@ -26,7 +35,7 @@ export default function Dashboard(): JSX.Element {
           Central Dashboard
         </div>
         <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 13, marginTop: 4 }}>
-          Open apps into OS workspaces. Status is advisory only.
+          Open apps into OS workspaces. Status is managed by the system.
         </div>
       </div>
 
@@ -42,7 +51,7 @@ export default function Dashboard(): JSX.Element {
             key={app.id}
             app={app}
             status={status}
-            onOpen={() => navigate(app.defaultRoute)}
+            onOpen={() => openWorkspaceByRoute(app.defaultRoute)}
           />
         ))}
       </div>
@@ -58,7 +67,7 @@ export default function Dashboard(): JSX.Element {
           fontSize: 12,
         }}
       >
-        Alerts summary (Phase 1 placeholder).
+        Status indicators are OS-owned. Alerts and notifications will surface here in a later step.
       </div>
     </div>
   );

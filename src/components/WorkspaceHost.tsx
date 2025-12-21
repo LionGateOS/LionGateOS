@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import {
-  setWorkspaceStatus,
-  getWorkspaceStatus,
-} from "../system/workspaceStatus";
+import { setWorkspaceStatus } from "../system/workspaceStatus";
 
 export type WorkspaceBean = {
   id: string;
@@ -36,6 +33,15 @@ function addOrActivateBean(
   return { beans: [...beans, bean], activeId: bean.id };
 }
 
+function applyStatuses(nextBeans: WorkspaceBean[], activeKey: string | null) {
+  // Mark everything idle first (unique keys)
+  const keys = Array.from(new Set(nextBeans.map((b) => b.key)));
+  for (const k of keys) setWorkspaceStatus(k, "idle");
+
+  // Then mark active
+  if (activeKey) setWorkspaceStatus(activeKey, "active");
+}
+
 export default function WorkspaceHost() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,6 +57,7 @@ export default function WorkspaceHost() {
 
   /**
    * ROUTE → WORKSPACE SYNC
+   * Ensures route navigation always results in a focused bean.
    */
   useEffect(() => {
     if (!current) return;
@@ -71,13 +78,17 @@ export default function WorkspaceHost() {
     setBeans((prev) => {
       const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
       setActiveId(nextActive);
-      setWorkspaceStatus(current.key, "active");
+
+      // Status: only one active workspace at a time
+      applyStatuses(nextBeans, current.key);
+
       return nextBeans;
     });
   }, [current]);
 
   /**
    * OS-NATIVE WORKSPACE OPEN
+   * This is the authoritative way the Dashboard opens/focuses workspaces.
    */
   const openWorkspaceByRoute = (route: string) => {
     const def = ROUTE_MAP.find((r) => r.route === route);
@@ -96,7 +107,9 @@ export default function WorkspaceHost() {
 
       const { beans: nextBeans, activeId: nextActive } = addOrActivateBean(prev, bean);
       setActiveId(nextActive);
-      setWorkspaceStatus(def.key, "active");
+
+      applyStatuses(nextBeans, def.key);
+
       return nextBeans;
     });
 
@@ -107,13 +120,12 @@ export default function WorkspaceHost() {
 
   /**
    * CLOSE WORKSPACE
+   * Guarantees OS-safe fallback: never leaves the shell empty.
    */
   const closeWorkspace = (id: string) => {
     setBeans((prev) => {
       const closing = prev.find((b) => b.id === id);
-      if (closing) {
-        setWorkspaceStatus(closing.key, "idle");
-      }
+      if (closing) setWorkspaceStatus(closing.key, "idle");
 
       const next = prev.filter((b) => b.id !== id);
 
@@ -121,12 +133,19 @@ export default function WorkspaceHost() {
         const fallback = next[next.length - 1];
         if (fallback) {
           setActiveId(fallback.id);
-          setWorkspaceStatus(fallback.key, "active");
+          applyStatuses(next, fallback.key);
           navigate(fallback.route);
         } else {
           setActiveId(null);
+
+          // Safe fallback to Hub
+          setWorkspaceStatus("workspace-hub", "active");
           navigate("/hub");
         }
+      } else {
+        // Active didn't change, but keep statuses consistent
+        const activeBean = next.find((b) => b.id === activeId) ?? null;
+        applyStatuses(next, activeBean ? activeBean.key : null);
       }
 
       return next;
@@ -141,7 +160,7 @@ export default function WorkspaceHost() {
     if (!bean) return;
 
     setActiveId(id);
-    setWorkspaceStatus(bean.key, "active");
+    applyStatuses(beans, bean.key);
     navigate(bean.route);
   };
 
@@ -157,7 +176,16 @@ export default function WorkspaceHost() {
           >
             <span className="dot" />
             <span className="title">{b.title}</span>
-            <button onClick={() => closeWorkspace(b.id)}>×</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                closeWorkspace(b.id);
+              }}
+              aria-label={`Close ${b.title}`}
+              type="button"
+            >
+              ×
+            </button>
           </div>
         ))}
       </div>
