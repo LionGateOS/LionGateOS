@@ -1,16 +1,6 @@
 /**
  * LionGateOS — Enforce "TypeScript is the single source of truth"
- *
- * What it does:
- * - Scans ./src recursively
- * - If a file has a TS/TSX sibling with the same basename, it deletes the JS/JSX file
- *   Examples:
- *     Foo.tsx + Foo.jsx  -> deletes Foo.jsx
- *     Bar.ts  + Bar.js   -> deletes Bar.js
- *
- * What it will NOT do:
- * - It will not delete any file unless a TS/TSX sibling exists
- * - It will not touch anything outside ./src
+ * Deletes .js/.jsx files in ./src only when a .ts/.tsx sibling exists.
  *
  * Usage:
  *   node tools/enforce-no-duplicates.cjs
@@ -21,10 +11,7 @@ const path = require("path");
 const projectRoot = process.cwd();
 const srcDir = path.join(projectRoot, "src");
 
-function exists(p) {
-  try { fs.accessSync(p); return true; } catch { return false; }
-}
-
+function exists(p) { try { fs.accessSync(p); return true; } catch { return false; } }
 function walk(dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -34,11 +21,7 @@ function walk(dir) {
   }
   return out;
 }
-
-function isJsLike(p) {
-  return p.endsWith(".js") || p.endsWith(".jsx");
-}
-
+function isJsLike(p) { return p.endsWith(".js") || p.endsWith(".jsx"); }
 function getSiblingTs(jsPath) {
   const dir = path.dirname(jsPath);
   const base = path.basename(jsPath).replace(/\.jsx?$/, "");
@@ -61,15 +44,12 @@ let kept = 0;
 
 for (const f of files) {
   const sib = getSiblingTs(f);
-  if (!sib) {
-    kept++;
-    continue;
-  }
+  if (!sib) { kept++; continue; }
 
   try {
     fs.unlinkSync(f);
     deleted++;
-    console.log("Deleted duplicate:", path.relative(projectRoot, f), " (TS sibling:", path.relative(projectRoot, sib) + ")");
+    console.log("Deleted duplicate:", path.relative(projectRoot, f), "(TS sibling:", path.relative(projectRoot, sib) + ")");
   } catch (e) {
     console.warn("Could not delete:", path.relative(projectRoot, f), "-", e.message);
   }
