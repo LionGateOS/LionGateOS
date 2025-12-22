@@ -12,7 +12,7 @@
   --card:rgba(14,18,34,.78);
   --text:#e8edf7;
   --muted:#aab6d6;
-  --trace:#5aa0ff; /* solid neon blue */
+  --trace:#5aa0ff;
   --radius:26px;
   --stroke:2px;
 }
@@ -20,7 +20,6 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
 .hidden{display:none!important}
 
-/* Ambient background (your purple image) */
 #ambient{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
@@ -30,35 +29,25 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
   background-size:cover;
   background-position:center;
   opacity:.30;
-  filter:saturate(1.05) contrast(1.05);
-  transform:scale(1.03);
 }
-#ambient::after{content:"";position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 55%, rgba(0,0,0,0), rgba(0,0,0,.55));}
 
-/* Subtle circuit sparkle dots */
 #sparkles{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.18}
-.dot{position:absolute;width:3px;height:3px;border-radius:50%;
+.dot{
+  position:absolute;width:3px;height:3px;border-radius:50%;
   background:rgba(120,160,255,.9);
   box-shadow:0 0 10px rgba(120,160,255,.85);
   animation:floatUp 22s linear infinite;
 }
 @keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-140vh)}}
 
-/* Splash */
-#splash{position:fixed;inset:0;z-index:9999;background:#000;overflow:hidden;
-  display:flex;align-items:center;justify-content:center}
+#splash{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center}
 #splash.hide{display:none}
-#splash .bg{position:absolute;inset:0;filter:blur(40px) brightness(.6);transform:scale(1.1)}
-#splash .bg video{width:100%;height:100%;object-fit:cover}
-#splash .fg{position:relative;z-index:2;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-#splash .fg video{width:100%;height:100%;object-fit:contain}
+#splash video{width:100%;height:100%;object-fit:contain}
 
-/* Gateway */
 #gateway{position:relative;z-index:2;min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px}
 .panel{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:24px}
 @media(max-width:900px){.panel{grid-template-columns:1fr}}
 
-/* Cards */
 .card{
   position:relative;
   background:var(--card);
@@ -68,89 +57,57 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
   padding:30px;
 }
 
-/* SVG edge runner overlay (NO rotation, NO gradients) */
-.edgeRunner{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:5;
-}
-.edgeRunner svg{
-  width:100%;
-  height:100%;
-  display:block;
-}
+.edgeRunner{position:absolute;inset:0;pointer-events:none;z-index:5}
+.edgeRunner svg{width:100%;height:100%;display:block}
 
-/* Content */
 .logo{max-width:420px;width:100%;display:block}
 footer{margin-top:22px;font-size:12px;color:var(--muted)}
 
-/* Launcher */
 .launcher{display:flex;flex-direction:column;gap:14px}
 .launcher a{
   display:flex;align-items:center;justify-content:space-between;
   padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.14);
   text-decoration:none;color:#fff;
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.08));
 }
 .launcher a.disabled{opacity:.5;pointer-events:none}
-
-@media (prefers-reduced-motion: reduce){
-  #sparkles{display:none}
-}
 </style>
 </head>
+
 <body>
 
-<div id="ambient" aria-hidden="true"></div>
-<div id="sparkles" aria-hidden="true"></div>
+<div id="ambient"></div>
+<div id="sparkles"></div>
 
-<!-- Splash -->
 <div id="splash">
-  <div class="bg"><video muted playsinline><source src="assets/splash.mp4" type="video/mp4"/></video></div>
-  <div class="fg"><video id="splashVideo" autoplay muted playsinline><source src="assets/splash.mp4" type="video/mp4"/></video></div>
+  <video id="splashVideo" autoplay muted playsinline>
+    <source src="assets/splash.mp4" type="video/mp4"/>
+  </video>
 </div>
 
-<!-- Gateway -->
 <div id="gateway" class="hidden">
   <div class="panel">
 
-    <!-- LEFT -->
     <div class="card" id="cardLeft">
-      <div class="edgeRunner" aria-hidden="true">
+      <div class="edgeRunner">
         <svg id="svgLeft"><rect id="baseLeft"/><rect id="runLeft"/></svg>
       </div>
-      <img src="assets/liongateos_logo.png" alt="LionGateOS" class="logo"/>
+      <img src="assets/liongateos_logo.png" class="logo"/>
       <footer>© <span id="year"></span> LionGateOS</footer>
     </div>
 
-    <!-- RIGHT -->
     <div class="card launcher" id="cardRight">
-      <div class="edgeRunner" aria-hidden="true">
+      <div class="edgeRunner">
         <svg id="svgRight"><rect id="baseRight"/><rect id="runRight"/></svg>
       </div>
       <a class="disabled"><span>Enter LionGateOS</span><span>Coming soon</span></a>
-      <a href="https://smartquoteai.pro" target="_blank" rel="noopener"><span>SmartQuote AI</span><span>Open</span></a>
-      <a href="https://liongateostravels.com" target="_blank" rel="noopener"><span>LionGateOS Travels</span><span>Open</span></a>
+      <a href="https://smartquoteai.pro" target="_blank"><span>SmartQuote AI</span><span>Open</span></a>
+      <a href="https://liongateostravels.com" target="_blank"><span>LionGateOS Travels</span><span>Open</span></a>
     </div>
 
   </div>
 </div>
 
 <script>
-// ===== Sparkles =====
-const spark = document.getElementById("sparkles");
-for(let i=0;i<32;i++){
-  const d=document.createElement("div");
-  d.className="dot";
-  d.style.left=(Math.random()*100)+"vw";
-  d.style.top=(110+Math.random()*120)+"vh";
-  d.style.animationDelay=(Math.random()*22)+"s";
-  d.style.opacity=(0.35+Math.random()*0.45).toFixed(2);
-  spark.appendChild(d);
-}
-
-// ===== Splash once per visitor =====
 const KEY="lgos_splash_seen_v10";
 const splash=document.getElementById("splash");
 const gateway=document.getElementById("gateway");
@@ -158,88 +115,61 @@ const video=document.getElementById("splashVideo");
 document.getElementById("year").textContent=new Date().getFullYear();
 
 function endSplash(){
-  try{video.pause();splash.classList.add("hide");}catch(e){}
+  splash.classList.add("hide");
   gateway.classList.remove("hidden");
+  startAfterPaint();
 }
+
 if(localStorage.getItem(KEY)){ endSplash(); }
 else{
-  video.addEventListener("ended",()=>{ localStorage.setItem(KEY,"1"); endSplash(); });
-  window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ localStorage.setItem(KEY,"1"); endSplash(); } });
+  video.addEventListener("ended",()=>{localStorage.setItem(KEY,"1");endSplash();});
 }
 
-// ===== EDGE RUNNER (solid segment traveling on a static path) =====
-function setupRunner(cardEl, svgEl, baseRect, runRect, direction, initOffset){
-  function applyGeometry(){
-    const r = cardEl.getBoundingClientRect();
-    const styles = getComputedStyle(cardEl);
-    const rad = parseFloat(styles.borderTopLeftRadius) || 26;
-    const stroke = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 2;
-
-    // Pixel-true viewBox to match corners exactly
-    svgEl.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
-    svgEl.setAttribute("preserveAspectRatio", "none");
-
-    const inset = stroke/2;
-    const w = Math.max(1, r.width - stroke);
-    const h = Math.max(1, r.height - stroke);
-
-    [baseRect, runRect].forEach(rect=>{
-      rect.setAttribute("x", inset);
-      rect.setAttribute("y", inset);
-      rect.setAttribute("width", w);
-      rect.setAttribute("height", h);
-      rect.setAttribute("rx", rad);
-      rect.setAttribute("ry", rad);
-      rect.setAttribute("fill", "none");
-      rect.setAttribute("stroke-linecap", "round");
-      rect.setAttribute("stroke-linejoin", "round");
-      rect.setAttribute("vector-effect", "non-scaling-stroke");
+function startAfterPaint(){
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      window.dispatchEvent(new Event("resize"));
+      initRunners();
     });
-
-    // Static base outline
-    baseRect.setAttribute("stroke", "rgba(255,255,255,0.10)");
-    baseRect.setAttribute("stroke-width", Math.max(1, stroke-0.5));
-
-    // Runner stroke (solid)
-    runRect.setAttribute("stroke", getComputedStyle(document.documentElement).getPropertyValue('--trace').trim() || "#5aa0ff");
-    runRect.setAttribute("stroke-width", stroke);
-
-    // Perimeter approximation for dash math (good enough visually)
-    const perimeter = 2*(w+h) - 8*rad + 2*Math.PI*rad;
-    const seg = Math.max(110, perimeter*0.22);   // about 22% lit
-    const gap = Math.max(110, perimeter - seg);  // remainder
-    runRect.setAttribute("stroke-dasharray", `${seg} ${gap}`);
-  }
-
-  applyGeometry();
-  window.addEventListener("resize", applyGeometry);
-
-  let t = 0;
-  function tick(){
-    t++;
-    const speed = 2.0; // calm but visible
-    const drift = Math.sin(t/1200)*0.4; // prevents a noticeable seam
-    runRect.setAttribute("stroke-dashoffset", (initOffset + (t*speed*direction) + drift).toFixed(2));
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+  });
 }
 
-setupRunner(
-  document.getElementById("cardLeft"),
-  document.getElementById("svgLeft"),
-  document.getElementById("baseLeft"),
-  document.getElementById("runLeft"),
-  +1, 4708
-);
+function setupRunner(card,svg,base,run,dir,offset){
+  function apply(){
+    const r=card.getBoundingClientRect();
+    if(r.width===0||r.height===0)return;
+    svg.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`);
+    const rad=26, stroke=2;
+    [base,run].forEach(el=>{
+      el.setAttribute("x",stroke/2);
+      el.setAttribute("y",stroke/2);
+      el.setAttribute("width",r.width-stroke);
+      el.setAttribute("height",r.height-stroke);
+      el.setAttribute("rx",rad);
+      el.setAttribute("ry",rad);
+      el.setAttribute("fill","none");
+      el.setAttribute("stroke-linejoin","round");
+    });
+    base.setAttribute("stroke","rgba(255,255,255,.12)");
+    run.setAttribute("stroke","#5aa0ff");
+    run.setAttribute("stroke-width",stroke);
+    const p=2*(r.width+r.height);
+    run.setAttribute("stroke-dasharray",`${p*0.22} ${p}`);
+  }
+  apply();
+  window.addEventListener("resize",apply);
+  let t=0;
+  (function loop(){
+    t+=dir*2;
+    run.setAttribute("stroke-dashoffset",offset+t);
+    requestAnimationFrame(loop);
+  })();
+}
 
-setupRunner(
-  document.getElementById("cardRight"),
-  document.getElementById("svgRight"),
-  document.getElementById("baseRight"),
-  document.getElementById("runRight"),
-  -1, 306
-);
+function initRunners(){
+  setupRunner(cardLeft,svgLeft,baseLeft,runLeft,1,400);
+  setupRunner(cardRight,svgRight,baseRight,runRight,-1,120);
+}
 </script>
 
 </body>
