@@ -1,0 +1,1 @@
+Optional assets folder. This build uses inline SVG, so no logo files are required.

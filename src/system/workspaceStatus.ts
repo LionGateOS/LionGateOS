@@ -1,26 +1,11 @@
-export type WorkspaceStatus =
-  | "idle"
-  | "active"
-  | "attention"
-  | "error";
+export type WorkspaceId = "smartquote" | "travels";
 
-type StatusMap = Record<string, WorkspaceStatus>;
+let activeWorkspace: WorkspaceId | null = null;
 
-const statusMap: StatusMap = {};
-
-export function setWorkspaceStatus(
-  workspaceKey: string,
-  status: WorkspaceStatus
-) {
-  statusMap[workspaceKey] = status;
+export function setActiveWorkspace(id: WorkspaceId | null) {
+  activeWorkspace = id;
 }
 
-export function getWorkspaceStatus(
-  workspaceKey: string
-): WorkspaceStatus {
-  return statusMap[workspaceKey] ?? "idle";
-}
-
-export function getWorkspaceStatusForId(appId: string): WorkspaceStatus {
-  return getWorkspaceStatus(appId);
+export function getActiveWorkspace(): WorkspaceId | null {
+  return activeWorkspace;
 }

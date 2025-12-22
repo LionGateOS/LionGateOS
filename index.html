@@ -1,12 +1,81 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LionGateOS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#0b0f1a"/>
+<title>LionGateOS</title>
+<style>
+html,body{margin:0;height:100%;background:#070a12;color:#e8edf7;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.hidden{display:none}
+#splash{position:fixed;inset:0;background:#000;z-index:9999}
+#splash video{width:100%;height:100%;object-fit:cover}
+#gateway{min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px}
+.panel{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:900px){.panel{grid-template-columns:1fr}}
+.card{background:rgba(14,18,34,.75);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:28px}
+.logo{max-width:420px;width:100%;display:block}
+.launcher a{display:flex;align-items:center;justify-content:space-between;padding:18px;border-radius:18px;
+border:1px solid rgba(255,255,255,.12);margin-bottom:14px;text-decoration:none;color:#fff}
+.launcher a.disabled{opacity:.5;pointer-events:none}
+footer{margin-top:20px;font-size:12px;color:#aab6d6}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <video id="splashVideo" autoplay muted playsinline>
+    <source src="assets/splash.mp4" type="video/mp4"/>
+  </video>
+</div>
+
+<div id="gateway" class="hidden">
+  <div class="panel">
+    <div class="card">
+      <img src="assets/liongateos_logo.png" alt="LionGateOS" class="logo"/>
+      <footer>© <span id="year"></span> LionGateOS</footer>
+    </div>
+    <div class="card launcher">
+      <a class="disabled">
+        <span>Enter LionGateOS</span><span>Coming soon</span>
+      </a>
+      <a href="https://smartquoteai.pro" target="_blank" rel="noopener">
+        <span>SmartQuote AI</span><span>Open</span>
+      </a>
+      <a href="https://liongateostravels.com" target="_blank" rel="noopener">
+        <span>LionGate Travels</span><span>Open</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY="lgos_splash_seen_v1";
+const splash=document.getElementById("splash");
+const gateway=document.getElementById("gateway");
+const video=document.getElementById("splashVideo");
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function showGateway(){
+  splash.classList.add("hidden");
+  gateway.classList.remove("hidden");
+}
+
+if(localStorage.getItem(KEY)){
+  showGateway();
+}else{
+  video.onended=()=>{
+    localStorage.setItem(KEY,"1");
+    showGateway();
+  };
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      localStorage.setItem(KEY,"1");
+      showGateway();
+    }
+  });
+}
+</script>
+
+</body>
 </html>
