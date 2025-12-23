@@ -121,6 +121,96 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 }
 /* === End Phase 4 === */
 
+
+/* === Phase 6: Launcher Intelligence (visual-only, safe) === */
+.launcher a{
+  align-items:stretch;
+  gap:14px;
+}
+.launcher a .meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.launcher a .title{
+  font-size:16px;
+  line-height:1.15;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.launcher a .hint{
+  font-size:12px;
+  line-height:1.25;
+  color: rgba(170,182,214,.92);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width: 100%;
+}
+.launcher a .right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-left:auto;
+  flex:0 0 auto;
+}
+.launcher a .state{
+  font-size:11px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: rgba(232,237,247,.88);
+}
+.launcher a .state.live{
+  border-color: rgba(90,160,255,.32);
+  background: rgba(90,160,255,.08);
+  color: rgba(232,237,247,.92);
+}
+.launcher a .state.soon{
+  border-color: rgba(255,255,255,.12);
+  background: rgba(0,0,0,.10);
+  color: rgba(232,237,247,.72);
+}
+.launcher a .action{
+  font-size:13px;
+  color: rgba(232,237,247,.92);
+}
+.launcher a.disabled .action{
+  color: rgba(232,237,247,.60);
+}
+.launcher a.disabled .state{
+  opacity:.75;
+}
+
+/* Hover-capable devices: hints appear on hover/focus only (cleaner launcher) */
+@media (hover:hover) and (pointer:fine){
+  .launcher a .hint{
+    opacity:0;
+    max-height:0;
+    transform: translateY(-2px);
+    transition: opacity 120ms ease-out, transform 120ms ease-out, max-height 120ms ease-out;
+  }
+  .launcher a:not(.disabled):hover .hint,
+  .launcher a:not(.disabled):focus-visible .hint{
+    opacity:1;
+    max-height:24px;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility: clear focus ring without layout shift */
+.launcher a:focus-visible{
+  outline:2px solid rgba(90,160,255,.55);
+  outline-offset:3px;
+}
+/* === End Phase 6 === */
+
 </style>
 
 <link rel="icon" href="/favicon.ico"/>
@@ -154,9 +244,18 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
       <div class="edgeRunner" aria-hidden="true">
         <svg id="svgRight"><rect id="baseRight"/><!-- runners injected --></svg>
       </div>
-      <a class="disabled"><span>Enter LionGateOS</span><span>Coming soon</span></a>
-      <a href="https://smartquoteai.pro" target="_blank" rel="noopener"><span>SmartQuote AI</span><span>Open</span></a>
-      <a href="https://liongateostravels.com" target="_blank" rel="noopener"><span>LionGateOS Travels</span><span>Open</span></a>
+      <a class="disabled" aria-disabled="true" tabindex="-1"><span class="meta"><span class="title">Enter LionGateOS</span><span class="hint">Platform shell and app launcher</span></span><span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span></a>
+      <a href="https://smartquoteai.pro" target="_blank" rel="noopener"><span class="meta"><span class="title">SmartQuote AI</span><span class="hint">Generate professional estimates fast</span></span><span class="right"><span class="state live">Live</span><span class="action">Open</span></span></a>
+      <a href="https://liongateostravels.com" target="_blank" rel="noopener"><span class="meta"><span class="title">LionGateOS Travels</span><span class="hint">Explore, plan, and book travel</span></span><span class="right"><span class="state live">Live</span><span class="action">Open</span></span></a>
+      <a class="disabled" aria-disabled="true" tabindex="-1">
+        <span class="meta"><span class="title">App Store</span><span class="hint">Install industry-specific apps</span></span>
+        <span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span>
+      </a>
+      <a class="disabled" aria-disabled="true" tabindex="-1">
+        <span class="meta"><span class="title">AI Tools</span><span class="hint">Assistants and automation modules</span></span>
+        <span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span>
+      </a>
+
     </div>
 
   </div>
