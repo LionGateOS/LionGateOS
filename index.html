@@ -6,29 +6,17 @@
 <meta name="theme-color" content="#0b0f1a"/>
 <title>LionGateOS</title>
 
-<script>
-try {
-  if(window.__LGOS_HARDENED__){}
-  else { window.__LGOS_HARDENED__ = true; }
-} catch(e){}
-(function(){ try {
-  var h=document.documentElement;
-  h.dataset.osVersion = h.dataset.osVersion || "9.0";
-  h.dataset.osBuild   = h.dataset.osBuild   || "20251223-165827Z";
-  h.dataset.osState   = h.dataset.osState   || "initializing";
-} catch(e){} })();
-</script>
-
 <style>
 :root{
   --bg:#070a12;
-  --panel:rgba(14,18,34,.72);
+  --card:rgba(14,18,34,.78); /* LOCKED panel transparency */
   --text:#e8edf7;
   --muted:#aab6d6;
   --trace:#5aa0ff;
   --radius:26px;
   --stroke:2px;
 }
+
 html,body{
   margin:0;height:100%;
   background:var(--bg);
@@ -37,78 +25,192 @@ html,body{
 }
 .hidden{display:none!important}
 
+/* Ambient background */
 #ambient{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
+  position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(900px 600px at 20% 20%, rgba(90,160,255,.10), transparent 60%),
-    radial-gradient(900px 650px at 85% 55%, rgba(215,179,90,.08), transparent 65%),
+    radial-gradient(900px 600px at 20% 20%, rgba(90,160,255,.08), transparent 60%),
+    radial-gradient(900px 650px at 85% 55%, rgba(215,179,90,.06), transparent 65%),
     url("assets/ambient_purple.png");
   background-size:cover;
   background-position:center;
-  opacity:.35;
+  opacity:.30;
+}
+#ambient::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(70% 70% at 50% 55%, rgba(0,0,0,0), rgba(0,0,0,.55));
 }
 
-#sparkles{position:fixed; inset:0; z-index:1; pointer-events:none;}
-.spark{ 
-  position:absolute;
-  width:4px;height:4px;border-radius:50%;
-  background:rgba(140,180,255,.95);
-  box-shadow:0 0 14px rgba(140,180,255,.95);
-  animation:floatUp linear infinite;
+/* Sparkles */
+#sparkles{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.30}
+.dot{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:rgba(120,160,255,.95);
+  box-shadow:0 0 12px rgba(120,160,255,.9);
+  animation:floatUp 24s linear infinite;
 }
-@keyframes floatUp{
-  from{transform:translateY(0)}
-  to{transform:translateY(-160vh)}
-}
-@media (prefers-reduced-motion: reduce){
-  #sparkles{display:none}
-}
+@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-140vh)}}
 
-#splash{
-  position:fixed; inset:0; z-index:9999; background:#000;
-  display:flex; align-items:center; justify-content:center;
-}
+/* Splash */
+#splash{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center}
 #splash.hide{display:none}
 #splash video{width:100%;height:100%;object-fit:contain}
 
-#gateway{
-  position:relative; z-index:2;
-  min-height:100%;
-  display:flex; align-items:center; justify-content:center;
-  padding:40px;
-}
-.panel{
-  max-width:1100px; width:100%;
-  display:grid; grid-template-columns:1fr 1fr; gap:24px;
-}
-@media(max-width:900px){ .panel{grid-template-columns:1fr} }
+/* Layout */
+#gateway{position:relative;z-index:2;min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px}
+.panel{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:900px){.panel{grid-template-columns:1fr}}
 
+/* Cards */
 .card{
   position:relative;
-  background:var(--panel);
+  background:var(--card);
   border-radius:var(--radius);
   box-shadow:0 22px 60px rgba(0,0,0,.55);
   overflow:hidden;
   padding:30px;
 }
+.edgeRunner{position:absolute;inset:0;pointer-events:none;z-index:5}
+.edgeRunner svg{width:100%;height:100%;display:block}
 
-.edgeRunner{position:absolute; inset:0; pointer-events:none; z-index:5;}
-.edgeRunner svg{width:100%; height:100%; display:block;}
-
-.logo{max-width:420px; width:100%; display:block; margin:0 auto;}
-footer{margin-top:22px; font-size:12px; color:var(--muted);}
-
-.launcher{display:flex; flex-direction:column; gap:14px;}
-.launcher a{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:18px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.14);
-  text-decoration:none;
-  color:#fff;
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08));
+.logo{
+  max-width:420px;
+  width:100%;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
 }
-.launcher a.disabled{opacity:.5; pointer-events:none;}
+footer{margin-top:22px;font-size:12px;color:var(--muted)}
+
+/* Launcher */
+.launcher{display:flex;flex-direction:column;gap:14px}
+.launcher a{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.14);
+  text-decoration:none;color:#fff;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.08));
+}
+.launcher a.disabled{opacity:.5;pointer-events:none}
+
+@media (prefers-reduced-motion: reduce){#sparkles{display:none}}
+
+/* === Phase 4: Launcher Micro-Interactions (CSS-only, safe) === */
+.launcher a{
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out, background-color 120ms ease-out, opacity 120ms ease-out;
+}
+.launcher a:not(.disabled):hover,
+.launcher a:not(.disabled):focus-visible{
+  transform: translateY(-1px);
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+  background-color: rgba(255,255,255,.06);
+}
+.launcher a:not(.disabled):active{
+  transform: translateY(0);
+  box-shadow: 0 20px 56px rgba(0,0,0,.55);
+  opacity: .95;
+}
+.launcher a.disabled{
+  cursor: not-allowed;
+  opacity: .45;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce){
+  .launcher a{
+    transition: none !important;
+  }
+}
+/* === End Phase 4 === */
+
+
+/* === Phase 6: Launcher Intelligence (visual-only, safe) === */
+.launcher a{
+  align-items:stretch;
+  gap:14px;
+}
+.launcher a .meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.launcher a .title{
+  font-size:16px;
+  line-height:1.15;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.launcher a .hint{
+  font-size:12px;
+  line-height:1.25;
+  color: rgba(170,182,214,.92);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width: 100%;
+}
+.launcher a .right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-left:auto;
+  flex:0 0 auto;
+}
+.launcher a .state{
+  font-size:11px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: rgba(232,237,247,.88);
+}
+.launcher a .state.live{
+  border-color: rgba(90,160,255,.32);
+  background: rgba(90,160,255,.08);
+  color: rgba(232,237,247,.92);
+}
+.launcher a .state.soon{
+  border-color: rgba(255,255,255,.12);
+  background: rgba(0,0,0,.10);
+  color: rgba(232,237,247,.72);
+}
+.launcher a .action{
+  font-size:13px;
+  color: rgba(232,237,247,.92);
+}
+.launcher a.disabled .action{
+  color: rgba(232,237,247,.60);
+}
+.launcher a.disabled .state{
+  opacity:.75;
+}
+
+/* Hover-capable devices: hints appear on hover/focus only (cleaner launcher) */
+@media (hover:hover) and (pointer:fine){
+  .launcher a .hint{
+    opacity:0;
+    max-height:0;
+    transform: translateY(-2px);
+    transition: opacity 120ms ease-out, transform 120ms ease-out, max-height 120ms ease-out;
+  }
+  .launcher a:not(.disabled):hover .hint,
+  .launcher a:not(.disabled):focus-visible .hint{
+    opacity:1;
+    max-height:24px;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility: clear focus ring without layout shift */
+.launcher a:focus-visible{
+  outline:2px solid rgba(90,160,255,.55);
+  outline-offset:3px;
+}
+/* === End Phase 6 === */
+
 </style>
 
 <link rel="icon" href="/favicon.ico"/>
@@ -122,327 +224,408 @@ footer{margin-top:22px; font-size:12px; color:var(--muted);}
 <div id="sparkles" aria-hidden="true"></div>
 
 <div id="splash">
-  <video autoplay muted playsinline id="splashVideo" preload="none">
-    <source src="assets/splash.mp4?v=lgos-splash-20251222" type="video/mp4"/>
+  <video id="splashVideo" autoplay muted playsinline preload="none">
+    <source src="assets/splash.mp4?v=lgos-splash-20251223" type="video/mp4"/>
   </video>
 </div>
 
 <div id="gateway" class="hidden">
   <div class="panel">
 
-    <div class="card" id="cardLeft">
-      <div class="edgeRunner" aria-hidden="true"><svg id="svgLeft"></svg></div>
-      <img class="logo" src="assets/liongateos_logo.png" alt="LionGateOS"/>
+    <div class="card" id="cardLeft" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="edgeRunner" aria-hidden="true">
+        <svg id="svgLeft"><rect id="baseLeft"/><!-- runners injected --></svg>
+      </div>
+      <img src="assets/liongateos_logo.png" alt="LionGateOS" class="logo"/>
       <footer>© <span id="year"></span> LionGateOS</footer>
     </div>
 
-
     <div class="card launcher" id="cardRight">
-      <div class="edgeRunner" aria-hidden="true"><svg id="svgRight"></svg></div>
-      <a class="disabled"><span>Enter LionGateOS</span><span>Coming soon</span></a>
-      <a class="disabled"><span>App Store</span><span>Coming soon</span></a>
-      <a class="disabled"><span>AI Tools</span><span>Coming soon</span></a>
-      <a href="https://smartquoteai.pro" target="_blank" rel="noopener"><span>SmartQuote AI</span><span>Open</span></a>
-      <a href="https://liongateostravels.com" target="_blank" rel="noopener"><span>LionGateOS Travels</span><span>Open</span></a>
-    </div>
+      <div class="edgeRunner" aria-hidden="true">
+        <svg id="svgRight"><rect id="baseRight"/><!-- runners injected --></svg>
+      </div>
+      <a class="disabled" aria-disabled="true" tabindex="-1"><span class="meta"><span class="title">Enter LionGateOS</span><span class="hint">Platform shell and app launcher</span></span><span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span></a>
+      <a href="https://smartquoteai.pro" target="_blank" rel="noopener"><span class="meta"><span class="title">SmartQuote AI</span><span class="hint">Generate professional estimates fast</span></span><span class="right"><span class="state live">Live</span><span class="action">Open</span></span></a>
+      <a href="https://liongateostravels.com" target="_blank" rel="noopener"><span class="meta"><span class="title">LionGateOS Travels</span><span class="hint">Explore, plan, and book travel</span></span><span class="right"><span class="state live">Live</span><span class="action">Open</span></span></a>
+      <a class="disabled" aria-disabled="true" tabindex="-1">
+        <span class="meta"><span class="title">App Store</span><span class="hint">Install industry-specific apps</span></span>
+        <span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span>
+      </a>
+      <a class="disabled" aria-disabled="true" tabindex="-1">
+        <span class="meta"><span class="title">AI Tools</span><span class="hint">Assistants and automation modules</span></span>
+        <span class="right"><span class="state soon">Soon</span><span class="action">Coming soon</span></span>
+      </a>
 
+    </div>
 
   </div>
 </div>
 
 <script>
-const KEY="lgos_splash_seen_v11";
-const splash=document.getElementById("splash");
-const gateway=document.getElementById("gateway");
-const video=document.getElementById("splashVideo");
-document.getElementById("year").textContent = new Date().getFullYear();
+/* ===== Capability + Guardrails (performance-safe) ===== */
+function getGuardrailProfile(){
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cores = (navigator.hardwareConcurrency || 4);
+  const mem = (navigator.deviceMemory || 4); // GB hint; may be undefined
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+  const saveData = !!(conn && conn.saveData);
+  const effType = (conn && conn.effectiveType) ? String(conn.effectiveType) : "";
 
-function showGateway(){
-  splash.classList.add("hide");
-  gateway.classList.remove("hidden");
-  startOS();
+  // Coarse tiering (privacy-safe buckets)
+  let tier = "high";
+  if (reduced) tier = "reduced";
+  else if (saveData) tier = "low";
+  else if (mem <= 2 || cores <= 4) tier = "low";
+  else if (mem <= 4 || cores <= 6) tier = "mid";
+  else tier = "high";
+
+  if (tier !== "reduced" && (effType.includes("2g") || effType.includes("slow"))) tier = "low";
+  return { reduced, tier, cores, mem, saveData, effType };
 }
-if (localStorage.getItem(KEY)) {
-  showGateway();
-} else {
-  video.addEventListener("ended", ()=>{ localStorage.setItem(KEY,"1"); showGateway(); });
-  video.addEventListener("error", ()=>{ localStorage.setItem(KEY,"1"); showGateway(); });
-}
+const GUARD = getGuardrailProfile();
 
-(function initSparkles(){
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce) return;
-  const c = document.getElementById("sparkles");
-  if(!c || c.children.length) return;
+/* ===== Sparkles (adaptive) ===== */
+(function(){
+  const spark=document.getElementById("sparkles");
+  if(!spark) return;
 
-  const cores = navigator.hardwareConcurrency || 4;
-  const mem   = navigator.deviceMemory || 4;
-  const lowPower = (cores <= 4) || (mem <= 4) || /Mobi|Android/i.test(navigator.userAgent);
+  if(GUARD.reduced){
+    spark.style.display="none";
+    return;
+  }
 
-  const COUNT = lowPower ? 18 : 28;
-  for(let i=0;i<COUNT;i++) {
+  const N = (GUARD.tier === "high") ? 44 : (GUARD.tier === "mid") ? 32 : 20;
+  for(let i=0;i<N;i++){
     const d=document.createElement("div");
-    d.className="spark";
-    d.style.left = (Math.random()*100) + "vw";
-    d.style.bottom = (-30 - Math.random()*260) + "px";
-    d.style.opacity = (0.40 + Math.random()*0.55).toFixed(2);
-    d.style.animationDuration = (lowPower ? (18 + Math.random()*14) : (14 + Math.random()*18)).toFixed(2) + "s";
-    d.style.animationDelay = (-Math.random()*18).toFixed(2) + "s";
-    c.appendChild(d);
+    d.className="dot";
+    d.style.left=(Math.random()*100)+"vw";
+    d.style.top=(110+Math.random()*120)+"vh";
+    d.style.animationDelay=(Math.random()*24)+"s";
+    d.style.opacity=(0.45+Math.random()*0.45).toFixed(2);
+    spark.appendChild(d);
   }
 })();
 
-function roundedRectPath(w, h, r, inset){
-  const x = inset, y = inset;
-  const W = Math.max(1, w - inset*2);
-  const H = Math.max(1, h - inset*2);
-  const rr = Math.max(0, Math.min(r, Math.min(W, H)/2));
-  return [
-    `M ${x+rr} ${y}`,
-    `H ${x+W-rr}`,
-    `A ${rr} ${rr} 0 0 1 ${x+W} ${y+rr}`,
-    `V ${y+H-rr}`,
-    `A ${rr} ${rr} 0 0 1 ${x+W-rr} ${y+H}`,
-    `H ${x+rr}`,
-    `A ${rr} ${rr} 0 0 1 ${x} ${y+H-rr}`,
-    `V ${y+rr}`,
-    `A ${rr} ${rr} 0 0 1 ${x+rr} ${y}`,
-    "Z"
-  ].join(" ");
+/* ===== Splash once per visitor ===== */
+const KEY="lgos_splash_seen_v13";
+const splash=document.getElementById("splash");
+const gateway=document.getElementById("gateway");
+const video=document.getElementById("splashVideo");
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function endSplash(){
+  splash.classList.add("hide");
+  gateway.classList.remove("hidden");
+  stabilizeLayoutThen(startEngines);
 }
 
-function waitForStableBox(el, frames=8, maxMs=2600){
-  return new Promise((resolve)=>{
-    let stable=0, last=null;
-    const start=performance.now();
-    function sample(){
-      const r=el.getBoundingClientRect();
-      const cur=[Math.round(r.width), Math.round(r.height)];
-      if(last && cur[0]===last[0] && cur[1]===last[1] && cur[0]>0 && cur[1]>0) stable++;
-      else { stable=0; last=cur; }
-      if(stable>=frames || (performance.now()-start)>maxMs) {
-        resolve({w:cur[0], h:cur[1]});
-        return;
-      }
-      requestAnimationFrame(sample);
-    }
-    requestAnimationFrame(sample);
+if(localStorage.getItem(KEY)){ endSplash(); }
+else{
+  video.addEventListener("ended",()=>{ localStorage.setItem(KEY,"1"); endSplash(); });
+  video.addEventListener("error",()=>{ localStorage.setItem(KEY,"1"); endSplash(); }, { once:true });
+}
+
+function stabilizeLayoutThen(cb){
+  function force(){
+    try{
+      void document.documentElement.offsetHeight;
+      void document.body.offsetHeight;
+      window.dispatchEvent(new Event("resize"));
+      window.dispatchEvent(new Event("orientationchange"));
+    }catch(e){}
+  }
+  requestAnimationFrame(()=>{
+    force();
+    requestAnimationFrame(()=>{
+      force();
+      setTimeout(force, 50);
+      setTimeout(force, 250);
+      setTimeout(force, 800);
+      setTimeout(force, 1400);
+      setTimeout(()=>{ try{ cb(); }catch(e){} }, 60);
+    });
   });
 }
 
-function TracerController(cfg){
-  const card = cfg.card;
-  const svg  = cfg.svg;
-  const dir  = cfg.dir;
-  const radius = cfg.radius;
-  const stroke = cfg.stroke;
+/* ===== Tracer Engine (locked for smoothness + no reversals) — with Performance Guardrails =====
+   Guardrails do NOT change the look on good hardware; they simply cap budgets on low-power devices.
+   Fixes (locked):
+   - NO back-and-forth: we never modulo dashoffset (prevents wrap "jump")
+   - Constant speed (shared across all tracers on a card)
+   - Same direction for all active tracers on a card
+   - Direction may change ONLY when the loop is empty (no active tracers)
+   - 1 or 2 tracers sometimes, but never collide
+   - Each tracer runs 90%–100% of full lap
+   - Length 12%–25%
+   - Grow from dot -> run -> shrink to dot
+*/
+function createCardEngine({card, svg, base, defaultDir}){
+  const traceColor = (getComputedStyle(document.documentElement).getPropertyValue('--trace').trim() || '#5aa0ff');
 
-  const NS="http://www.w3.org/2000/svg";
-  let L = 0;
-  let rafId = null;
-  let seeded = false;
-  let basePath=null, runnerA=null, runnerB=null;
+  // Guardrails (per-card budgets)
+  const CFG = (function(){
+    if (GUARD && GUARD.reduced) {
+      return { enabled:false, maxTracers:0, spawnMin:999999, spawnMax:999999, speed:0, flipChance:0 };
+    }
+    const tier = (GUARD && GUARD.tier) ? GUARD.tier : "high";
+    if (tier === "low") return { enabled:true, maxTracers:1, spawnMin:3200, spawnMax:6500, speed:185, flipChance:0.25 };
+    if (tier === "mid") return { enabled:true, maxTracers:1, spawnMin:2400, spawnMax:5600, speed:195, flipChance:0.30 };
+    return { enabled:true, maxTracers:2, spawnMin:1900, spawnMax:4700, speed:205, flipChance:0.35 };
+  })();
 
-  function build(){
+  let L = 1; // perimeter proxy
+  let lastW=-1, lastH=-1;
+
+  const tracers = []; // active tracers
+  let nextSpawnAt = 0;
+
+  let dir = defaultDir;     // +1 clockwise, -1 counter
+  const speed = CFG.speed;  // constant, non-jerky
+
+  let paused = false;
+  let lastNow = 0;
+
+  function setPaused(v){
+    paused = v;
+    if(!paused){
+      lastNow = performance.now(); // reset timebase
+    }
+  }
+
+  function applyGeometry(){
     const r = card.getBoundingClientRect();
-    const w = Math.max(1, Math.round(r.width));
-    const h = Math.max(1, Math.round(r.height));
+    if(!r.width || !r.height) return;
 
-    svg.innerHTML = "";
-    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    const w = Math.round(r.width);
+    const h = Math.round(r.height);
+    if(w===lastW && h===lastH) return;
+    lastW=w; lastH=h;
+
+    svg.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
     svg.setAttribute("preserveAspectRatio", "none");
 
+    const rad = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 26;
+    const stroke = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 2;
     const inset = stroke/2;
-    const d = roundedRectPath(w, h, radius, inset);
 
-    basePath=document.createElementNS(NS,"path");
-    basePath.setAttribute("d", d);
-    basePath.setAttribute("fill","none");
-    basePath.setAttribute("stroke","rgba(255,255,255,.12)");
-    basePath.setAttribute("stroke-width", Math.max(1, stroke-0.5));
-    basePath.setAttribute("stroke-linejoin","round");
-    basePath.setAttribute("stroke-linecap","round");
-    basePath.setAttribute("vector-effect","non-scaling-stroke");
-    svg.appendChild(basePath);
+    const rw = Math.max(1, r.width - stroke);
+    const rh = Math.max(1, r.height - stroke);
 
-    runnerA=document.createElementNS(NS,"path");
-    runnerB=document.createElementNS(NS,"path");
-    [runnerA, runnerB].forEach(p=>{
-      p.setAttribute("d", d);
-      p.setAttribute("fill","none");
-      p.setAttribute("stroke", getComputedStyle(document.documentElement).getPropertyValue('--trace').trim() || "#5aa0ff");
-      p.setAttribute("stroke-width", stroke);
-      p.setAttribute("stroke-linejoin","round");
-      p.setAttribute("stroke-linecap","round");
-      p.setAttribute("vector-effect","non-scaling-stroke");
-      p.style.filter = "drop-shadow(0 0 8px rgba(90,160,255,.38))";
-      p.style.opacity = "1";
-      svg.appendChild(p);
+    L = Math.max(1, (2*(rw+rh)) - (8*rad) + (2*Math.PI*rad));
+
+    base.setAttribute("x", inset);
+    base.setAttribute("y", inset);
+    base.setAttribute("width", rw);
+    base.setAttribute("height", rh);
+    base.setAttribute("rx", rad);
+    base.setAttribute("ry", rad);
+    base.setAttribute("fill", "none");
+    base.setAttribute("stroke", "rgba(255,255,255,0.12)");
+    base.setAttribute("stroke-width", Math.max(1, stroke-0.5));
+    base.setAttribute("stroke-linecap", "round");
+    base.setAttribute("stroke-linejoin", "round");
+    base.setAttribute("vector-effect", "non-scaling-stroke");
+
+    const runners = svg.querySelectorAll("rect[data-runner='1']");
+    runners.forEach(el=>{
+      el.setAttribute("x", inset);
+      el.setAttribute("y", inset);
+      el.setAttribute("width", rw);
+      el.setAttribute("height", rh);
+      el.setAttribute("rx", rad);
+      el.setAttribute("ry", rad);
     });
-    L = runnerA.getTotalLength();
   }
 
-  function norm(x){ x = x % L; if(x<0) x+=L; return x; }
-  function segLen(){ return L * (0.12 + Math.random()*0.13); }
-  function travelLen(){ return L * (0.90 + Math.random()*0.10); }
+  function rand(min,max){ return min + Math.random()*(max-min); }
+  function distOnLoop(a,b){ const d=Math.abs(a-b); return Math.min(d, L-d); }
 
-  function ensureSep(aStart, aSeg, bSeg){
-    const buffer = L * 0.03;
-    const minGap = aSeg + bSeg + buffer;
-    for(let i=0;i<24;i++) {
-      const cand = Math.random()*L;
-      const dist = Math.abs(norm(cand - aStart));
-      const gap = Math.min(dist, L - dist);
-      if(gap >= minGap) return cand;
+  function isSeparated(candidateStart, candidateLen){
+    const margin = Math.max(22, L*0.04);
+    for(const t of tracers){
+      const minSep = (candidateLen/2) + (t.baseLen/2) + margin;
+      if(distOnLoop(candidateStart, t.start) < minSep) return false;
     }
-    return norm(aStart + minGap);
+    return true;
   }
 
-  function makeRunner(path){
-    return {
-      path,
-      active:false,
-      start:0,
-      seg:0,
-      travel:0,
-      speed:0,
-      t0:0,
-      lapMs:0,
-      growMs:380,
-      shrinkMs:380
-    };
+  function makeRunnerRect(){
+    const r = card.getBoundingClientRect();
+    const rad = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 26;
+    const stroke = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 2;
+    const inset = stroke/2;
+    const rw = Math.max(1, r.width - stroke);
+    const rh = Math.max(1, r.height - stroke);
+
+    const el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    el.dataset.runner="1";
+    el.setAttribute("x", inset);
+    el.setAttribute("y", inset);
+    el.setAttribute("width", rw);
+    el.setAttribute("height", rh);
+    el.setAttribute("rx", rad);
+    el.setAttribute("ry", rad);
+    el.setAttribute("fill", "none");
+    el.setAttribute("stroke", traceColor);
+    el.setAttribute("stroke-width", stroke);
+    el.setAttribute("stroke-opacity", "0.85");
+    el.setAttribute("stroke-linecap", "round");
+    el.setAttribute("stroke-linejoin", "round");
+    el.setAttribute("vector-effect", "non-scaling-stroke");
+    el.style.filter = "drop-shadow(0 0 4px rgba(90,160,255,.22))";
+    svg.appendChild(el);
+    return el;
   }
 
-  const A = makeRunner(runnerA);
-  const B = makeRunner(runnerB);
-
-  function dashArray(seg, cur){
-    const s = Math.max(0.001, Math.min(seg, cur));
-    return `${s} ${Math.max(1, L - s)}`;
+  function maybeFlipDirectionWhenEmpty(){
+    if(tracers.length !== 0) return;
+    if(Math.random() < CFG.flipChance) dir = -dir;
   }
 
-  function seed(now){
-    seeded = true;
-    const cores = navigator.hardwareConcurrency || 4;
-    const mem   = navigator.deviceMemory || 4;
-    const lowPower = (cores <= 4) || (mem <= 4) || /Mobi|Android/i.test(navigator.userAgent);
+  function spawnTracer(now){
+    if(tracers.length >= CFG.maxTracers) return;
 
-    const wantTwo = !lowPower && (Math.random() < 0.30);
-    A.active = true;
-    B.active = wantTwo;
+    if(tracers.length === 1 && CFG.maxTracers >= 2 && Math.random() > 0.38) return;
 
-    const seconds = lowPower ? (10.5 + Math.random()*2.5) : (9.0 + Math.random()*2.0);
-    const speed = (L / (seconds*1000)) * dir; // constant per card
+    const segPct = rand(0.12, 0.25);
+    const baseLen = Math.max(1, segPct * L);
+    const lapPct = rand(0.90, 1.00);
+    const lapPx = lapPct * L;
 
-    A.seg = segLen();
-    A.start = Math.random()*L;
-    A.travel = travelLen();
-    A.speed = speed;
-    A.t0 = now;
-    A.lapMs = Math.max(4500, Math.abs(A.travel / A.speed));
-
-    if(B.active){
-      B.seg = segLen();
-      B.start = ensureSep(A.start, A.seg, B.seg);
-      B.travel = travelLen();
-      B.speed = speed;
-      B.t0 = now;
-      B.lapMs = Math.max(4500, Math.abs(B.travel / B.speed));
-      B.path.style.opacity = "1";
-      B.path.setAttribute("stroke-dasharray", dashArray(B.seg, 0.001));
-    } else {
-      B.path.style.opacity = "0";
+    let start = rand(0, L);
+    let ok = false;
+    for(let i=0;i<28;i++){
+      start = rand(0, L);
+      if(isSeparated(start, baseLen)){ ok=true; break; }
     }
+    if(!ok) return;
 
-    A.path.style.opacity = "1";
-    A.path.setAttribute("stroke-dasharray", dashArray(A.seg, 0.001));
+    const el = makeRunnerRect();
+    const growMs = 560;
+    const shrinkMs = 560;
+
+    tracers.push({
+      el,
+      start,
+      segPct,
+      baseLen,
+      lapPx,
+      elapsedMs: 0,
+      growMs,
+      shrinkMs
+    });
   }
 
-  function phase(r, now){
-    const e = now - r.t0;
-    const runMs = Math.max(0, r.lapMs - r.growMs - r.shrinkMs);
-    if(e < r.growMs) return {p:"grow", u:e/r.growMs, runT:0};
-    if(e < r.growMs + runMs) return {p:"run", u:(e-r.growMs)/runMs, runT:(e-r.growMs)};
-    if(e < r.lapMs) return {p:"shrink", u:(e-r.growMs-runMs)/r.shrinkMs, runT:runMs};
-    return {p:"done", u:1, runT:runMs};
-  }
-
-  function update(r, now){
-    if(!r.active) return;
-    const ph = phase(r, now);
-
-    let cur = r.seg;
-    if(ph.p==="grow") cur = r.seg * ph.u;
-    else if(ph.p==="shrink") cur = r.seg * (1 - ph.u);
-
-    const travelElapsed = (ph.p==="grow")
-      ? (ph.u * r.growMs * 0.35)
-      : (r.growMs*0.35 + ph.runT + (ph.p==="shrink" ? (ph.u * r.shrinkMs) : 0));
-
-    const off = norm(r.start + travelElapsed * r.speed);
-    r.path.setAttribute("stroke-dasharray", dashArray(r.seg, cur));
-    r.path.setAttribute("stroke-dashoffset", off);
+  function scheduleNextSpawn(now){
+    nextSpawnAt = now + rand(CFG.spawnMin, CFG.spawnMax);
   }
 
   function tick(now){
-    if(!seeded) seed(now);
+    if(!CFG.enabled) return;
 
-    let done = true;
-    for(const r of [A,B]){
-      if(!r.active) continue;
-      if((now - r.t0) < r.lapMs) done = false;
+    if(paused){
+      requestAnimationFrame(tick);
+      return;
     }
-    if(done) seed(now);
 
-    update(A, now);
-    update(B, now);
+    if(!lastNow) lastNow = now;
+    const dt = Math.min(40, Math.max(0, now - lastNow));
+    lastNow = now;
 
-    rafId = requestAnimationFrame(tick);
+    applyGeometry();
+
+    if(now >= nextSpawnAt){
+      spawnTracer(now);
+      scheduleNextSpawn(now);
+    }
+
+    for(let i=tracers.length-1;i>=0;i--){
+      const t = tracers[i];
+      t.elapsedMs += dt;
+      const elapsedMs = t.elapsedMs;
+
+      const distPx = (elapsedMs/1000) * speed;
+      const progressPx = Math.min(distPx, t.lapPx);
+
+      let curLen = t.baseLen;
+
+      if(elapsedMs < t.growMs){
+        const g = Math.max(0, Math.min(1, elapsedMs / t.growMs));
+        curLen = Math.max(1, t.baseLen * g);
+      }
+
+      const remainingPx = t.lapPx - progressPx;
+      const remainingMs = (remainingPx / speed) * 1000;
+      if(remainingMs <= t.shrinkMs){
+        const s = Math.max(0, Math.min(1, remainingMs / t.shrinkMs));
+        curLen = Math.max(1, t.baseLen * s);
+      }
+
+      const gap = Math.max(1, L - curLen);
+      t.el.setAttribute("stroke-dasharray", `${curLen} ${gap}`);
+
+      // NO modulo here: monotonic offsets prevent wrap "jumps" that look like reversal
+      const dashOffset = -(t.start + (progressPx * dir));
+      t.el.setAttribute("stroke-dashoffset", dashOffset);
+
+      if(progressPx >= t.lapPx){
+        try{ svg.removeChild(t.el); }catch(e){}
+        tracers.splice(i,1);
+      }
+    }
+
+    if(tracers.length === 0) maybeFlipDirectionWhenEmpty();
+    requestAnimationFrame(tick);
   }
 
-  async function start(){
-    await waitForStableBox(card, 8, 2600);
-    build();
-    await new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(res)));
-    build();
-    if(rafId) cancelAnimationFrame(rafId);
-    seeded = false;
-    rafId = requestAnimationFrame(tick);
+  function start(){
+    if(!CFG.enabled) return;
+    const now = performance.now();
+    nextSpawnAt = now + rand(380, 1500);
+    requestAnimationFrame(tick);
   }
 
-  function stop(){
-    if(rafId) cancelAnimationFrame(rafId);
-    rafId = null;
-  }
+  // Robust observers
+  if(window.ResizeObserver) new ResizeObserver(()=>applyGeometry()).observe(card);
+  window.addEventListener("resize", applyGeometry, {passive:true});
+  window.addEventListener("orientationchange", applyGeometry, {passive:true});
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(applyGeometry, 60); }, {passive:true});
 
-  if(window.ResizeObserver){
-    const ro = new ResizeObserver(()=>{ stop(); start(); });
-    ro.observe(card);
-  } else {
-    window.addEventListener("resize", ()=>{ stop(); start(); }, {passive:true});
-    window.addEventListener("orientationchange", ()=>{ stop(); start(); }, {passive:true});
-  }
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden){ stop(); start(); } });
+  // Guardrail pause/resume (battery + avoids timebase jumps)
+  document.addEventListener("visibilitychange", ()=>{ setPaused(document.hidden); }, {passive:true});
+  window.addEventListener("blur", ()=>{ setPaused(true); }, {passive:true});
+  window.addEventListener("focus", ()=>{ setPaused(false); applyGeometry(); }, {passive:true});
 
-  return { start, stop };
+  applyGeometry();
+  setTimeout(applyGeometry, 50);
+  setTimeout(applyGeometry, 250);
+  setTimeout(applyGeometry, 800);
+
+  return { start };
 }
 
-let __osStarted=false;
-function startOS(){
-  if(__osStarted) return;
-  __osStarted=true;
+let started=false;
+function startEngines(){
+  if(started) return;
+  started=true;
 
-  const cardLeft = document.getElementById("cardLeft");
-  const cardRight = document.getElementById("cardRight");
-  const svgLeft = document.getElementById("svgLeft");
-  const svgRight = document.getElementById("svgRight");
+  const left = createCardEngine({
+    card: document.getElementById("cardLeft"),
+    svg:  document.getElementById("svgLeft"),
+    base: document.getElementById("baseLeft"),
+    defaultDir: +1
+  });
 
-  const left = TracerController({ card: cardLeft, svg: svgLeft, dir:+1, radius:26, stroke:2 });
-  const right = TracerController({ card: cardRight, svg: svgRight, dir:-1, radius:26, stroke:2 });
+  const right = createCardEngine({
+    card: document.getElementById("cardRight"),
+    svg:  document.getElementById("svgRight"),
+    base: document.getElementById("baseRight"),
+    defaultDir: -1
+  });
 
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{ left.start(); right.start(); }));
+  left.start();
+  right.start();
 }
 </script>
-
 </body>
 </html>
