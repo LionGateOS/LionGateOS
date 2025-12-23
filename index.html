@@ -135,10 +135,39 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 </div>
 
 <script>
-/* ===== Sparkles ===== */
+/* ===== Capability + Guardrails (performance-safe) ===== */
+function getGuardrailProfile(){
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cores = (navigator.hardwareConcurrency || 4);
+  const mem = (navigator.deviceMemory || 4); // GB hint; may be undefined
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+  const saveData = !!(conn && conn.saveData);
+  const effType = (conn && conn.effectiveType) ? String(conn.effectiveType) : "";
+
+  // Coarse tiering (privacy-safe buckets)
+  let tier = "high";
+  if (reduced) tier = "reduced";
+  else if (saveData) tier = "low";
+  else if (mem <= 2 || cores <= 4) tier = "low";
+  else if (mem <= 4 || cores <= 6) tier = "mid";
+  else tier = "high";
+
+  if (tier !== "reduced" && (effType.includes("2g") || effType.includes("slow"))) tier = "low";
+  return { reduced, tier, cores, mem, saveData, effType };
+}
+const GUARD = getGuardrailProfile();
+
+/* ===== Sparkles (adaptive) ===== */
 (function(){
   const spark=document.getElementById("sparkles");
-  const N=44;
+  if(!spark) return;
+
+  if(GUARD.reduced){
+    spark.style.display="none";
+    return;
+  }
+
+  const N = (GUARD.tier === "high") ? 44 : (GUARD.tier === "mid") ? 32 : 20;
   for(let i=0;i<N;i++){
     const d=document.createElement("div");
     d.className="dot";
@@ -191,8 +220,9 @@ function stabilizeLayoutThen(cb){
   });
 }
 
-/* ===== Tracer Engine (locked for smoothness + no reversals) =====
-   Fixes:
+/* ===== Tracer Engine (locked for smoothness + no reversals) — with Performance Guardrails =====
+   Guardrails do NOT change the look on good hardware; they simply cap budgets on low-power devices.
+   Fixes (locked):
    - NO back-and-forth: we never modulo dashoffset (prevents wrap "jump")
    - Constant speed (shared across all tracers on a card)
    - Same direction for all active tracers on a card
@@ -205,16 +235,35 @@ function stabilizeLayoutThen(cb){
 function createCardEngine({card, svg, base, defaultDir}){
   const traceColor = (getComputedStyle(document.documentElement).getPropertyValue('--trace').trim() || '#5aa0ff');
 
+  // Guardrails (per-card budgets)
+  const CFG = (function(){
+    if (GUARD && GUARD.reduced) {
+      return { enabled:false, maxTracers:0, spawnMin:999999, spawnMax:999999, speed:0, flipChance:0 };
+    }
+    const tier = (GUARD && GUARD.tier) ? GUARD.tier : "high";
+    if (tier === "low") return { enabled:true, maxTracers:1, spawnMin:3200, spawnMax:6500, speed:185, flipChance:0.25 };
+    if (tier === "mid") return { enabled:true, maxTracers:1, spawnMin:2400, spawnMax:5600, speed:195, flipChance:0.30 };
+    return { enabled:true, maxTracers:2, spawnMin:1900, spawnMax:4700, speed:205, flipChance:0.35 };
+  })();
+
   let L = 1; // perimeter proxy
   let lastW=-1, lastH=-1;
 
-  // Active tracers
-  const tracers = []; // {el,start,lenPx,segPct,lapPx,speed,born,growMs,shrinkMs}
+  const tracers = []; // active tracers
   let nextSpawnAt = 0;
 
-  // Direction + speed are GOVERNED and shared for the whole card while active
-  let dir = defaultDir;       // +1 clockwise, -1 counter
-  const speed = 205;          // CONSTANT speed (premium, non-jerky)
+  let dir = defaultDir;     // +1 clockwise, -1 counter
+  const speed = CFG.speed;  // constant, non-jerky
+
+  let paused = false;
+  let lastNow = 0;
+
+  function setPaused(v){
+    paused = v;
+    if(!paused){
+      lastNow = performance.now(); // reset timebase
+    }
+  }
 
   function applyGeometry(){
     const r = card.getBoundingClientRect();
@@ -235,7 +284,6 @@ function createCardEngine({card, svg, base, defaultDir}){
     const rw = Math.max(1, r.width - stroke);
     const rh = Math.max(1, r.height - stroke);
 
-    // stable rounded-rect perimeter approximation
     L = Math.max(1, (2*(rw+rh)) - (8*rad) + (2*Math.PI*rad));
 
     base.setAttribute("x", inset);
@@ -251,7 +299,6 @@ function createCardEngine({card, svg, base, defaultDir}){
     base.setAttribute("stroke-linejoin", "round");
     base.setAttribute("vector-effect", "non-scaling-stroke");
 
-    // keep existing runner rect geometry consistent
     const runners = svg.querySelectorAll("rect[data-runner='1']");
     runners.forEach(el=>{
       el.setAttribute("x", inset);
@@ -297,31 +344,26 @@ function createCardEngine({card, svg, base, defaultDir}){
     el.setAttribute("stroke-linecap", "round");
     el.setAttribute("stroke-linejoin", "round");
     el.setAttribute("vector-effect", "non-scaling-stroke");
-    // subtle halo (not bursting)
     el.style.filter = "drop-shadow(0 0 6px rgba(90,160,255,.30))";
     svg.appendChild(el);
     return el;
   }
 
   function maybeFlipDirectionWhenEmpty(){
-    // Only allowed to change direction when NOTHING is active (your rule)
     if(tracers.length !== 0) return;
-    // 35% chance to flip each time the loop becomes empty
-    if(Math.random() < 0.35) dir = -dir;
+    if(Math.random() < CFG.flipChance) dir = -dir;
   }
 
   function spawnTracer(now){
-    if(tracers.length >= 2) return;
+    if(tracers.length >= CFG.maxTracers) return;
 
-    // If one exists, only sometimes add a second
-    if(tracers.length === 1 && Math.random() > 0.38) return;
+    if(tracers.length === 1 && CFG.maxTracers >= 2 && Math.random() > 0.38) return;
 
     const segPct = rand(0.12, 0.25);
     const baseLen = Math.max(1, segPct * L);
     const lapPct = rand(0.90, 1.00);
     const lapPx = lapPct * L;
 
-    // Find a start position that won't collide
     let start = rand(0, L);
     let ok = false;
     for(let i=0;i<28;i++){
@@ -340,17 +382,28 @@ function createCardEngine({card, svg, base, defaultDir}){
       segPct,
       baseLen,
       lapPx,
-      born: now,
+      elapsedMs: 0,
       growMs,
       shrinkMs
     });
   }
 
   function scheduleNextSpawn(now){
-    nextSpawnAt = now + rand(1900, 4700);
+    nextSpawnAt = now + rand(CFG.spawnMin, CFG.spawnMax);
   }
 
   function tick(now){
+    if(!CFG.enabled) return;
+
+    if(paused){
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    if(!lastNow) lastNow = now;
+    const dt = Math.min(40, Math.max(0, now - lastNow));
+    lastNow = now;
+
     applyGeometry();
 
     if(now >= nextSpawnAt){
@@ -360,11 +413,12 @@ function createCardEngine({card, svg, base, defaultDir}){
 
     for(let i=tracers.length-1;i>=0;i--){
       const t = tracers[i];
-      const elapsedMs = now - t.born;
+      t.elapsedMs += dt;
+      const elapsedMs = t.elapsedMs;
+
       const distPx = (elapsedMs/1000) * speed;
       const progressPx = Math.min(distPx, t.lapPx);
 
-      // grow/hold/shrink length (subtle)
       let curLen = t.baseLen;
 
       if(elapsedMs < t.growMs){
@@ -382,8 +436,7 @@ function createCardEngine({card, svg, base, defaultDir}){
       const gap = Math.max(1, L - curLen);
       t.el.setAttribute("stroke-dasharray", `${curLen} ${gap}`);
 
-      // CRITICAL: no modulo here (prevents wrap jump that looks like reversal)
-      // stroke-dashoffset supports large values; keeping it monotonic = smooth.
+      // NO modulo here: monotonic offsets prevent wrap "jumps" that look like reversal
       const dashOffset = -(t.start + (progressPx * dir));
       t.el.setAttribute("stroke-dashoffset", dashOffset);
 
@@ -393,26 +446,28 @@ function createCardEngine({card, svg, base, defaultDir}){
       }
     }
 
-    // If we just became empty, direction may flip (but only then)
     if(tracers.length === 0) maybeFlipDirectionWhenEmpty();
-
     requestAnimationFrame(tick);
   }
 
   function start(){
+    if(!CFG.enabled) return;
     const now = performance.now();
-    // desync per card so left/right don't look mirrored in spawn timing
     nextSpawnAt = now + rand(380, 1500);
     requestAnimationFrame(tick);
   }
 
-  // robust observers
+  // Robust observers
   if(window.ResizeObserver) new ResizeObserver(()=>applyGeometry()).observe(card);
   window.addEventListener("resize", applyGeometry, {passive:true});
   window.addEventListener("orientationchange", applyGeometry, {passive:true});
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(applyGeometry, 60); });
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(applyGeometry, 60); }, {passive:true});
 
-  // initial geometry kicks
+  // Guardrail pause/resume (battery + avoids timebase jumps)
+  document.addEventListener("visibilitychange", ()=>{ setPaused(document.hidden); }, {passive:true});
+  window.addEventListener("blur", ()=>{ setPaused(true); }, {passive:true});
+  window.addEventListener("focus", ()=>{ setPaused(false); applyGeometry(); }, {passive:true});
+
   applyGeometry();
   setTimeout(applyGeometry, 50);
   setTimeout(applyGeometry, 250);
@@ -430,14 +485,14 @@ function startEngines(){
     card: document.getElementById("cardLeft"),
     svg:  document.getElementById("svgLeft"),
     base: document.getElementById("baseLeft"),
-    defaultDir: +1  // left defaults clockwise
+    defaultDir: +1
   });
 
   const right = createCardEngine({
     card: document.getElementById("cardRight"),
     svg:  document.getElementById("svgRight"),
     base: document.getElementById("baseRight"),
-    defaultDir: -1  // right defaults counterclockwise
+    defaultDir: -1
   });
 
   left.start();
