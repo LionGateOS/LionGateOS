@@ -1,11 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#0b0f1a"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#0b0f1a" name="theme-color"/>
 <title>LionGateOS</title>
-
 <style>
 :root{
   --bg:#070a12;
@@ -71,42 +71,34 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 }
 .launcher a.disabled{opacity:.5;pointer-events:none}
 </style>
-</head>
-
+<link href="/favicon.ico" rel="icon"/><link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-180.png" rel="apple-touch-icon" sizes="180x180"/><link href="/favicon-256.png" rel="icon" sizes="256x256" type="image/png"/></head>
 <body>
-
 <div id="ambient"></div>
 <div id="sparkles"></div>
-
 <div id="splash">
-  <video id="splashVideo" autoplay muted playsinline>
-    <source src="assets/splash.mp4" type="video/mp4"/>
-  </video>
+<video autoplay="" id="splashVideo" muted="" playsinline="">
+<source src="assets/splash.mp4" type="video/mp4"/>
+</video>
 </div>
-
-<div id="gateway" class="hidden">
-  <div class="panel">
-
-    <div class="card" id="cardLeft">
-      <div class="edgeRunner">
-        <svg id="svgLeft"><rect id="baseLeft"/><rect id="runLeft"/></svg>
-      </div>
-      <img src="assets/liongateos_logo.png" class="logo"/>
-      <footer>© <span id="year"></span> LionGateOS</footer>
-    </div>
-
-    <div class="card launcher" id="cardRight">
-      <div class="edgeRunner">
-        <svg id="svgRight"><rect id="baseRight"/><rect id="runRight"/></svg>
-      </div>
-      <a class="disabled"><span>Enter LionGateOS</span><span>Coming soon</span></a>
-      <a href="https://smartquoteai.pro" target="_blank"><span>SmartQuote AI</span><span>Open</span></a>
-      <a href="https://liongateostravels.com" target="_blank"><span>LionGateOS Travels</span><span>Open</span></a>
-    </div>
-
-  </div>
+<div class="hidden" id="gateway">
+<div class="panel">
+<div class="card" id="cardLeft">
+<div class="edgeRunner">
+<svg id="svgLeft"><rect id="baseLeft"></rect><rect id="runLeft"></rect></svg>
 </div>
-
+<img class="logo" src="assets/liongateos_logo.png"/>
+<footer>© <span id="year"></span> LionGateOS</footer>
+</div>
+<div class="card launcher" id="cardRight">
+<div class="edgeRunner">
+<svg id="svgRight"><rect id="baseRight"></rect><rect id="runRight"></rect></svg>
+</div>
+<a class="disabled"><span>Enter LionGateOS</span><span>Coming soon</span></a>
+<a href="https://smartquoteai.pro" target="_blank"><span>SmartQuote AI</span><span>Open</span></a>
+<a href="https://liongateostravels.com" target="_blank"><span>LionGateOS Travels</span><span>Open</span></a>
+</div>
+</div>
+</div>
 <script>
 const KEY="lgos_splash_seen_v10";
 const splash=document.getElementById("splash");
@@ -135,9 +127,17 @@ function startAfterPaint(){
 }
 
 function setupRunner(card,svg,base,run,dir,offset){
+  let lastW = -1, lastH = -1;
   function apply(){
     const r=card.getBoundingClientRect();
     if(r.width===0||r.height===0)return;
+
+    // Avoid thrashing if nothing changed
+    const w = Math.round(r.width);
+    const h = Math.round(r.height);
+    if(w===lastW && h===lastH) return;
+    lastW=w; lastH=h;
+
     svg.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`);
     const rad=26, stroke=2;
     [base,run].forEach(el=>{
@@ -153,11 +153,43 @@ function setupRunner(card,svg,base,run,dir,offset){
     base.setAttribute("stroke","rgba(255,255,255,.12)");
     run.setAttribute("stroke","#5aa0ff");
     run.setAttribute("stroke-width",stroke);
+
+    // Perimeter-based dash gives consistent speed across sizes
     const p=2*(r.width+r.height);
     run.setAttribute("stroke-dasharray",`${p*0.22} ${p}`);
   }
-  apply();
-  window.addEventListener("resize",apply);
+
+  // Apply on next paints + after any layout shifts (fonts/images/splash)
+  function kick(){
+    apply();
+    requestAnimationFrame(()=>apply());
+    setTimeout(apply, 50);
+    setTimeout(apply, 250);
+    setTimeout(apply, 1000);
+  }
+
+  kick();
+
+  // Robust: observe the card itself, not just window resize
+  if(window.ResizeObserver){
+    const ro = new ResizeObserver(()=>apply());
+    ro.observe(card);
+  }
+  window.addEventListener("resize",apply,{passive:true});
+  window.addEventListener("orientationchange",apply,{passive:true});
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) kick(); });
+
+  // If a splash/video overlay exists, re-apply when it finishes/hides
+  const splash = document.getElementById("splash");
+  if(splash){
+    splash.addEventListener("transitionend",kick);
+    const vid = splash.querySelector("video");
+    if(vid){
+      vid.addEventListener("ended",kick);
+      vid.addEventListener("loadeddata",kick);
+    }
+  }
+
   let t=0;
   (function loop(){
     t+=dir*2;
@@ -171,6 +203,67 @@ function initRunners(){
   setupRunner(cardRight,svgRight,baseRight,runRight,-1,120);
 }
 </script>
+<script id="lgos-first-load-layout-fix">(function () {
+  // Forces a layout + resize pass a few times after first paint.
+  // This addresses first-load tracer/outline misalignment that self-corrects on manual resize/zoom.
+  function force() {
+    try {
+      // Force reflow
+      void document.documentElement.offsetHeight;
+      void document.body.offsetHeight;
+      // Nudge CSS calc/layout listeners
+      window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event('orientationchange'));
+    } catch (e) {}
+  }
 
-</body>
+  function schedule() {
+    // Multiple passes to cover: initial paint, fonts, images, GPU warm-up, and late CSS.
+    requestAnimationFrame(function () {
+      force();
+      requestAnimationFrame(force);
+    });
+    setTimeout(force, 50);
+    setTimeout(force, 250);
+    setTimeout(force, 800);
+    setTimeout(force, 1500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', schedule, { once: true });
+  } else {
+    schedule();
+  }
+
+  // After full load (assets)
+  window.addEventListener('load', function () {
+    schedule();
+  }, { once: true });
+
+  // After fonts (if supported)
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      schedule();
+    }).catch(function(){});
+  }
+
+  // After images (covers logo background etc.)
+  try {
+    var imgs = Array.prototype.slice.call(document.images || []);
+    if (imgs.length) {
+      var pending = imgs.filter(function (img) { return !img.complete; });
+      if (pending.length) {
+        var left = pending.length;
+        pending.forEach(function (img) {
+          var done = function () {
+            left--;
+            if (left <= 0) schedule();
+          };
+          img.addEventListener('load', done, { once: true });
+          img.addEventListener('error', done, { once: true });
+        });
+      }
+    }
+  } catch (e) {}
+})();</script></body>
 </html>
