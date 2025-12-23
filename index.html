@@ -49,7 +49,10 @@ html,body{
   box-shadow:0 0 12px rgba(120,160,255,.9);
   animation:floatUp 24s linear infinite;
 }
-@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-140vh)}}
+@keyframes floatUp{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(var(--drift),-140vh,0)}
+}to{transform:translateY(-140vh)}}
 
 /* Splash */
 #splash{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center}
@@ -284,7 +287,7 @@ function getGuardrailProfile(){
 }
 const GUARD = getGuardrailProfile();
 
-/* ===== Sparkles (adaptive) ===== */
+/* ===== Sparkles (adaptive, polished) ===== */
 (function(){
   const spark=document.getElementById("sparkles");
   if(!spark) return;
@@ -298,10 +301,20 @@ const GUARD = getGuardrailProfile();
   for(let i=0;i<N;i++){
     const d=document.createElement("div");
     d.className="dot";
+
+    const depth = Math.random();
+    const size = 2 + depth * 1.5;
+    d.style.width = d.style.height = size + "px";
+
     d.style.left=(Math.random()*100)+"vw";
     d.style.top=(110+Math.random()*120)+"vh";
     d.style.animationDelay=(Math.random()*24)+"s";
-    d.style.opacity=(0.45+Math.random()*0.45).toFixed(2);
+    d.style.animationDuration=(18 + Math.random()*10)+"s";
+    d.style.opacity=(0.25 + depth * 0.45).toFixed(2);
+
+    const drift = (-20 + Math.random()*40).toFixed(1) + "px";
+    d.style.setProperty("--drift", drift);
+
     spark.appendChild(d);
   }
 })();
