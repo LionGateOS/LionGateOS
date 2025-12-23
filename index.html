@@ -383,6 +383,8 @@ function createCardEngine({card, svg, base, defaultDir}){
   const speed = CFG.speed;  // constant, non-jerky
 
   let paused = false;
+  let speedMultiplier = 1.0; // 1=normal, <1=idle slow
+
   let lastNow = 0;
 
   function setPaused(v){
@@ -592,9 +594,9 @@ function createCardEngine({card, svg, base, defaultDir}){
   document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(applyGeometry, 60); }, {passive:true});
 
   // Guardrail pause/resume (battery + avoids timebase jumps)
-  document.addEventListener("visibilitychange", ()=>{ setPaused(document.hidden); }, {passive:true});
-  window.addEventListener("blur", ()=>{ setPaused(true); }, {passive:true});
-  window.addEventListener("focus", ()=>{ setPaused(false); applyGeometry(); }, {passive:true});
+  document.addEventListener("visibilitychange", ()=>{ speedMultiplier = document.hidden ? 0.2 : 1.0; if(!document.hidden) applyGeometry(); }, {passive:true});
+  window.addEventListener("blur", ()=>{ speedMultiplier = 0.2; }, {passive:true});
+  window.addEventListener("focus", ()=>{ speedMultiplier = 1.0; applyGeometry(); }, {passive:true});
 
   applyGeometry();
   setTimeout(applyGeometry, 50);
@@ -629,3 +631,5 @@ function startEngines(){
 </script>
 </body>
 </html>
+
+<script>window.addEventListener("mousemove", ()=>{ try{ speedMultiplier = 1.0; }catch(e){} }, {passive:true});</script>
