@@ -71,15 +71,24 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 }
 .launcher a.disabled{opacity:.5;pointer-events:none}
 </style>
-<link href="/favicon.ico" rel="icon"/><link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-180.png" rel="apple-touch-icon" sizes="180x180"/><link href="/favicon-256.png" rel="icon" sizes="256x256" type="image/png"/></head>
+
+<link href="/favicon.ico" rel="icon"/>
+<link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="/favicon-180.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="/favicon-256.png" rel="icon" sizes="256x256" type="image/png"/>
+</head>
+
 <body>
 <div id="ambient"></div>
 <div id="sparkles"></div>
+
 <div id="splash">
-<video autoplay="" id="splashVideo" muted="" playsinline="">
-<source src="assets/splash.mp4" type="video/mp4"/>
-</video>
+  <!-- cache-proofed splash video -->
+  <video autoplay="" id="splashVideo" muted="" playsinline="" preload="none">
+    <source src="assets/splash.mp4?v=lgos-splash-20251222" type="video/mp4"/>
+  </video>
 </div>
+
 <div class="hidden" id="gateway">
 <div class="panel">
 <div class="card" id="cardLeft">
@@ -89,6 +98,7 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 <img class="logo" src="assets/liongateos_logo.png"/>
 <footer>© <span id="year"></span> LionGateOS</footer>
 </div>
+
 <div class="card launcher" id="cardRight">
 <div class="edgeRunner">
 <svg id="svgRight"><rect id="baseRight"></rect><rect id="runRight"></rect></svg>
@@ -99,6 +109,7 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 </div>
 </div>
 </div>
+
 <script>
 const KEY="lgos_splash_seen_v10";
 const splash=document.getElementById("splash");
@@ -132,7 +143,6 @@ function setupRunner(card,svg,base,run,dir,offset){
     const r=card.getBoundingClientRect();
     if(r.width===0||r.height===0)return;
 
-    // Avoid thrashing if nothing changed
     const w = Math.round(r.width);
     const h = Math.round(r.height);
     if(w===lastW && h===lastH) return;
@@ -154,12 +164,10 @@ function setupRunner(card,svg,base,run,dir,offset){
     run.setAttribute("stroke","#5aa0ff");
     run.setAttribute("stroke-width",stroke);
 
-    // Perimeter-based dash gives consistent speed across sizes
     const p=2*(r.width+r.height);
     run.setAttribute("stroke-dasharray",`${p*0.22} ${p}`);
   }
 
-  // Apply on next paints + after any layout shifts (fonts/images/splash)
   function kick(){
     apply();
     requestAnimationFrame(()=>apply());
@@ -170,7 +178,6 @@ function setupRunner(card,svg,base,run,dir,offset){
 
   kick();
 
-  // Robust: observe the card itself, not just window resize
   if(window.ResizeObserver){
     const ro = new ResizeObserver(()=>apply());
     ro.observe(card);
@@ -179,7 +186,6 @@ function setupRunner(card,svg,base,run,dir,offset){
   window.addEventListener("orientationchange",apply,{passive:true});
   document.addEventListener("visibilitychange",()=>{ if(!document.hidden) kick(); });
 
-  // If a splash/video overlay exists, re-apply when it finishes/hides
   const splash = document.getElementById("splash");
   if(splash){
     splash.addEventListener("transitionend",kick);
@@ -203,22 +209,18 @@ function initRunners(){
   setupRunner(cardRight,svgRight,baseRight,runRight,-1,120);
 }
 </script>
+
 <script id="lgos-first-load-layout-fix">(function () {
-  // Forces a layout + resize pass a few times after first paint.
-  // This addresses first-load tracer/outline misalignment that self-corrects on manual resize/zoom.
   function force() {
     try {
-      // Force reflow
       void document.documentElement.offsetHeight;
       void document.body.offsetHeight;
-      // Nudge CSS calc/layout listeners
       window.dispatchEvent(new Event('resize'));
       window.dispatchEvent(new Event('orientationchange'));
     } catch (e) {}
   }
 
   function schedule() {
-    // Multiple passes to cover: initial paint, fonts, images, GPU warm-up, and late CSS.
     requestAnimationFrame(function () {
       force();
       requestAnimationFrame(force);
@@ -235,19 +237,16 @@ function initRunners(){
     schedule();
   }
 
-  // After full load (assets)
   window.addEventListener('load', function () {
     schedule();
   }, { once: true });
 
-  // After fonts (if supported)
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
       schedule();
     }).catch(function(){});
   }
 
-  // After images (covers logo background etc.)
   try {
     var imgs = Array.prototype.slice.call(document.images || []);
     if (imgs.length) {
@@ -265,5 +264,7 @@ function initRunners(){
       }
     }
   } catch (e) {}
-})();</script></body>
+})();</script>
+
+</body>
 </html>
