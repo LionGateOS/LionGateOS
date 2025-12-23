@@ -122,6 +122,28 @@ footer{margin-top:22px;font-size:12px;color:var(--muted)}
 <link rel="icon" sizes="32x32" type="image/png" href="/favicon-32.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png"/>
 <link rel="icon" sizes="256x256" type="image/png" href="/favicon-256.png"/>
+
+<style>
+:root{--panel-bg: rgba(14,18,34,.72);}
+#ambient-bg{
+ position:fixed; inset:0; z-index:-2; pointer-events:none;
+ background:
+  radial-gradient(900px 600px at 20% 20%, rgba(90,160,255,.10), transparent 60%),
+  radial-gradient(900px 650px at 85% 55%, rgba(215,179,90,.08), transparent 65%),
+  url("assets/ambient_purple.png");
+ background-size:cover; background-position:center; opacity:.35;
+}
+#sparkles{position:fixed; inset:0; z-index:-1; pointer-events:none}
+.sparkle{
+ width:3px;height:3px;border-radius:50%;
+ background:rgba(120,160,255,.9);
+ box-shadow:0 0 10px rgba(120,160,255,.8);
+ animation:floatUp 24s linear infinite;
+}
+@keyframes floatUp{from{transform:translateY(120vh)}to{transform:translateY(-140vh)}}
+.panel,.card{background:var(--panel-bg)!important}
+</style>
+
 </head>
 
 <body>
@@ -493,6 +515,26 @@ async function startOSInner(){
   const right = TracerController({ card: cardRight, svg: svgRight, dir:-1, radius:26, stroke:2 });
   left.start(); right.start();
 }
+</script>
+
+
+<script>
+(function(){
+ const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce) return;
+ const c=document.getElementById('sparkles');
+ if(!c) return;
+ const n=Math.min(36,Math.floor(window.innerWidth/40));
+ for(let i=0;i<n;i++){
+  const d=document.createElement('div');
+  d.className='sparkle';
+  d.style.left=Math.random()*100+'vw';
+  d.style.top=(120+Math.random()*120)+'vh';
+  d.style.animationDelay=(Math.random()*24)+'s';
+  d.style.opacity=(0.4+Math.random()*0.4).toFixed(2);
+  c.appendChild(d);
+ }
+})();
 </script>
 
 </body>
