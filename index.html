@@ -341,10 +341,11 @@ function createCardEngine({card, svg, base, defaultDir}){
     el.setAttribute("fill", "none");
     el.setAttribute("stroke", traceColor);
     el.setAttribute("stroke-width", stroke);
+    el.setAttribute("stroke-opacity", "0.85");
     el.setAttribute("stroke-linecap", "round");
     el.setAttribute("stroke-linejoin", "round");
     el.setAttribute("vector-effect", "non-scaling-stroke");
-    el.style.filter = "drop-shadow(0 0 6px rgba(90,160,255,.30))";
+    el.style.filter = "drop-shadow(0 0 4px rgba(90,160,255,.22))";
     svg.appendChild(el);
     return el;
   }
