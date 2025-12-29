@@ -1,0 +1,18 @@
+LionGateOS Particle Module Integration Instructions for External Apps (Rows & Budget)
+
+1. Copy the official module into each external project:
+   - Destination folder: [ProjectRoot]/assets/js/
+   - File name: lion_gate_os_particle_module.js
+
+2. Include the script in your HTML or JS entry point:
+   <script src='assets/js/lion_gate_os_particle_module.js'></script>
+
+3. Initialize the particle layer in the desired container:
+   // Background layer
+   new ParticleLayer(document.body, 140, false);
+
+   // Front layer (optional for card panels)
+   new ParticleLayer(document.body, 140, true);
+
+4. Do NOT include edge trace logic for external apps yet.
+5. Use CSS variables for accent colors to match LionGateOS theme.
