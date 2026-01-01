@@ -264,6 +264,96 @@ Examples:
 
 ---
 
+## Security Events App Behavior (B29)
+
+This section defines the behavior of the **Security Events** app, which provides
+a chronological, near-real-time view of OS events for audit and diagnostics.
+
+### Purpose
+- Present a **raw, append-only event stream**
+- Serve as the **audit and diagnostics view**
+- Support compliance and internal review
+
+Security Center answers *“What should I do?”*  
+Security Events answers *“What exactly happened?”*
+
+---
+
+### Event Intake & Scope
+
+- Source: OS message bus (`os:*`)
+- Includes all access, entitlement, billing, cap, and security events
+- Excludes app-local logs and debug traces
+
+The OS message bus is authoritative.
+
+---
+
+### Stream Model
+
+#### Real-Time Stream
+- Append-only timeline
+- Events appear live as emitted
+- No mutation, suppression, or reordering
+
+#### Historical View
+- Time-range filters
+- App filters
+- Event-type and severity filters
+
+Raw events remain individually accessible.
+
+---
+
+### Correlation Rules (Non-Destructive)
+
+Allowed correlations:
+- Same `appId` + same `eventType` within a window
+- Repeated denials or cap hits grouped with a counter
+- Billing state transitions shown as a sequence
+
+Correlation must never hide or delete raw events.
+
+---
+
+### Severity Handling
+
+- Severity is OS-defined and read-only
+- The app displays severity exactly as emitted
+- No reclassification or suppression
+
+---
+
+### Access & Visibility
+
+- **Free:** Limited history, read-only
+- **Paid:** Extended history
+- **Commercial:** Org-wide view with role-based access
+
+No deletion or redaction at the app level.
+
+---
+
+### Export Rules
+
+- Read-only export
+- Formats: CSV / JSON (where permitted)
+- Exports respect retention and account tier
+- All exports labeled “System Audit Data”
+
+---
+
+### Non-Goals
+
+- No remediation actions
+- No user guidance copy
+- No configuration changes
+- No policy editing
+
+The Security Events app **observes**, it does not decide.
+
+---
+
 ## Versioning
 
 - Initial version: **B29**
