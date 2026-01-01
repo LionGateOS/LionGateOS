@@ -174,6 +174,96 @@ If an action is denied at any layer, an audit event must be emitted.
 
 ---
 
+## Security Center UI Consumption Rules (B29)
+
+This section defines how the **Security Center** consumes, groups, and presents
+events emitted under this policy.
+
+### UI Objectives
+- Calm, non-alarming presentation
+- Clear explanation of **what happened**, **why**, and **what to do next**
+- Zero technical jargon in user-facing views
+
+---
+
+### Event Intake & Normalization
+
+- Consume events exclusively from the OS message bus (`os:*`)
+- Deduplicate identical events within a short window
+- Collapse repeated warnings into a single incident with counters
+- Preserve raw events for audit views without loss of fidelity
+
+---
+
+### Primary UI Sections
+
+#### 1. Overview
+- Current account state (Active / Grace / Suspended)
+- Active alerts (count by severity)
+- Recent critical events (last 24 hours)
+
+#### 2. Alerts & Incidents
+Displays **actionable** items only:
+- Security anomalies
+- Repeated access denials
+- Repeated cap hits
+- Billing failures
+
+Each incident must show:
+- Plain-language summary
+- Affected app(s)
+- Time window
+- Recommended action (upgrade, retry, contact support)
+
+#### 3. Activity Log (User-Facing)
+Shows:
+- Access denials
+- Entitlement denials
+- Cap hits
+- Billing state changes
+
+Each entry includes:
+- App name
+- Feature name (if applicable)
+- Human-readable reason
+- Timestamp
+- Link to relevant policy explanation
+
+#### 4. Audit Log (Advanced)
+- Full-fidelity, read-only view
+- Time-range and app filters
+- Exportable where permitted by account tier
+
+---
+
+### Severity Mapping (Immutable)
+
+| Event Type | UI Severity |
+|----------|-------------|
+| `os:access:denied` | Warning |
+| `os:entitlement:denied` | Warning |
+| `os:cap:hit` | Warning |
+| `os:cap:warning` | Info |
+| `os:billing:grace-start` | Warning |
+| `os:billing:suspended` | Alert |
+| `os:security:anomaly` | Alert |
+
+Apps may not override severity mapping.
+
+---
+
+### Messaging Rules
+
+- No blame or alarmist language
+- Always include **reason** and **next step**
+- If user action is required, present **one clear CTA**
+
+Examples:
+- “You’ve reached your export limit for this month.”
+- “Your subscription payment failed. You’re in a grace period.”
+
+---
+
 ## Versioning
 
 - Initial version: **B29**
