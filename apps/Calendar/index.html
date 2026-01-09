@@ -175,7 +175,7 @@
       padding-right:2px;
     }
     .events::-webkit-scrollbar{ width:6px; }
-    .events::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.10); border-radius:999px; }
+    .events::-webkit-scrollbar-thumb{ background: rgba(59,130,246,.55); border-radius:999px; }
     .events::-webkit-scrollbar-track{ background: transparent; }
 
     .evpill{
@@ -263,7 +263,7 @@
       flex:1 1 auto;
     }
     .panel-body::-webkit-scrollbar{ width:8px; }
-    .panel-body::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.10); border-radius:999px; }
+    .panel-body::-webkit-scrollbar-thumb{ background: rgba(59,130,246,.55); border-radius:999px; }
     .panel-body::-webkit-scrollbar-track{ background: transparent; }
 
     .empty{
@@ -363,7 +363,7 @@
     }
 
     /* Note: option styling support varies by browser; provide best effort. */
-    .select option{
+    .select option{ background:#0b2a73; color:rgba(255,255,255,.95);
       background:#0b1024;
       color:rgba(255,255,255,.92);
     }
@@ -455,7 +455,40 @@
     .chip{
       width:10px; height:10px; border-radius:999px; display:inline-block;
     }
-  </style>
+  
+/* ===== Scrollbar theme lock (blue, no gray/white on hover/active) ===== */
+.events::-webkit-scrollbar,
+.panel-body::-webkit-scrollbar{
+  width:8px;
+}
+.events::-webkit-scrollbar-track,
+.panel-body::-webkit-scrollbar-track{
+  background: transparent;
+}
+/* idle */
+.events::-webkit-scrollbar-thumb,
+.panel-body::-webkit-scrollbar-thumb{
+  background: rgba(59,130,246,.35);
+  border-radius:999px;
+}
+/* hover */
+.events::-webkit-scrollbar-thumb:hover,
+.panel-body::-webkit-scrollbar-thumb:hover{
+  background: rgba(59,130,246,.65);
+}
+/* active (dragging) */
+.events::-webkit-scrollbar-thumb:active,
+.panel-body::-webkit-scrollbar-thumb:active{
+  background: rgba(59,130,246,.85);
+}
+
+/* Firefox */
+.events, .panel-body{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59,130,246,.65) transparent;
+}
+
+</style>
 </head>
 <body>
   <div class="app" id="app">
