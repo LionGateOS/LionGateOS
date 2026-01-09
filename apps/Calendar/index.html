@@ -200,6 +200,7 @@
       flex:0 0 auto;
       opacity:.95;
     }
+    .attach-indicator{font-size:11px;opacity:.75;margin-left:6px}
     .evtext{
       overflow:hidden;
       text-overflow:ellipsis;
@@ -554,6 +555,9 @@
 
       const STORAGE_KEY = "liongateos.calendar.v1.entries";
 
+      // Attachment shape (ROWS-aligned, informational only):
+      // attachments?: [{ id, name, type, size, source, createdAt }]
+
       const CATEGORIES = [
         { id:"personal", label:"Personal", dotClass:"c-personal", pillClass:"pill-personal" },
         { id:"work", label:"Work", dotClass:"c-work", pillClass:"pill-work" },
@@ -821,6 +825,7 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
+            if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
             pill.appendChild(txt);
             eventsWrap.appendChild(pill);
@@ -864,6 +869,7 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
+            if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
             pill.appendChild(txt);
             eventsWrap.appendChild(pill);
@@ -995,6 +1001,46 @@
           descWrap.appendChild(dLabel);
           descWrap.appendChild(ta);
           descWrap.appendChild(counter);
+          // Attachments (read-only list + add)
+          const attWrap = document.createElement("div");
+          const attLabel = document.createElement("label");
+          attLabel.textContent = "Attachments";
+          const attList = document.createElement("div");
+          attList.style.fontSize = "12px";
+          attList.style.color = "rgba(255,255,255,.75)";
+          (e.attachments||[]).forEach(a=>{
+            const d=document.createElement("div");
+            d.textContent = "📎 " + a.name;
+            attList.appendChild(d);
+          });
+          const attBtn = document.createElement("button");
+          attBtn.className="smallbtn";
+          attBtn.textContent="Add attachment";
+          attBtn.addEventListener("click",()=>{
+            const f=document.createElement("input");
+            f.type="file";
+            f.onchange=()=>{
+              if(!f.files[0]) return;
+              const file=f.files[0];
+              e.attachments = e.attachments||[];
+              e.attachments.push({
+                id:"a_"+Date.now(),
+                name:file.name,
+                type:file.type,
+                size:file.size,
+                source:"manual",
+                createdAt:Date.now()
+              });
+              updateEntry(iso, e.id, { attachments: e.attachments });
+              renderPanel();
+            };
+            f.click();
+          });
+          attWrap.appendChild(attLabel);
+          attWrap.appendChild(attList);
+          attWrap.appendChild(attBtn);
+          descWrap.appendChild(attWrap);
+
 
           row.appendChild(catWrap);
           row.appendChild(descWrap);
