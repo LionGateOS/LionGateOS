@@ -277,14 +277,12 @@
       line-height:1.35;
     }
 
-    .entry{
-      border:1px solid rgba(255,255,255,.10);
+    .entry{border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.12);
       border-radius:18px;
       padding:12px;
       margin-bottom:12px;
-      position:relative;
-    }
+      position:relative; overflow:hidden; }
     .entry-top{
       display:flex;
       align-items:center;
@@ -487,6 +485,54 @@
 .events, .panel-body{
   scrollbar-width: thin;
   scrollbar-color: rgba(59,130,246,.65) transparent;
+}
+
+
+/* ===== Entry Time Anchors ===== */
+.time-row{display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:6px; flex-wrap:wrap; max-width:100%; }
+.time-pill{padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06); white-space:nowrap; }
+
+    .time-free{ display:flex; align-items:center; gap:8px; flex:1 1 220px; min-width:220px; }
+    .time-free input{
+      height:30px;
+      width:100%;
+      max-width:220px;
+      min-width:140px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      color:rgba(255,255,255,.92);
+      padding:0 10px;
+      outline:none;
+      font-weight:700;
+    }
+    .time-free input:focus{ border-color: rgba(59,130,246,.55); box-shadow:0 0 0 5px rgba(59,130,246,.18); }
+
+.time-pill.active{
+  background:rgba(59,130,246,.28);
+  border-color:rgba(59,130,246,.55);
+}
+.time-input{
+  height:28px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.18);
+  color:white;
+  padding:0 6px;
+}
+.time-indicator{
+  margin-left:6px;
+  font-size:11px;
+  opacity:.75;
 }
 
 </style>
@@ -825,6 +871,7 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
+            if(e.time && e.time.kind){ const ti=document.createElement("span"); ti.className="time-indicator"; ti.textContent="⏱"; pill.appendChild(ti);}
             if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
             pill.appendChild(txt);
@@ -869,6 +916,7 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
+            if(e.time && e.time.kind){ const ti=document.createElement("span"); ti.className="time-indicator"; ti.textContent="⏱"; pill.appendChild(ti);}
             if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
             pill.appendChild(txt);
@@ -974,6 +1022,8 @@
           catWrap.appendChild(catLabel);
           catWrap.appendChild(sel);
 
+          renderTimeControls(iso, e, row);
+
           const descWrap = document.createElement("div");
           const dLabel = document.createElement("label");
           dLabel.textContent = "Description";
@@ -1053,6 +1103,47 @@
           // Size after insertion.
           autoSizeTextarea(ta);
         }
+      }
+
+      
+      /* ===== Time Anchor helpers ===== */
+      const TIME_LABELS = ["morning","afternoon","evening","night"];
+
+      function normalizeEntryTime(e){
+        if(!e.time) e.time = { kind:null, value:null };
+        return e;
+      }
+
+      for(const d in state.entries){
+        state.entries[d] = state.entries[d].map(normalizeEntryTime);
+      }
+
+      function renderTimeControls(iso, entry, container){
+        const row = document.createElement("div");
+        row.className = "time-row";
+
+        TIME_LABELS.forEach(lbl=>{
+          const p = document.createElement("div");
+          p.className = "time-pill" + (entry.time?.value===lbl ? " active":"");
+          p.textContent = lbl.charAt(0).toUpperCase()+lbl.slice(1);
+          p.onclick = ()=>{
+            updateEntry(iso, entry.id, { time:{kind:"label", value:lbl} });
+            renderPanel();
+          };
+          row.appendChild(p);
+        });
+
+        const input = document.createElement("input");
+        input.type="time";
+        input.className="time-input";
+        if(entry.time?.kind==="exact") input.value = entry.time.value;
+        input.onchange = ()=>{
+          updateEntry(iso, entry.id, { time:{kind:"exact", value:input.value} });
+          renderPanel();
+        };
+        row.appendChild(input);
+
+        container.appendChild(row);
       }
 
       function firstLine(text){
