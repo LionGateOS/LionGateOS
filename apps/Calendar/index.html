@@ -136,7 +136,8 @@ body{
   flex-direction:column;
   gap:10px;
 }
-.modal input{
+.modal input,
+.modal select{
   background:#11152a;
   border:1px solid var(--border);
   color:var(--text);
@@ -188,6 +189,13 @@ body{
   <div class="modal">
     <strong id="modalTitle">Add Event</strong>
     <input id="eventTitle" placeholder="Event title"/>
+    <select id="eventLabel">
+      <option value="">Label (optional)</option>
+      <option value="Personal">Personal</option>
+      <option value="Work">Work</option>
+      <option value="Travel">Travel</option>
+      <option value="Reminder">Reminder</option>
+    </select>
     <div class="row">
       <button id="saveEvent">Save</button>
       <button id="deleteEvent" class="danger" style="display:none;">Delete</button>
@@ -199,8 +207,17 @@ body{
 /* ========= Persistence ========= */
 const STORAGE_KEY = "lgos.calendar.events";
 function loadEvents(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e){ return []; }
+  try{
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    // Backward-compatible: older events may not have "label"
+    return Array.isArray(raw) ? raw.map(e => ({
+      title: (e && typeof e.title === "string") ? e.title : "",
+      date:  (e && typeof e.date  === "string") ? e.date  : "",
+      label: (e && typeof e.label === "string") ? e.label : ""
+    })).filter(e => e.title && e.date) : [];
+  }catch(e){
+    return [];
+  }
 }
 function saveEvents(list){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
@@ -253,7 +270,7 @@ function renderCalendar(){
             .forEach((e,idx)=>{
               const el=document.createElement("div");
               el.className="event";
-              el.textContent=e.title;
+              el.textContent = (e.label ? `${e.label}: ` : "") + e.title;
               el.onclick = (ev)=>{ ev.stopPropagation(); openModal(cellDate, idx); };
               cell.appendChild(el);
             });
@@ -268,18 +285,21 @@ function openModal(date, idx=null){
   editingIndex = idx;
   document.getElementById("modalBackdrop").style.display="flex";
   document.getElementById("eventTitle").value = (idx!==null) ? EVENTS[idx].title : "";
+  document.getElementById("eventLabel").value = (idx!==null) ? (EVENTS[idx].label || "") : "";
   document.getElementById("modalTitle").textContent = (idx!==null) ? "Edit Event" : "Add Event";
   document.getElementById("deleteEvent").style.display = (idx!==null) ? "block" : "none";
 }
 
 document.getElementById("saveEvent").onclick = () => {
   const title = document.getElementById("eventTitle").value.trim();
+  const labelVal = (document.getElementById("eventLabel").value || "").trim();
   if(!title || !selectedDate) return;
   const dateStr = selectedDate.toISOString().slice(0,10);
   if(editingIndex!==null){
     EVENTS[editingIndex].title = title;
+    EVENTS[editingIndex].label = labelVal;
   }else{
-    EVENTS.push({ title, date: dateStr });
+    EVENTS.push({ title, date: dateStr, label: labelVal });
   }
   saveEvents(EVENTS);
   closeModal();
