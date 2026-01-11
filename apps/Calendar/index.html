@@ -490,67 +490,91 @@
 }
 
 
-/* ===== Entry Time Anchors ===== */
+/* ===== Entry Time (optional) — compact, theme-aligned ===== */
+.time-block{ margin-top:10px; }
 .time-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.time-label{
+  font-size:11px;
+  color:var(--muted2);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin:0 0 6px 0;
   display:flex;
   gap:8px;
   align-items:center;
-  margin-bottom:6px;
 }
-.time-pill{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
-  cursor:pointer;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
+.time-label .opt{ opacity:.7; font-weight:800; }
+.time-inputs{
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
-.time-pill.active{
-  background:rgba(59,130,246,.28);
-  border-color:rgba(59,130,246,.55);
-}
-.time-input{
-  height:28px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.18);
-  color:white;
-  padding:0 6px;
-}
-
-.time-pills{ display:flex; gap:8px; flex-wrap:wrap; }
-.time-inputs{ display:flex; align-items:center; gap:6px; margin-left:auto; }
 .time-field{
-  width:52px;
-  height:28px;
+  width:54px;
+  height:30px;
   border-radius:10px;
-  border:1px solid var(--stroke2);
-  background: rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.18);
   color: var(--text);
   padding: 0 10px;
-  font-weight:800;
+  font-weight:850;
+  font-size:12px;
+  text-align:center;
 }
+.time-field::placeholder{ color: rgba(255,255,255,.35); }
 .time-field:focus{
   outline:none;
-  border-color: rgba(59,130,246,.55);
+  border-color: rgba(59,130,246,.65);
   box-shadow:0 0 0 4px rgba(59,130,246,.16);
 }
 .time-sep{ opacity:.7; font-weight:900; }
 .time-ampm{
-  height:28px;
+  height:30px;
   border-radius:10px;
-  border:1px solid var(--stroke2);
-  background: rgba(0,0,0,.20);
+  border:1px solid rgba(59,130,246,.35);
+  background: rgba(59,130,246,.14);
   color: var(--text);
   padding: 0 10px;
-  font-weight:800;
+  font-weight:900;
+  font-size:12px;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.70) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.70) 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 16px) 12px,
+    calc(100% - 11px) 12px,
+    0 0;
+  background-size:5px 5px, 5px 5px, 100% 100%;
+  background-repeat:no-repeat;
 }
-.time-ampm:disabled{ opacity:.55; }
+.time-ampm:focus{
+  outline:none;
+  border-color: rgba(59,130,246,.70);
+  box-shadow:0 0 0 4px rgba(59,130,246,.16);
+}
+.time-ampm option{
+  background:#0b1024;
+  color:rgba(255,255,255,.92);
+}
+.time-meta{
+  margin-left:auto;
+  font-size:11px;
+  opacity:.70;
+  white-space:nowrap;
+}
 .time-indicator{
   margin-left:6px;
   font-size:11px;
-  opacity:.75;
+  opacity:.78;
+  white-space:nowrap;
 }
 
 </style>
@@ -670,7 +694,15 @@
       // ======= Event wiring =======
       prevBtn.addEventListener("click", () => shiftMonth(-1));
       nextBtn.addEventListener("click", () => shiftMonth(1));
-      todayBtn.addEventListener("click", () => goToToday());
+      
+todayBtn.addEventListener("click", () => {
+  const now = new Date();
+  state.viewYear = now.getFullYear();
+  state.viewMonth = now.getMonth();
+  state.selectedDayISO = isoDate(now.getFullYear(), now.getMonth(), now.getDate());
+  render();
+});
+
 
       closePanelBtn.addEventListener("click", () => closeDayPanel());
       addEntryBtn.addEventListener("click", () => addEntryForSelectedDay());
@@ -709,6 +741,17 @@
           for (const k of Object.keys(parsed)){
             if (!Array.isArray(parsed[k])) parsed[k] = [];
           }
+          // Entry-level normalization for forward compatibility.
+          for (const k of Object.keys(parsed)){
+            const arr = parsed[k];
+            if (!Array.isArray(arr)) continue;
+            for (const e of arr){
+              if (!e || typeof e !== "object") continue;
+              if (typeof e.timeExact !== "string") e.timeExact = "";
+              if (!Array.isArray(e.attachments)) e.attachments = (e.attachments ? e.attachments : []);
+            }
+          }
+
           return parsed;
         }catch{
           return {};
@@ -769,6 +812,7 @@
           id,
           category: "personal",
           description: "",
+          timeExact: "",
           createdAt: Date.now(),
           updatedAt: Date.now()
         };
@@ -809,7 +853,7 @@
         const fromList = Array.isArray(state.entries[fromISO]) ? state.entries[fromISO] : [];
         const prettyFrom = formatLongDate(fromISO);
 
-        const to = prompt(`Copy entries from:\n${prettyFrom}\n\nEnter destination date as YYYY-MM-DD:`);
+        const to = prompt(`Copy entries from:\n${prettyFrom}\n\nEnter destination date (YYYY-MM-DD). Entries will be duplicated to that date:`);
         if(!to) return;
         if(!/^\d{4}-\d{2}-\d{2}$/.test(to)){
           alert("Invalid date format. Use YYYY-MM-DD.");
@@ -889,10 +933,10 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
-            if((e.timeExact && String(e.timeExact).trim()!=="") || (e.timeLabel && String(e.timeLabel).trim()!=="")){ const ti=document.createElement("span"); ti.className="time-indicator"; ti.textContent = (e.timeExact && String(e.timeExact).trim()!=="") ? ("⏱ " + prettyTime12(e.timeExact)) : "⏱"; pill.appendChild(ti);}
+            if(e.timeExact && String(e.timeExact).trim() !== ""){ txt.textContent += " ⏱ " + prettyTime12(e.timeExact); }
             if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
-            pill.appendChild(txt);
+            if(e.timeExact){ const pd=document.createElement('span'); pd.className='time-indicator'; pd.textContent=' · '+deriveDayPart(e.timeExact); pill.appendChild(pd);} pill.appendChild(txt);
             eventsWrap.appendChild(pill);
           }
 
@@ -934,10 +978,10 @@
             const txt = document.createElement("span");
             txt.className = "evtext";
             txt.textContent = (meta.label + ": " + firstLine(e.description)).trim();
-            if((e.timeExact && String(e.timeExact).trim()!=="") || (e.timeLabel && String(e.timeLabel).trim()!=="")){ const ti=document.createElement("span"); ti.className="time-indicator"; ti.textContent = (e.timeExact && String(e.timeExact).trim()!=="") ? ("⏱ " + prettyTime12(e.timeExact)) : "⏱"; pill.appendChild(ti);}
+            if(e.timeExact && String(e.timeExact).trim() !== ""){ txt.textContent += " ⏱ " + prettyTime12(e.timeExact); }
             if(e.attachments && e.attachments.length){ txt.textContent += " 📎"; }
             pill.appendChild(dot);
-            pill.appendChild(txt);
+            if(e.timeExact){ const pd=document.createElement('span'); pd.className='time-indicator'; pd.textContent=' · '+deriveDayPart(e.timeExact); pill.appendChild(pd);} pill.appendChild(txt);
             eventsWrap.appendChild(pill);
           }
         });
@@ -1040,7 +1084,111 @@
           catWrap.appendChild(catLabel);
           catWrap.appendChild(sel);
 
-          renderTimeControls(iso, e, row);
+          // Time (optional): visible, never required.
+          const timeWrap = document.createElement("div");
+          timeWrap.className = "time-block";
+
+          const tLabel = document.createElement("div");
+          tLabel.className = "time-label";
+          tLabel.innerHTML = 'Time <span class="opt">(optional)</span>';
+
+          const tRow = document.createElement("div");
+          tRow.className = "time-row";
+
+          const tInputs = document.createElement("div");
+          tInputs.className = "time-inputs";
+
+          const hour = document.createElement("input");
+          hour.className = "time-field";
+          hour.type = "text";
+          hour.inputMode = "numeric";
+          hour.placeholder = "hh";
+          hour.setAttribute("aria-label","Hour");
+
+          const sep = document.createElement("span");
+          sep.className = "time-sep";
+          sep.textContent = ":";
+
+          const minute = document.createElement("input");
+          minute.className = "time-field";
+          minute.type = "text";
+          minute.inputMode = "numeric";
+          minute.placeholder = "mm";
+          minute.setAttribute("aria-label","Minute");
+
+          const ampm = document.createElement("select");
+          ampm.className = "time-ampm";
+          ampm.setAttribute("aria-label","AM/PM");
+          ["AM","PM"].forEach(v=>{
+            const opt = document.createElement("option");
+            opt.value = v;
+            opt.textContent = v;
+            ampm.appendChild(opt);
+          });
+
+          const metaEl = document.createElement("div");
+          metaEl.className = "time-meta";
+
+          if(typeof e.timeExact !== "string") e.timeExact = "";
+
+          function syncFromState(){
+            const parts = time24ToParts(e.timeExact);
+            hour.value = parts.h;
+            minute.value = parts.m;
+            ampm.value = parts.ampm;
+            const dp = deriveDayPart(e.timeExact);
+            metaEl.textContent = dp ? ("• " + dp) : "";
+          }
+
+          function normalizeField(el, min, max, pad2){
+            const raw = (el.value||"");
+            const digits = raw.replace(/[^\d]/g,"").slice(0,2);
+            if(digits === ""){ el.value = ""; return; }
+            const n = clampInt(digits, min, max);
+            if(n === null) return;
+            el.value = pad2 ? String(n).padStart(2,"0") : String(n);
+          }
+
+          function commit(){
+            const h = (hour.value||"").replace(/[^\d]/g,"").slice(0,2);
+            const m = (minute.value||"").replace(/[^\d]/g,"").slice(0,2);
+
+            if(h === "" && m === ""){
+              e.timeExact = "";
+              updateEntry(iso, e.id, { timeExact: "" });
+              metaEl.textContent = "";
+              return;
+            }
+
+            const hh = clampInt(h, 1, 12);
+            if(hh === null) return;
+            const mm = (m === "") ? "00" : String(clampInt(m,0,59)).padStart(2,"0");
+
+            const t24 = partsTo24(String(hh), mm, ampm.value || "AM");
+            e.timeExact = t24;
+            updateEntry(iso, e.id, { timeExact: t24 });
+            const dp = deriveDayPart(t24);
+            metaEl.textContent = dp ? ("• " + dp) : "";
+          }
+
+          hour.addEventListener("input", ()=>{ normalizeField(hour,1,12,false); commit(); });
+          minute.addEventListener("input", ()=>{ normalizeField(minute,0,59,true); commit(); });
+          ampm.addEventListener("change", ()=>{ commit(); syncFromState(); });
+
+          tInputs.appendChild(hour);
+          tInputs.appendChild(sep);
+          tInputs.appendChild(minute);
+          tInputs.appendChild(ampm);
+
+          tRow.appendChild(tInputs);
+          tRow.appendChild(metaEl);
+
+          timeWrap.appendChild(tLabel);
+          timeWrap.appendChild(tRow);
+
+          row.appendChild(timeWrap);
+
+          syncFromState();
 
           const descWrap = document.createElement("div");
           const dLabel = document.createElement("label");
@@ -1123,226 +1271,61 @@
         }
       }
 
-      
-      /* ===== Time Anchor helpers ===== */
-      const TIME_LABELS = [
-        {id:"morning", label:"Morning", force:"AM"},
-        {id:"afternoon", label:"Afternoon", force:"PM"},
-        {id:"evening", label:"Evening", force:"PM"},
-        {id:"night", label:"Night", force:"PM"},
-      ];
-
-      function normalizeEntryTime(e){
-        // Phase 2 migration: split label vs exact to prevent overwriting.
-        // Older builds stored a single e.time={kind:"label"|"exact", value:"..."}.
-        if(e && e.time && typeof e.time==="object"){
-          if(e.time.kind==="label" && typeof e.time.value==="string") e.timeLabel = e.time.value;
-          if(e.time.kind==="exact" && typeof e.time.value==="string") e.timeExact = e.time.value;
-          delete e.time;
-        }
-        if(typeof e.timeLabel!=="string") e.timeLabel="";
-        if(typeof e.timeExact!=="string") e.timeExact="";
-      }
-      function forcedMeridiem(timeLabel){
-        if(!timeLabel) return null;
-        const found = TIME_LABELS.find(t => t.id === timeLabel);
-        return found ? found.force : null;
-      }
-
-      function parse24(t){
+      /* ===== Time helpers (optional) ===== */
+      function parseTime24(t){
         if(!t || typeof t !== "string") return null;
-        const m = t.match(/^(\d{1,2}):(\d{2})$/);
+        const m = t.match(/^(\d{2}):(\d{2})$/);
         if(!m) return null;
-        const hh = Math.max(0, Math.min(23, parseInt(m[1],10)));
-        const mm = Math.max(0, Math.min(59, parseInt(m[2],10)));
-        return {hh, mm};
+        const hh = parseInt(m[1],10);
+        const mm = parseInt(m[2],10);
+        if(!Number.isFinite(hh) || !Number.isFinite(mm)) return null;
+        if(hh<0||hh>23||mm<0||mm>59) return null;
+        return {hh,mm};
       }
 
-      function to12Parts(t24, force){
-        const p = parse24(t24);
-        if(!p) return {hour:"", minute:"", ampm: (force||"AM")};
-        let hh = p.hh, mm = p.mm;
-        let ampm = (hh >= 12) ? "PM" : "AM";
-        if(force) ampm = force;
-        let h12 = hh % 12;
-        if(h12 === 0) h12 = 12;
-        // If a force meridiem is applied, keep the visible hour but adjust underlying meridiem in storage later.
-        return {hour:String(h12), minute:String(mm).padStart(2,"0"), ampm};
+      function prettyTime12(t){
+        const p = parseTime24(t);
+        if(!p) return "";
+        const ampm = (p.hh>=12) ? "PM" : "AM";
+        let h = p.hh % 12; if(h===0) h=12;
+        return `${h}:${String(p.mm).padStart(2,"0")} ${ampm}`;
       }
 
-      function partsTo24(hourStr, minuteStr, ampm){
-        const h = parseInt(hourStr,10);
-        const m = parseInt(minuteStr,10);
-        if(!Number.isFinite(h) || !Number.isFinite(m)) return "";
-        if(h < 1 || h > 12) return "";
-        if(m < 0 || m > 59) return "";
-        let hh = h % 12;
-        if((ampm||"AM") === "PM") hh += 12;
+      function deriveDayPart(t){
+        const p = parseTime24(t);
+        if(!p) return "";
+        const mins = p.hh*60 + p.mm;
+        if(mins >= 5*60 && mins < 12*60) return "Morning";
+        if(mins >= 12*60 && mins < 17*60) return "Afternoon";
+        if(mins >= 17*60 && mins < 21*60) return "Evening";
+        return "Night";
+      }
+
+      function clampInt(v, min, max){
+        const n = parseInt(v,10);
+        if(!Number.isFinite(n)) return null;
+        if(n < min) return min;
+        if(n > max) return max;
+        return n;
+      }
+
+      function partsTo24(hStr, mStr, ampm){
+        const h = clampInt(hStr, 1, 12);
+        const m = clampInt(mStr, 0, 59);
+        if(h === null || m === null) return "";
+        let hh = (h % 12);
+        if((ampm||"AM")==="PM") hh += 12;
         return String(hh).padStart(2,"0") + ":" + String(m).padStart(2,"0");
       }
 
-      function enforce24Meridiem(t24, force){
-        if(!force) return t24 || "";
-        const p = parse24(t24);
-        if(!p) return "";
-        let {hh, mm} = p;
-        let h12 = hh % 12;
-        if(h12 === 0) h12 = 12;
-        return partsTo24(String(h12), String(mm).padStart(2,"0"), force);
-      }
-      function prettyTime12(t24){
-        const p = parse24(t24);
-        if(!p) return "";
-        const ampm = (p.hh >= 12) ? "PM" : "AM";
-        let h12 = p.hh % 12; if(h12===0) h12=12;
-        return String(h12) + ":" + String(p.mm).padStart(2,"0") + " " + ampm;
+      function time24ToParts(t24){
+        const p = parseTime24(t24);
+        if(!p) return {h:"", m:"", ampm:"AM"};
+        const ampm = (p.hh>=12) ? "PM" : "AM";
+        let h = p.hh % 12; if(h===0) h=12;
+        return {h:String(h), m:String(p.mm).padStart(2,"0"), ampm};
       }
 
-
-
-      for(const d in state.entries){
-        state.entries[d] = state.entries[d].map(normalizeEntryTime);
-      }
-
-      function renderTimeControls(iso, entry, container){
-        const row = document.createElement("div");
-        row.className = "time-row";
-        row.setAttribute("aria-label","Time");
-
-        normalizeEntryTime(entry);
-
-        const pills = document.createElement("div");
-        pills.className = "time-pills";
-
-        function repaintPills(){
-          [...pills.children].forEach(btn=>{
-            btn.classList.toggle("active", btn.dataset.id === entry.timeLabel);
-          });
-        }
-
-        TIME_LABELS.forEach(t=>{
-          const p = document.createElement("button");
-          p.type = "button";
-          p.className = "time-pill";
-          p.dataset.id = t.id;
-          p.textContent = t.label;
-          p.addEventListener("click", ()=>{
-            // Toggle off if clicked again.
-            entry.timeLabel = (entry.timeLabel === t.id) ? "" : t.id;
-
-            // If an exact time exists, enforce AM/PM implied by the label.
-            const force = forcedMeridiem(entry.timeLabel);
-            if(entry.timeExact){
-              entry.timeExact = enforce24Meridiem(entry.timeExact, force);
-            }
-
-            saveEntries();
-            renderMonth();
-            renderPanel();
-          });
-          pills.appendChild(p);
-        });
-
-        const inputs = document.createElement("div");
-        inputs.className = "time-inputs";
-
-        const hour = document.createElement("input");
-        hour.type = "number";
-        hour.inputMode = "numeric";
-        hour.min = "1";
-        hour.max = "12";
-        hour.placeholder = "hh";
-        hour.className = "time-field";
-
-        const sep = document.createElement("span");
-        sep.className = "time-sep";
-        sep.textContent = ":";
-
-        const minute = document.createElement("input");
-        minute.type = "number";
-        minute.inputMode = "numeric";
-        minute.min = "0";
-        minute.max = "59";
-        minute.placeholder = "mm";
-        minute.className = "time-field";
-
-        const ampm = document.createElement("select");
-        ampm.className = "time-ampm";
-        ["AM","PM"].forEach(v=>{
-          const opt = document.createElement("option");
-          opt.value = v;
-          opt.textContent = v;
-          ampm.appendChild(opt);
-        });
-
-        function syncUIFromState(){
-          const force = forcedMeridiem(entry.timeLabel);
-          const parts = to12Parts(entry.timeExact, force);
-          hour.value = parts.hour;
-          minute.value = parts.minute;
-          ampm.value = parts.ampm;
-          ampm.disabled = !!force;
-        }
-
-        function commitFromUI(){
-          const force = forcedMeridiem(entry.timeLabel);
-          const h = String(hour.value||"").trim();
-          const m = String(minute.value||"").trim();
-          if(h==="" && m===""){
-            entry.timeExact = "";
-          }else{
-            const mm = (m==="" ? "00" : String(parseInt(m,10)).padStart(2,"0"));
-            const mer = force || ampm.value || "AM";
-            const t24 = partsTo24(h, mm, mer);
-            entry.timeExact = t24;
-          }
-          saveEntries();
-          renderMonth();
-        }
-
-        hour.addEventListener("input", ()=>{
-          // Clamp and keep UI stable
-          if(hour.value !== ""){
-            let v = parseInt(hour.value,10);
-            if(Number.isFinite(v)){
-              if(v < 1) v = 1;
-              if(v > 12) v = 12;
-              hour.value = String(v);
-            }
-          }
-          commitFromUI();
-        });
-
-        minute.addEventListener("input", ()=>{
-          if(minute.value !== ""){
-            let v = parseInt(minute.value,10);
-            if(Number.isFinite(v)){
-              if(v < 0) v = 0;
-              if(v > 59) v = 59;
-              minute.value = String(v).padStart(2,"0");
-            }
-          }
-          commitFromUI();
-        });
-
-        ampm.addEventListener("change", ()=>{
-          commitFromUI();
-          syncUIFromState(); // keep forced states consistent
-        });
-
-        inputs.appendChild(hour);
-        inputs.appendChild(sep);
-        inputs.appendChild(minute);
-        inputs.appendChild(ampm);
-
-        row.appendChild(pills);
-        row.appendChild(inputs);
-
-        container.appendChild(row);
-
-        repaintPills();
-        syncUIFromState();
-      }
 
       function firstLine(text){
         const t = (text || "").trim();
