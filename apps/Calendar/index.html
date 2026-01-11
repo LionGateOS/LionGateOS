@@ -577,6 +577,54 @@
   white-space:nowrap;
 }
 
+
+/* ===== Attachments: download/open/remove ===== */
+.att-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
+  margin:6px 0;
+}
+.att-left{ min-width:0; }
+.att-name{
+  font-size:12px;
+  font-weight:850;
+  color:rgba(255,255,255,.86);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width: 220px;
+}
+.att-sub{
+  margin-top:2px;
+  font-size:11px;
+  color:rgba(255,255,255,.62);
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.att-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.smallbtn.tiny{
+  height:28px;
+  padding:0 9px;
+  border-radius:10px;
+  font-size:11px;
+}
+.smallbtn.tiny:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
 </style>
 </head>
 <body>
@@ -1217,18 +1265,150 @@ todayBtn.addEventListener("click", () => {
           descWrap.appendChild(dLabel);
           descWrap.appendChild(ta);
           descWrap.appendChild(counter);
-          // Attachments (read-only list + add)
+          
+          // Attachments: stored locally so they can be downloaded/opened/removed.
+          // Note: localStorage has tight size limits. We enforce conservative caps.
+          const ATTACH_LIMITS = {
+            maxBytesPerFile: 1500 * 1024,   // 1.5 MB
+            maxBytesTotal:   3000 * 1024    // 3.0 MB across calendar
+          };
+
           const attWrap = document.createElement("div");
           const attLabel = document.createElement("label");
           attLabel.textContent = "Attachments";
+
           const attList = document.createElement("div");
-          attList.style.fontSize = "12px";
-          attList.style.color = "rgba(255,255,255,.75)";
-          (e.attachments||[]).forEach(a=>{
-            const d=document.createElement("div");
-            d.textContent = "📎 " + a.name;
-            attList.appendChild(d);
-          });
+          attList.style.marginTop = "6px";
+
+          function formatBytes(n){
+            if(!Number.isFinite(n) || n <= 0) return "";
+            if(n < 1024) return `${n} B`;
+            if(n < 1024*1024) return `${Math.round(n/1024)} KB`;
+            return `${(n/(1024*1024)).toFixed(1)} MB`;
+          }
+
+          function totalEmbeddedBytes(){
+            let total = 0;
+            try{
+              for(const d of Object.keys(state.entries||{})){
+                const arr = state.entries[d];
+                if(!Array.isArray(arr)) continue;
+                for(const ee of arr){
+                  const atts2 = (ee && ee.attachments) ? ee.attachments : [];
+                  if(!Array.isArray(atts2)) continue;
+                  for(const a of atts2){
+                    if(a && a.dataUrl && Number.isFinite(a.size)) total += a.size;
+                  }
+                }
+              }
+            }catch{}
+            return total;
+          }
+
+          function dataUrlToBlob(dataUrl){
+            // data:[mime];base64,....
+            const mm = String(dataUrl||"").match(/^data:([^;]+);base64,(.+)$/);
+            if(!mm) return null;
+            const mime = mm[1] || "application/octet-stream";
+            const b64 = mm[2] || "";
+            let binStr = "";
+            try{ binStr = atob(b64); }catch{ return null; }
+            const len = binStr.length;
+            const bytes = new Uint8Array(len);
+            for(let i=0;i<len;i++) bytes[i] = binStr.charCodeAt(i);
+            return new Blob([bytes], {type:mime});
+          }
+
+          function downloadAttachment(att){
+            if(!att || !att.dataUrl) return;
+            const blob = dataUrlToBlob(att.dataUrl);
+            if(!blob) return;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = att.name || "attachment";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url), 1500);
+          }
+
+          function openAttachment(att){
+            if(!att || !att.dataUrl) return;
+            const blob = dataUrlToBlob(att.dataUrl);
+            if(!blob) return;
+            const url = URL.createObjectURL(blob);
+            window.open(url, "_blank", "noopener,noreferrer");
+            setTimeout(()=>URL.revokeObjectURL(url), 8000);
+          }
+
+          function removeAttachment(attId){
+            const list = Array.isArray(e.attachments) ? e.attachments : [];
+            const next = list.filter(a => a && a.id !== attId);
+            updateEntry(iso, e.id, { attachments: next });
+            renderPanel();
+          }
+
+          // Render list
+          const atts = Array.isArray(e.attachments) ? e.attachments : [];
+          if(atts.length === 0){
+            const emptyAtt = document.createElement("div");
+            emptyAtt.style.fontSize = "12px";
+            emptyAtt.style.color = "rgba(255,255,255,.62)";
+            emptyAtt.textContent = "No attachments yet.";
+            attList.appendChild(emptyAtt);
+          }else{
+            atts.forEach(att=>{
+              const row = document.createElement("div");
+              row.className = "att-row";
+
+              const left = document.createElement("div");
+              left.className = "att-left";
+
+              const name = document.createElement("div");
+              name.className = "att-name";
+              name.textContent = att.name || "Attachment";
+
+              const sub = document.createElement("div");
+              sub.className = "att-sub";
+              const sizeTxt = att.size ? formatBytes(att.size) : "";
+              const kindTxt = att.type ? att.type : "unknown";
+              const storedTxt = att.dataUrl ? "stored" : "metadata-only";
+              sub.textContent = [sizeTxt, kindTxt, storedTxt].filter(Boolean).join(" · ");
+
+              left.appendChild(name);
+              left.appendChild(sub);
+
+              const actions = document.createElement("div");
+              actions.className = "att-actions";
+
+              const openBtn = document.createElement("button");
+              openBtn.className = "smallbtn tiny";
+              openBtn.textContent = "Open";
+              openBtn.disabled = !att.dataUrl;
+              openBtn.addEventListener("click", ()=>openAttachment(att));
+
+              const dlBtn = document.createElement("button");
+              dlBtn.className = "smallbtn tiny";
+              dlBtn.textContent = "Download";
+              dlBtn.disabled = !att.dataUrl;
+              dlBtn.addEventListener("click", ()=>downloadAttachment(att));
+
+              const rmBtn = document.createElement("button");
+              rmBtn.className = "smallbtn tiny danger";
+              rmBtn.textContent = "Remove";
+              rmBtn.addEventListener("click", ()=>removeAttachment(att.id));
+
+              actions.appendChild(openBtn);
+              actions.appendChild(dlBtn);
+              actions.appendChild(rmBtn);
+
+              row.appendChild(left);
+              row.appendChild(actions);
+              attList.appendChild(row);
+            });
+          }
+
           const attBtn = document.createElement("button");
           attBtn.className="smallbtn";
           attBtn.textContent="Add attachment";
@@ -1236,22 +1416,42 @@ todayBtn.addEventListener("click", () => {
             const f=document.createElement("input");
             f.type="file";
             f.onchange=()=>{
-              if(!f.files[0]) return;
+              if(!f.files || !f.files[0]) return;
               const file=f.files[0];
-              e.attachments = e.attachments||[];
-              e.attachments.push({
-                id:"a_"+Date.now(),
-                name:file.name,
-                type:file.type,
-                size:file.size,
-                source:"manual",
-                createdAt:Date.now()
-              });
-              updateEntry(iso, e.id, { attachments: e.attachments });
-              renderPanel();
+
+              if(file.size > ATTACH_LIMITS.maxBytesPerFile){
+                alert("That file is too large to store inside the calendar (localStorage). Please attach a smaller file (max ~1.5 MB).");
+                return;
+              }
+
+              const projectedTotal = totalEmbeddedBytes() + file.size;
+              if(projectedTotal > ATTACH_LIMITS.maxBytesTotal){
+                alert("Attachment storage is nearly full for this calendar (localStorage limit). Please remove older attachments or attach smaller files.");
+                return;
+              }
+
+              const reader = new FileReader();
+              reader.onload = () => {
+                const dataUrl = String(reader.result || "");
+                const next = Array.isArray(e.attachments) ? e.attachments.slice() : [];
+                next.push({
+                  id:"a_"+Math.random().toString(36).slice(2,10)+"_"+Date.now().toString(36),
+                  name:file.name,
+                  type:file.type || "application/octet-stream",
+                  size:file.size,
+                  source:"manual",
+                  createdAt:Date.now(),
+                  dataUrl
+                });
+                updateEntry(iso, e.id, { attachments: next });
+                renderPanel();
+              };
+              reader.onerror = () => alert("Could not read that file.");
+              reader.readAsDataURL(file);
             };
             f.click();
           });
+
           attWrap.appendChild(attLabel);
           attWrap.appendChild(attList);
           attWrap.appendChild(attBtn);
