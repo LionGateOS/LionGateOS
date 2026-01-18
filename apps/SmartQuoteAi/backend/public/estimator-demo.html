@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Estimator Demo (Fixed)</title>
+<style>
+body { background:#0b0f1a; color:white; font-family:Arial; padding:40px; }
+label { display:block; margin-top:20px; }
+select, input {
+  padding:10px;
+  width:250px;
+  border-radius:8px;
+  border:1px solid #555;
+  background:#1d2333;
+  color:white;
+}
+.dropdown-fix {
+  position:relative;
+  z-index:9999;
+}
+</style>
+</head>
+<body>
+<h1>Estimator Demo (Fixed UI)</h1>
+
+<label>Client Name</label>
+<input type="text" placeholder="Enter client name" />
+
+<label>Complexity</label>
+<select class="dropdown-fix">
+  <option>Low</option>
+  <option>Medium</option>
+  <option>High</option>
+</select>
+
+<p style="margin-top:30px;">Updated UI patch: Client Name added + fixed dropdown readability.</p>
+
+</body>
+</html>

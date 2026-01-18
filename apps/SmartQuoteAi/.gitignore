@@ -1,0 +1,39 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build outputs
+dist/
+out/
+build/
+*.log
+
+# Electron binaries
+electron/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+
+index.html.BACKUP_*
+public/index.html
+src/system/SparklesLayer.tsx
+
+backups/
+*.tgz
+*.tar.gz
+
+# Backups and temp files
+backups/
+tools/**/Backups/
+*.backup
+*.bak
+
+# Local scripts (do not version)
+Make_*.ps1
+
+# OS / tooling noise
+.expo/

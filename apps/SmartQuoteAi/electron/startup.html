@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Startup</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.35s ease-out;
+}
+.fade-out {
+  opacity: 0;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+</style>
+</head>
+<body>
+<video id="vid" autoplay muted playsinline>
+  <source src="startup.mp4" type="video/mp4" />
+</video>
+
+<script>
+const vid = document.getElementById("vid");
+
+// fade + close on video end
+vid.onended = () => {
+  document.body.classList.add("fade-out");
+  setTimeout(() => window.close(), 350);
+};
+
+// skip with ESC or SPACE
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Escape" || event.code === "Space") {
+    document.body.classList.add("fade-out");
+    setTimeout(() => window.close(), 250);
+  }
+});
+</script>
+
+</body>
+</html>

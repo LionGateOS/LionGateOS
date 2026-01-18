@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartQuoteAI Pro – Proposal Preview (Phase 9)</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1020;
+      --accent: #f7b267;
+      --accent-soft: #fce3c0;
+      --text-main: #f5f7fa;
+      --text-soft: #b9c1d9;
+      --border-subtle: #252b3d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 16px 48px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #101735, var(--bg));
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+    .shell {
+      width: 100%;
+      max-width: 1120px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(0,0,0,0.6));
+      border-radius: 24px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.65);
+      padding: 24px 28px 32px;
+      border: 1px solid rgba(255,255,255,0.04);
+      display: grid;
+      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      column-gap: 28px;
+      row-gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+    .title-block p {
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+    .status-pill {
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(122, 199, 79, 0.5);
+      color: #a5ff93;
+      background: radial-gradient(circle at top left, rgba(122,199,79,0.3), transparent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #7ac74f;
+      box-shadow: 0 0 10px rgba(122,199,79,0.8);
+    }
+    .card {
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.04), var(--card));
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-soft);
+    }
+    .card p.helper {
+      margin: 0 0 14px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px 12px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    label {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background: rgba(5, 8, 22, 0.9);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 999px;
+      padding: 8px 10px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+      border-radius: 12px;
+      line-height: 1.4;
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(247,178,103,0.4);
+      background: rgba(9, 13, 30, 0.95);
+    }
+    .row-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      gap: 10px;
+    }
+    .primary-btn,
+    .ghost-btn {
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .primary-btn {
+      background: radial-gradient(circle at top left, #fbd38d, #f6ad55);
+      color: #1a1308;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+    .primary-btn:hover {
+      filter: brightness(1.03);
+    }
+    .ghost-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.24);
+      color: var(--text-soft);
+    }
+    .ghost-btn:hover {
+      background: rgba(255,255,255,0.04);
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+    .preview-document {
+      background: #070b18;
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 8px;
+    }
+    .doc-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+    .doc-header span {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+    .doc-body {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-soft);
+    }
+    .doc-body h3 {
+      margin: 12px 0 4px;
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .doc-body p {
+      margin: 0 0 8px;
+    }
+    .doc-body .meta-line {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+    .doc-body .est-block {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(10, 18, 40, 0.9);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .doc-body .est-block strong {
+      color: var(--accent-soft);
+    }
+    .doc-body ul {
+      margin: 4px 0 10px 16px;
+      padding: 0;
+    }
+    .doc-body li {
+      margin: 2px 0;
+    }
+    .doc-footer {
+      font-size: 0.75rem;
+      color: rgba(185,193,217,0.9);
+      border-top: 1px dashed rgba(255,255,255,0.08);
+      padding-top: 6px;
+      margin-top: 2px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .doc-footer span {
+      opacity: 0.8;
+    }
+    .doc-body .placeholder {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: rgba(185,193,217,0.7);
+      font-style: italic;
+    }
+    .badge {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--accent-soft);
+    }
+    .log-line {
+      font-size: 0.75rem;
+      color: rgba(185,193,217,0.85);
+      margin-top: 4px;
+    }
+    .log-line span.key {
+      color: var(--accent-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <div class="title-block">
+        <h1>SmartQuoteAI Pro · Proposal Console</h1>
+        <p>Phase 9 – Formatted proposal preview (local-only, Git-backed).</p>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>API link: <strong>/api/proposal/generate</strong></span>
+      </div>
+    </div>
+
+    <!-- Left: Input form -->
+    <div class="card">
+      <h2>Proposal inputs</h2>
+      <p class="helper">
+        Fill in the basic client and project details, then click
+        <strong>Generate formatted proposal</strong>. The backend will build the narrative,
+        and this screen will assemble a clean document preview.
+      </p>
+      <form id="proposalForm">
+        <div class="field-grid">
+          <div class="field-group">
+            <label for="clientName">Client name</label>
+            <input id="clientName" type="text" placeholder="e.g. Northbridge Ventures" required />
+          </div>
+          <div class="field-group">
+            <label for="projectName">Project / initiative name</label>
+            <input id="projectName" type="text" placeholder="e.g. SmartQuoteAI Pro Rollout" required />
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-top:10px;">
+          <label for="summary">Short project summary</label>
+          <textarea id="summary" placeholder="Briefly describe the engagement in your own words (optional but recommended)."></textarea>
+        </div>
+
+        <div class="row-2" style="margin-top:10px;">
+          <div class="field-group">
+            <label for="baseHours">Base estimate – hours</label>
+            <input id="baseHours" type="number" min="1" step="1" value="40" />
+          </div>
+          <div class="field-group">
+            <label for="hourlyRate">Hourly rate (USD)</label>
+            <input id="hourlyRate" type="number" min="0" step="10" value="150" />
+          </div>
+        </div>
+
+        <div class="row-2" style="margin-top:10px;">
+          <div class="field-group">
+            <label for="complexity">Complexity</label>
+            <select id="complexity">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="riskBuffer">Risk buffer (%)</label>
+            <input id="riskBuffer" type="number" min="0" step="5" value="20" />
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-top:10px;">
+          <label for="assumptions">Key assumptions (optional)</label>
+          <textarea id="assumptions" placeholder="Access to stakeholders, decision cadence, existing assets, etc."></textarea>
+        </div>
+
+        <div class="field-group" style="margin-top:10px;">
+          <label for="risks">Known risks or constraints (optional)</label>
+          <textarea id="risks" placeholder="Anything that might affect delivery, risk, or outcomes."></textarea>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="primary-btn">
+            <span>Generate formatted proposal</span>
+          </button>
+          <button type="button" class="ghost-btn" id="copyButton">
+            Copy full proposal
+          </button>
+        </div>
+        <div class="log-line" id="logLine">
+          Ready. Waiting for first proposal generation…
+        </div>
+      </form>
+    </div>
+
+    <!-- Right: Document preview -->
+    <div class="preview-document">
+      <div class="doc-header">
+        <div>
+          <h2>Proposal preview</h2>
+          <span id="docMeta">No proposal generated yet.</span>
+        </div>
+        <div class="badge" id="toneBadge">Tone: adaptive</div>
+      </div>
+      <div class="doc-body" id="docBody">
+        <p class="placeholder">
+          Once generated, a fully assembled proposal will appear here –
+          including executive summary, objectives, scope, implementation approach,
+          investment overview, risks, and next steps.
+        </p>
+      </div>
+      <div class="doc-footer">
+        <span>SmartQuoteAI Pro · Local-only draft (no client distribution)</span>
+        <span id="footerEstimate"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("proposalForm");
+    const logLine = document.getElementById("logLine");
+    const docMetaEl = document.getElementById("docMeta");
+    const docBodyEl = document.getElementById("docBody");
+    const footerEstimateEl = document.getElementById("footerEstimate");
+    const toneBadgeEl = document.getElementById("toneBadge");
+    const copyButton = document.getElementById("copyButton");
+
+    let lastPlainText = "";
+
+    function formatCurrency(amount, currency) {
+      if (typeof amount !== "number" || isNaN(amount)) return "TBD";
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency || "USD",
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function assembleClientSide(doc) {
+      if (!doc || !doc.sections) return "(No sections returned from backend.)";
+
+      const lines = [];
+      lines.push("PROPOSAL DOCUMENT");
+      lines.push("------------------------------------------------------------");
+      if (doc.meta) {
+        if (doc.meta.clientName) lines.push("Client: " + doc.meta.clientName);
+        if (doc.meta.projectName) lines.push("Project: " + doc.meta.projectName);
+        if (doc.meta.createdAt) lines.push("Generated: " + doc.meta.createdAt);
+        if (doc.meta.tone) lines.push("Tone: " + doc.meta.tone);
+      }
+      lines.push("");
+
+      for (const section of doc.sections) {
+        lines.push(section.title.toUpperCase());
+        lines.push("------------------------------------------------------------");
+        lines.push(section.body || "");
+        lines.push("");
+      }
+
+      return lines.join("\n");
+    }
+
+    function renderDocument(doc) {
+      if (!doc) return;
+
+      const meta = doc.meta || {};
+      const est = doc.estimate || {};
+      const currency = est.currency || "USD";
+
+      // Tone badge
+      if (meta.tone) {
+        toneBadgeEl.textContent = "Tone: " + meta.tone;
+      } else {
+        toneBadgeEl.textContent = "Tone: adaptive";
+      }
+
+      // Meta line
+      const client = meta.clientName || "Unknown client";
+      const project = meta.projectName || "Untitled project";
+      const version = meta.version || "n/a";
+      const created = meta.createdAt
+        ? new Date(meta.createdAt).toLocaleString()
+        : "time not recorded";
+      docMetaEl.textContent =
+        client + " · " + project + " · v" + version + " · " + created;
+
+      // Investment text
+      const totalWithBuffer = est.totalWithBuffer;
+      if (typeof totalWithBuffer === "number") {
+        footerEstimateEl.textContent =
+          "Indicative total (with buffer): " +
+          formatCurrency(totalWithBuffer, currency);
+      } else {
+        footerEstimateEl.textContent =
+          "Indicative total (with buffer): to be confirmed.";
+      }
+
+      // Build HTML sections
+      const parts = [];
+      const sections = doc.sections || [];
+
+      sections.forEach((s) => {
+        parts.push("<h3>" + (s.title || "Section") + "</h3>");
+        if (s.body) {
+          const paragraphs = s.body.split(/\n\n+/);
+          paragraphs.forEach((p) => {
+            const trimmed = p.trim();
+            if (!trimmed) return;
+            parts.push("<p>" + trimmed.replace(/\n/g, "<br/>") + "</p>");
+          });
+        }
+      });
+
+      if (!parts.length) {
+        parts.push(
+          '<p class="placeholder">The backend responded, but no sections were found in the proposal payload.</p>'
+        );
+      }
+
+      docBodyEl.innerHTML = parts.join("\n");
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const clientName = document.getElementById("clientName").value.trim();
+      const projectName = document.getElementById("projectName").value.trim();
+      const summary = document.getElementById("summary").value.trim();
+      const assumptions = document.getElementById("assumptions").value.trim();
+      const risks = document.getElementById("risks").value.trim();
+      const baseHours = parseFloat(document.getElementById("baseHours").value) || 0;
+      const hourlyRate = parseFloat(document.getElementById("hourlyRate").value) || 0;
+      const complexity = document.getElementById("complexity").value || "medium";
+      const riskBuffer = parseFloat(document.getElementById("riskBuffer").value) || 0;
+
+      const totalBase = baseHours * hourlyRate;
+      const totalWithBuffer = totalBase * (1 + riskBuffer / 100);
+
+      const payload = {
+        clientName,
+        projectName,
+        summary,
+        assumptions,
+        risks,
+        preparedBy: "SmartQuoteAI Pro – Proposal Console",
+        estimate: {
+          baseHours,
+          hourlyRate,
+          complexity,
+          riskBufferPercent: riskBuffer,
+          totalBase,
+          totalWithBuffer,
+          currency: "USD"
+        }
+      };
+
+      logLine.textContent = "Sending payload to /api/proposal/generate…";
+
+      try {
+        const response = await fetch("/api/proposal/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+        const proposalDoc = data.data || data.proposal || data; // support { ok, data }, { proposal }, or direct
+
+        // Client-side text assembly fallback for copying
+        lastPlainText =
+          proposalDoc.fullText || data.fullText || assembleClientSide(proposalDoc);
+
+        renderDocument(proposalDoc);
+        logLine.innerHTML =
+          '<span class="key">Status:</span> Draft generated successfully from backend at ' +
+          new Date().toLocaleTimeString() +
+          ".";
+      } catch (err) {
+        console.error(err);
+        docBodyEl.innerHTML =
+          '<p class="placeholder">There was a problem calling /api/proposal/generate. Please confirm the backend is running on port 4000 and try again.</p>';
+        logLine.innerHTML =
+          '<span class="key">Error:</span> ' +
+          (err && err.message ? err.message : "Unexpected error");
+      }
+    });
+
+    copyButton.addEventListener("click", async () => {
+      if (!lastPlainText) {
+        alert("No proposal has been generated yet.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(lastPlainText);
+        logLine.innerHTML =
+          '<span class="key">Copied:</span> Full proposal text placed on clipboard.';
+      } catch (err) {
+        console.error(err);
+        alert("Unable to copy to clipboard in this browser.");
+      }
+    });
+  </script>
+</body>
+</html>

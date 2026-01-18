@@ -1,0 +1,42 @@
+
+:root {
+  --shell-bg-z: 0;
+  --shell-particles-z: 1;
+  --shell-ui-z: 10;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shell-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.shell-background {
+  position: fixed;
+  inset: 0;
+  z-index: var(--shell-bg-z);
+  background-size: cover;
+  background-position: center;
+}
+
+.shell-particles {
+  position: fixed;
+  inset: 0;
+  z-index: var(--shell-particles-z);
+  pointer-events: none;
+}
+
+.shell-ui {
+  position: relative;
+  z-index: var(--shell-ui-z);
+  height: 100%;
+  overflow-y: auto;
+}

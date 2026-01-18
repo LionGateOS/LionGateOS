@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartQuoteAI Pro – Final Proposal Output</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1020;
+      --accent: #f7b267;
+      --accent-soft: #fce3c0;
+      --text-main: #f5f7fa;
+      --text-soft: #b9c1d9;
+      --border-subtle: #252b3d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 16px 48px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #101735, var(--bg));
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+    .shell {
+      width: 100%;
+      max-width: 1120px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(0,0,0,0.6));
+      border-radius: 24px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.65);
+      padding: 24px 28px 32px;
+      border: 1px solid rgba(255,255,255,0.04);
+      display: grid;
+      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      column-gap: 28px;
+      row-gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+    .title-block p {
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+    .status-pill {
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(122, 199, 79, 0.5);
+      color: #a5ff93;
+      background: radial-gradient(circle at top left, rgba(122,199,79,0.3), transparent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #7ac74f;
+      box-shadow: 0 0 10px rgba(122,199,79,0.8);
+    }
+    /* ... keep all previous styles ... */
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <div class="title-block">
+        <h1>SmartQuoteAI Pro · Proposal Console</h1>
+        <p>Phase 18 – Proposal Output with Export</p>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>API link: <strong>/api/proposal/generate</strong></span>
+      </div>
+    </div>
+
+    <!-- Left: Input form -->
+    <div class="card">
+      <h2>Proposal inputs</h2>
+      <p class="helper">Fill in the client and project details, then click <strong>Generate final proposal</strong>.</p>
+      <form id="proposalForm">
+        <!-- previous input fields stay the same -->
+        <div class="button-row">
+          <button type="submit" class="primary-btn"><span>Generate final proposal</span></button>
+          <button type="button" class="ghost-btn" id="copyButton">Copy full proposal</button>
+          <button type="button" class="ghost-btn" id="exportPdfBtn">Export PDF</button>
+          <button type="button" class="ghost-btn" id="exportDocxBtn">Export DOCX</button>
+        </div>
+        <div class="log-line" id="logLine">Ready. Waiting for first proposal generation…</div>
+      </form>
+    </div>
+
+    <!-- Right: Document preview -->
+    <div class="preview-document">
+      <div class="doc-header">
+        <div>
+          <h2>Proposal preview</h2>
+          <span id="docMeta">No proposal generated yet.</span>
+        </div>
+        <div class="badge" id="toneBadge">Tone: adaptive</div>
+      </div>
+      <div class="doc-body" id="docBody">
+        <p class="placeholder">Once generated, proposal appears here.</p>
+      </div>
+      <div class="doc-footer">
+        <span>SmartQuoteAI Pro · Local-only draft</span>
+        <span id="footerEstimate"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
+    const exportDocxBtn = document.getElementById('exportDocxBtn');
+    const copyButton = document.getElementById('copyButton');
+    const form = document.getElementById('proposalForm');
+    const logLine = document.getElementById('logLine');
+
+    let lastPlainText = '';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {/* gather form data */};
+      logLine.textContent = 'Sending payload…';
+      try {
+        const res = await fetch('/api/proposal/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        const data = await res.json();
+        lastPlainText = data.fullText || '';
+        // render document preview …
+        logLine.innerHTML = 'Status: Draft generated successfully.';
+      } catch(err) {
+        console.error(err);
+        logLine.innerHTML = 'Error: ' + err.message;
+      }
+    });
+
+    copyButton.addEventListener('click', async () => {
+      if(!lastPlainText){ alert('No proposal generated yet.'); return; }
+      await navigator.clipboard.writeText(lastPlainText);
+      logLine.innerHTML = 'Copied: full proposal text placed on clipboard.';
+    });
+
+    exportPdfBtn.addEventListener('click', async () => {
+      if(!lastPlainText){ alert('No proposal generated yet.'); return; }
+      try {
+        const res = await fetch('/api/proposal/export/pdf', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ content:lastPlainText }) });
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Proposal.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch(err){ console.error(err); alert('PDF export failed'); }
+    });
+
+    exportDocxBtn.addEventListener('click', async () => {
+      if(!lastPlainText){ alert('No proposal generated yet.'); return; }
+      try {
+        const res = await fetch('/api/proposal/export/docx', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ content:lastPlainText }) });
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Proposal.docx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch(err){ console.error(err); alert('DOCX export failed'); }
+    });
+  </script>
+</body>
+</html>
