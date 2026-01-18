@@ -1,0 +1,27 @@
+{
+  "name": "SmartQuoteAI Interaction Adapter",
+  "status": "PROVISIONAL",
+  "rules": [
+    "Do not define visual values",
+    "Do not persist visual preferences",
+    "Render only values supplied by LionGateOS"
+  ],
+  "deviceAdaptation": {
+    "touch": {
+      "controls": "wheel"
+    },
+    "pointer": {
+      "controls": "slider"
+    }
+  },
+  "binding": {
+    "wheel": "binds to same value index as slider",
+    "slider": "binds to same value index as wheel"
+  },
+  "fallback": {
+    "whenLionGateOSUnavailable": {
+      "appearance": "neutral",
+      "branding": "none"
+    }
+  }
+}
