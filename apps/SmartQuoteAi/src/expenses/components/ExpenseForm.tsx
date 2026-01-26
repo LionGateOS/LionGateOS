@@ -41,6 +41,7 @@ export const ExpenseForm: React.FC<{ onAdd: (e: Expense) => void }> = ({ onAdd }
     <div
       onKeyDown={(e) => {
         if (e.key === "Enter") {
+          // Enter NEVER submits an expense
           e.preventDefault();
           e.stopPropagation();
         }
@@ -105,13 +106,8 @@ export const ExpenseForm: React.FC<{ onAdd: (e: Expense) => void }> = ({ onAdd }
         />
       </div>
 
-      <div style={{ marginBottom: 18 }}>
-        <WheelSelect label="Currency" value={currency} options={CURRENCIES} onChange={setCurrency} />
-      </div>
-
-      <div style={{ marginBottom: 28 }}>
-        <WheelSelect label="Category" value={category} options={CATEGORIES} onChange={setCategory} />
-      </div>
+      <WheelSelect label="Currency" value={currency} options={CURRENCIES} onChange={setCurrency} />
+      <WheelSelect label="Category" value={category} options={CATEGORIES} onChange={setCategory} />
 
       <button
         type="button"
