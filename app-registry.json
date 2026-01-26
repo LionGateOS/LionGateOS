@@ -1,0 +1,10 @@
+{
+  "default": "calendar",
+  "apps": [
+    { "id": "calendar",   "title": "Calendar",     "path": "apps/Calendar/index.html",     "enabled": true },
+    { "id": "budget",     "title": "Budget",       "path": "apps/Budget/index.html",       "enabled": true },
+    { "id": "travels",    "title": "Travels",      "path": "apps/LionGateTravels/index.html","enabled": true },
+    { "id": "rows",       "title": "ROWS",         "path": "apps/Rows/index.html",         "enabled": true },
+    { "id": "smartquote", "title": "SmartQuoteAI", "path": "apps/SmartQuoteAi/index.html",  "enabled": true }
+  ]
+}
