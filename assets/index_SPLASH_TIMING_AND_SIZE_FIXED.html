@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LionGateOS — LionDataWeb Dashboard</title>
+  <style>
+    :root{
+      --bg0:#060814;
+      --bg1:#0b1024;
+      --panel:#0f1633cc;
+      --panel2:#0f1633ee;
+      --stroke:rgba(255,255,255,.10);
+      --stroke2:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.65);
+      --muted2:rgba(255,255,255,.45);
+      --shadow:0 24px 70px rgba(0,0,0,.55);
+      --ring:#3b82f6;
+      --ring2:rgba(59,130,246,.35);
+      --btn:#121b3e;
+      --btn2:#182457;
+      --good:#35d39a;
+      --warn:#f59e0b;
+      --bad:#f87171;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1200px 600px at 18% 22%, rgba(99,102,241,.24), transparent 60%),
+        radial-gradient(900px 500px at 75% 35%, rgba(59,130,246,.18), transparent 60%),
+        radial-gradient(900px 700px at 35% 88%, rgba(168,85,247,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      color:var(--text);
+    }
+    .shell{
+      min-height:100vh;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 18px;
+      border:1px solid var(--stroke);
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+    }
+    .brand h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .brand .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      font-weight:800;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill:hover{ background: rgba(255,255,255,.06); }
+    .pill.primary{
+      background: rgba(59,130,246,.22);
+      border-color: rgba(255,255,255,.14);
+    }
+    .pill.primary:hover{ background: rgba(59,130,246,.30); }
+    .pill.ghost{
+      background: rgba(0,0,0,.10);
+      color: rgba(255,255,255,.78);
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:10px 4px 0 4px;
+    }
+    .tab{
+      height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.14);
+      color:rgba(255,255,255,.85);
+      font-weight:800;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      outline:2px solid var(--ring);
+      box-shadow: 0 0 0 6px var(--ring2);
+      background: rgba(59,130,246,.18);
+    }
+
+    .content{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel .head{
+      padding:14px 16px 10px 16px;
+      border-bottom:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel .head .title{
+      font-size:16px;
+      font-weight:900;
+    }
+    .panel .head .meta{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted2);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .panel .body{
+      padding:14px 16px 16px 16px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media (max-width: 1100px){
+      .grid2{ grid-template-columns: 1fr; }
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 820px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      border-radius:18px;
+      padding:12px;
+    }
+    .card h3{
+      margin:0;
+      font-size:14px;
+      font-weight:900;
+    }
+    .card .small{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    .appRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+      margin-bottom:10px;
+    }
+    .appLeft{ min-width:0; }
+    .appName{ font-weight:900; }
+    .appDesc{ margin-top:3px; font-size:12px; color:var(--muted); }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .dot{ width:10px; height:10px; border-radius:999px; }
+    .dot.good{ background: var(--good); }
+    .dot.warn{ background: var(--warn); }
+    .dot.bad{ background: var(--bad); }
+
+    .progressWrap{ display:flex; align-items:center; gap:10px; }
+    input[type="range"]{ width:160px; }
+    .pct{ width:46px; text-align:right; font-weight:900; color:rgba(255,255,255,.85); }
+
+    .note{
+      padding:12px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,.18);
+      background: rgba(0,0,0,.10);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    /* Calendar embed */
+    .calFrameWrap{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .calFrame{
+      width:100%;
+      height: calc(100vh - 260px);
+      min-height: 640px;
+      border:0;
+      display:block;
+      background: transparent;
+    }
+    @media (max-width: 1100px){
+      .calFrame{ height: calc(100vh - 320px); min-height: 720px; }
+    }
+    @media (max-width: 720px){
+      .calFrame{ height: 820px; }
+    }
+
+    .hidden{ display:none !important; }
+    a.link{ color: rgba(168,214,255,.92); text-decoration:none; font-weight:900; }
+    a.link:hover{ text-decoration:underline; }
+  
+    /* ===== LionGateOS VISUALS (particles + tracers) =====
+       Passive, non-interactive (pointer-events:none).
+       Safe for file://, no network, no dependencies.
+    */
+    #lg-visuals{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    #lg-visuals canvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    /* Keep UI above visuals */
+    .shell{ position:relative; z-index:1; }
+
+    /* Slight bloom without washing out text */
+    #lg-tracers{ mix-blend-mode:screen; opacity:.65; }
+    #lg-particles{ opacity:.55; }
+
+    /* === Phase A reset: Visual Controls (beta constellation only) === */
+    .visual-controls{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(14,20,45,.70), rgba(10,14,34,.60));
+      border:1px solid var(--stroke);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+    }
+    .vc-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.14);
+    }
+    .vc-label{
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.72);
+      white-space:nowrap;
+    }
+    .vc-item input[type="range"]{
+      width:110px;
+      accent-color: var(--ring);
+      background:transparent;
+    }
+    @media (max-width: 1100px){
+      .vc-item input[type="range"]{width:84px}
+      .vc-label{display:none}
+      .vc-item{padding:4px 6px}
+    }
+
+    /* === LionGateOS Splash (fullscreen, timing-safe) === */
+    #splashScreen{
+      position:fixed; inset:0; z-index:9999;
+      background:#060814;
+      display:flex; align-items:center; justify-content:center;
+      opacity:1; transition:opacity 500ms ease;
+    }
+    #splashScreen.hidden{ opacity:0; pointer-events:none; }
+    #splashScreen.gone{ display:none; }
+    #splashScreen video{
+      width:100vw; height:100vh;
+      object-fit:contain; /* show full frame, no cropping */
+      background:#060814;
+    }
+
+</style>
+</head>
+<body>
+
+<div id="splashScreen" aria-hidden="true">
+  <video id="splashVideo" src="splash.mp4" autoplay muted playsinline preload="auto"></video>
+</div>
+<script>
+(function(){
+  const splash = document.getElementById('splashScreen');
+  const vid = document.getElementById('splashVideo');
+  if(!splash || !vid) return;
+
+  const hide = () => {
+    if(splash.classList.contains('hidden')) return;
+    splash.classList.add('hidden');
+    // remove after fade
+    setTimeout(()=> splash.classList.add('gone'), 600);
+  };
+
+  // Prefer exact timing: hide when video ends
+  vid.addEventListener('ended', hide);
+
+  // Safety: if video errors or can't autoplay, don't block the app
+  vid.addEventListener('error', () => setTimeout(hide, 400));
+  vid.addEventListener('stalled', () => setTimeout(hide, 1200));
+
+  // If browser blocks autoplay, user interaction will start it; still allow click-to-skip
+  splash.addEventListener('click', hide);
+
+  // Absolute safety cap (never exceed 12s)
+  setTimeout(hide, 12000);
+})();
+</script>
+
+
+
+  <div id="lg-visuals" aria-hidden="true"><canvas id="lg-particles"></canvas>
+</div>
+  <div class="shell">
+    <header class="top">
+      <div class="brand">
+        <h1>LionGateOS — LionDataWeb</h1>
+        <div class="sub">Single-file dashboard · local-only · no recommendations · 2026-01-11 16:34 UTC</div>
+      </div>
+      <div class="actions">
+        <button class="pill ghost" id="btnVisuals" title="Toggle background visuals">Visuals</button>
+        <div id="visualControls" class="visual-controls" aria-label="Visual controls" hidden>
+          <div class="vc-item">
+            <span class="vc-label">Speed</span>
+            <input id="vcSpeed" type="range" min="0" max="100" value="35" />
+          </div>
+          <div class="vc-item">
+            <span class="vc-label">Particles</span>
+            <input id="vcCount" type="range" min="20" max="220" value="110" />
+          </div>
+          <div class="vc-item">
+            <span class="vc-label">Brightness</span>
+            <input id="vcBright" type="range" min="0" max="100" value="55" />
+          </div>
+          <div class="vc-item">
+            <span class="vc-label">Glow</span>
+            <input id="vcGlow" type="range" min="0" max="100" value="35" />
+          </div>
+          <div class="vc-item">
+            <span class="vc-label">Sharpness</span>
+            <input id="vcSharp" type="range" min="0" max="100" value="70" />
+          </div>
+          <div class="vc-item">
+            <span class="vc-label">Color</span>
+            <input id="vcColor" type="range" min="0" max="100" value="70" />
+          </div>
+        </div>
+
+        <button class="pill ghost" id="btnSignIn" title="Placeholder only (not enforced)">Sign in (coming soon)</button>
+        <button class="pill" id="btnExport">Export Progress</button>
+        <button class="pill primary" id="btnReset">Reset Progress</button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="calendar">Calendar</button>
+      <button class="tab" data-tab="apps">Apps Progress</button>
+      <button class="tab" data-tab="governance">Notes</button>
+    </nav>
+
+    <main class="content">
+      <section class="panel" id="tab-overview">
+        <div class="head">
+          <div>
+            <div class="title">Overview</div>
+            <div class="meta">What exists now, visible in one place</div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="grid2">
+            <div class="cards">
+              <div class="card">
+                <h3>Calendar</h3>
+                <div class="small">Embedded directly inside this dashboard (no separate window). Entries and attachments are stored locally in your browser.</div>
+              </div>
+              <div class="card">
+                <h3>Apps Progress</h3>
+                <div class="small">A simple progress tracker so the ecosystem can “reflect” activity immediately without building a full back-end.</div>
+              </div>
+              <div class="card">
+                <h3>Login</h3>
+                <div class="small">Not enforced yet. This dashboard includes a placeholder button only. When you decide to implement registration, we’ll add it as a controlled phase.</div>
+              </div>
+              <div class="card">
+                <h3>Local-first posture</h3>
+                <div class="small">No network calls. No analytics. No hidden automation. Pure visualization and reversible notes.</div>
+              </div>
+            </div>
+
+            <div class="note">
+              Use the tabs above. If you want the Calendar visible on your “main site,” this file is the safe first step: it is self-contained and can later be moved into the real web app.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="tab-calendar">
+        <div class="head">
+          <div>
+            <div class="title">Calendar</div>
+            <div class="meta">Embedded module · attachments are downloadable</div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="calFrameWrap">
+            <iframe class="calFrame" id="calFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads"></iframe>
+          </div>
+          <div style="height:10px"></div>
+          <div class="note">
+            If you open this file in different browsers, each browser keeps its own localStorage. That can make it look “different” even though the file is identical.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="tab-apps">
+        <div class="head">
+          <div>
+            <div class="title">Apps Progress</div>
+            <div class="meta">Manual tracking · stored locally</div>
+          </div>
+        </div>
+        <div class="body" id="appsBody">
+          <!-- injected -->
+        </div>
+      </section>
+
+      <section class="panel hidden" id="tab-governance">
+        <div class="head">
+          <div>
+            <div class="title">Notes</div>
+            <div class="meta">Non-directive, informational only</div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="note">
+            This dashboard is intentionally simple:
+            <ul>
+              <li>No AI, no decisions, no automation.</li>
+              <li>Calendar is a visualization surface for time (consistent with your contract posture).</li>
+              <li>Login is deferred until you explicitly trigger that phase.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const KEY = "liongateos.liondataweb.v1.progress";
+
+      const DEFAULT_APPS = [
+        { id:"calendar", name:"Calendar", desc:"Month + Day view; optional time; attachments downloadable", status:"active", pct: 45 },
+        { id:"liongatetravels", name:"LionGateTravels", desc:"Planner-not-booker surface (blocked for full build)", status:"blocked", pct: 5 },
+        { id:"smartquoteai", name:"SmartQuoteAI", desc:"Explain pricing decisions; transparency-first", status:"parked", pct: 15 },
+        { id:"rows", name:"Rows", desc:"Records of work + receipts + traceability", status:"active", pct: 10 },
+        { id:"budget", name:"Budget", desc:"Personal finance surface", status:"planned", pct: 5 },
+      ];
+
+      function load(){
+        try{
+          const raw = localStorage.getItem(KEY);
+          if(!raw) return DEFAULT_APPS;
+          const parsed = JSON.parse(raw);
+          if(!Array.isArray(parsed)) return DEFAULT_APPS;
+          return mergeDefaults(parsed);
+        }catch{
+          return DEFAULT_APPS;
+        }
+      }
+
+      function mergeDefaults(arr){
+        const byId = new Map(arr.map(a=>[a.id, a]));
+        return DEFAULT_APPS.map(d => Object.assign({}, d, byId.get(d.id) || {}));
+      }
+
+      function save(arr){
+        try{ localStorage.setItem(KEY, JSON.stringify(arr)); }catch{}
+      }
+
+      function statusMeta(status){
+        const s = String(status||"").toLowerCase();
+        if(s==="active") return { label:"Active", dot:"good" };
+        if(s==="parked") return { label:"Parked", dot:"warn" };
+        if(s==="blocked") return { label:"Blocked", dot:"bad" };
+        if(s==="planned") return { label:"Planned", dot:"warn" };
+        return { label:"Unknown", dot:"warn" };
+      }
+
+      function renderApps(){
+        const apps = load();
+        const root = document.getElementById("appsBody");
+        root.innerHTML = "";
+
+        apps.forEach((app, idx) => {
+          const meta = statusMeta(app.status);
+
+          const row = document.createElement("div");
+          row.className = "appRow";
+
+          const left = document.createElement("div");
+          left.className = "appLeft";
+          const name = document.createElement("div");
+          name.className = "appName";
+          name.textContent = app.name;
+          const desc = document.createElement("div");
+          desc.className = "appDesc";
+          desc.textContent = app.desc || "";
+          left.appendChild(name);
+          left.appendChild(desc);
+
+          const right = document.createElement("div");
+          right.style.display = "flex";
+          right.style.flexDirection = "column";
+          right.style.alignItems = "flex-end";
+          right.style.gap = "8px";
+
+          const chip = document.createElement("div");
+          chip.className = "chip";
+          const dot = document.createElement("span");
+          dot.className = "dot " + meta.dot;
+          const label = document.createElement("span");
+          label.textContent = meta.label;
+          chip.appendChild(dot);
+          chip.appendChild(label);
+
+          const prog = document.createElement("div");
+          prog.className = "progressWrap";
+
+          const rng = document.createElement("input");
+          rng.type = "range";
+          rng.min = "0";
+          rng.max = "100";
+          rng.value = String(Math.max(0, Math.min(100, Number(app.pct||0))));
+          const pct = document.createElement("div");
+          pct.className = "pct";
+          pct.textContent = rng.value + "%";
+
+          rng.addEventListener("input", () => {
+            pct.textContent = rng.value + "%";
+            apps[idx].pct = Number(rng.value);
+            save(apps);
+          });
+
+          prog.appendChild(rng);
+          prog.appendChild(pct);
+
+          right.appendChild(chip);
+          right.appendChild(prog);
+
+          row.appendChild(left);
+          row.appendChild(right);
+
+          root.appendChild(row);
+        });
+
+        const n = document.createElement("div");
+        n.className = "note";
+        n.innerHTML = "This is intentionally manual. It is a visibility layer, not a planning engine.";
+        root.appendChild(n);
+      }
+
+      // Tabs
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = {
+        overview: document.getElementById("tab-overview"),
+        calendar: document.getElementById("tab-calendar"),
+        apps: document.getElementById("tab-apps"),
+        governance: document.getElementById("tab-governance"),
+      };
+
+      tabs.forEach(t => t.addEventListener("click", () => {
+        const id = t.dataset.tab;
+        tabs.forEach(x => x.classList.toggle("active", x === t));
+        Object.keys(panels).forEach(k => panels[k].classList.toggle("hidden", k !== id));
+        if(id === "apps") renderApps();
+        if(id === "calendar") ensureCalendarLoaded();
+      }));
+
+      // Calendar embed (srcdoc)
+      const CAL_HTML = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <title>LionGateOS Calendar \u2014 Contract-Compliant (Month + Day)</title>\n  <style>\n    :root{\n      --bg0:#060814;\n      --bg1:#0b1024;\n      --panel:#0f1633cc;\n      --panel2:#0f1633ee;\n      --stroke:rgba(255,255,255,.10);\n      --stroke2:rgba(255,255,255,.14);\n      --text:rgba(255,255,255,.92);\n      --muted:rgba(255,255,255,.65);\n      --muted2:rgba(255,255,255,.45);\n      --shadow:0 24px 70px rgba(0,0,0,.55);\n      --ring:#3b82f6;           /* active date ring (blue) */\n      --ring2:rgba(59,130,246,.35);\n      --btn:#121b3e;\n      --btn2:#182457;\n      --danger:#6b1f2a;\n      --danger2:#8a2b3a;\n\n      --cat-personal:#4f7cff;\n      --cat-work:#35d39a;\n      --cat-travel:#8b5cf6;\n      --cat-reminder:#f59e0b;\n      --cat-unlabeled:#94a3b8;\n\n      --sel-bg:#123a9c;          /* dropdown selected background */\n      --sel-fg:#a8d6ff;          /* dropdown selected text (neon-ish) */\n      --hover-bg:#0b2a73;\n    }\n\n    *{box-sizing:border-box}\n    html,body{height:100%}\n    body{\n      margin:0;\n      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, \"Apple Color Emoji\",\"Segoe UI Emoji\";\n      background:\n        radial-gradient(1200px 600px at 18% 22%, rgba(99,102,241,.24), transparent 60%),\n        radial-gradient(900px 500px at 75% 35%, rgba(59,130,246,.18), transparent 60%),\n        radial-gradient(900px 700px at 35% 88%, rgba(168,85,247,.12), transparent 60%),\n        linear-gradient(180deg, var(--bg0), var(--bg1));\n      color:var(--text);\n      overflow:hidden; /* important: layout handles its own scrolling regions */\n    }\n\n    /* ======= Layout ======= */\n    .app{\n      height:100vh;\n      width:100vw;\n      padding:14px;\n      display:flex;\n      gap:12px;\n    }\n\n    /* When the viewport is tight, stack panel under month. */\n    @media (max-width: 1080px){\n      body{ overflow:auto; }\n      .app{ flex-direction:column; height:auto; min-height:100vh; overflow:visible; }\n    }\n\n    .month-shell{\n      flex: 1 1 auto;\n      min-width: 520px;\n      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));\n      border:1px solid var(--stroke);\n      border-radius:22px;\n      box-shadow: var(--shadow);\n      overflow:hidden;\n      position:relative;\n    }\n\n    @media (max-width: 1080px){\n      .month-shell{ min-width: unset; }\n    }\n\n    .topbar{\n      display:flex;\n      align-items:center;\n      justify-content:space-between;\n      padding:18px 18px 10px 18px;\n      border-bottom:1px solid var(--stroke);\n      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent);\n    }\n    .title{\n      font-size:38px;\n      font-weight:800;\n      letter-spacing:.2px;\n    }\n    .controls{\n      display:flex;\n      align-items:center;\n      gap:10px;\n    }\n    .iconbtn{\n      width:40px; height:40px;\n      border-radius:999px;\n      border:1px solid var(--stroke2);\n      background: rgba(0,0,0,.18);\n      color:var(--text);\n      display:inline-flex;\n      align-items:center;\n      justify-content:center;\n      cursor:pointer;\n      user-select:none;\n    }\n    .iconbtn:hover{ background: rgba(255,255,255,.06); }\n    .pillbtn{\n      height:40px;\n      padding:0 14px;\n      border-radius:999px;\n      border:1px solid var(--stroke2);\n      background: rgba(0,0,0,.18);\n      color:var(--text);\n      cursor:pointer;\n      font-weight:600;\n      user-select:none;\n    }\n    .pillbtn:hover{ background: rgba(255,255,255,.06); }\n\n    .dow{\n      display:grid;\n      grid-template-columns:repeat(7, 1fr);\n      gap:8px;\n      padding:10px 18px 12px 18px;\n      color:var(--muted);\n      font-size:12px;\n      text-transform:uppercase;\n      letter-spacing:.22em;\n    }\n    .dow div{ text-align:center; opacity:.9; }\n\n    .grid{\n      padding:0 18px 18px 18px;\n      display:grid;\n      grid-template-columns:repeat(7, 1fr);\n      gap:10px;\n    }\n\n    /* Fixed month cell height to prevent layout creep. */\n    .day{\n      height:110px;\n      border-radius:16px;\n      border:1px solid var(--stroke);\n      background: rgba(0,0,0,.16);\n      position:relative;\n      overflow:hidden;\n      cursor:pointer;\n    }\n    .day:hover{ border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.03); }\n    .day.dim{ opacity:.48; }\n    .day.selected{\n      outline:2px solid var(--ring);\n      box-shadow: 0 0 0 6px var(--ring2);\n    }\n    .daynum{\n      position:absolute;\n      top:8px;\n      left:10px;\n      font-weight:700;\n      font-size:13px;\n      color:rgba(255,255,255,.78);\n    }\n    .events{\n      position:absolute;\n      left:8px;\n      right:8px;\n      bottom:8px;\n      top:30px;\n      overflow:auto;       /* scroll INSIDE month cell */\n      padding-right:2px;\n    }\n    .events::-webkit-scrollbar{ width:6px; }\n    .events::-webkit-scrollbar-thumb{ background: rgba(59,130,246,.55); border-radius:999px; }\n    .events::-webkit-scrollbar-track{ background: transparent; }\n\n    .evpill{\n      display:flex;\n      align-items:center;\n      gap:8px;\n      height:22px;\n      margin-bottom:6px;\n      padding:0 8px;\n      border-radius:999px;\n      border:1px solid rgba(255,255,255,.10);\n      background: rgba(255,255,255,.06);\n      color:rgba(255,255,255,.86);\n      font-size:12px;\n      white-space:nowrap;\n      overflow:hidden;\n      text-overflow:ellipsis;\n    }\n    .dot{\n      width:8px; height:8px;\n      border-radius:999px;\n      flex:0 0 auto;\n      opacity:.95;\n    }\n    .attach-indicator{font-size:11px;opacity:.75;margin-left:6px}\n    .evtext{\n      overflow:hidden;\n      text-overflow:ellipsis;\n    }\n\n    /* ======= Day Panel ======= */\n    .panel{\n      flex: 0 0 380px;\n      max-width:380px;\n      min-width:320px;\n      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));\n      border:1px solid var(--stroke);\n      border-radius:22px;\n      box-shadow: var(--shadow);\n      overflow:hidden;\n      display:flex;\n      flex-direction:column;\n    }\n    @media (max-width: 1080px){\n      .panel{ max-width:none; min-width:unset; width:100%; }\n    }\n\n    .panel-head{\n      padding:16px 16px 10px 16px;\n      border-bottom:1px solid var(--stroke);\n      display:flex;\n      align-items:flex-start;\n      justify-content:space-between;\n      gap:10px;\n      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent);\n    }\n    .panel-title{\n      font-size:20px;\n      font-weight:800;\n      line-height:1.15;\n    }\n    .panel-sub{\n      margin-top:4px;\n      font-size:11px;\n      letter-spacing:.08em;\n      text-transform:uppercase;\n      color:var(--muted2);\n    }\n    .closebtn{\n      width:34px; height:34px;\n      border-radius:999px;\n      border:1px solid var(--stroke2);\n      background: rgba(0,0,0,.18);\n      cursor:pointer;\n      display:flex;\n      align-items:center;\n      justify-content:center;\n      color:var(--text);\n      user-select:none;\n    }\n    .closebtn:hover{ background: rgba(255,255,255,.06); }\n\n    .panel-body{\n      padding:14px 14px 12px 14px;\n      overflow:auto;             /* panel scrolls independently */\n      flex:1 1 auto;\n    }\n    .panel-body::-webkit-scrollbar{ width:8px; }\n    .panel-body::-webkit-scrollbar-thumb{ background: rgba(59,130,246,.55); border-radius:999px; }\n    .panel-body::-webkit-scrollbar-track{ background: transparent; }\n\n    .empty{\n      padding:14px;\n      color:var(--muted);\n      border:1px dashed rgba(255,255,255,.18);\n      border-radius:16px;\n      background: rgba(0,0,0,.10);\n      font-size:13px;\n      line-height:1.35;\n    }\n\n    .entry{\n      border:1px solid rgba(255,255,255,.10);\n      background: rgba(0,0,0,.12);\n      border-radius:18px;\n      padding:12px;\n      margin-bottom:12px;\n      position:relative;\n    }\n    .entry-top{\n      display:flex;\n      align-items:center;\n      justify-content:space-between;\n      gap:10px;\n      margin-bottom:10px;\n    }\n    .entry-badge{\n      display:inline-flex;\n      align-items:center;\n      gap:8px;\n      font-weight:700;\n      font-size:12px;\n      color:rgba(255,255,255,.88);\n      background: rgba(255,255,255,.06);\n      border:1px solid rgba(255,255,255,.10);\n      padding:6px 10px;\n      border-radius:999px;\n    }\n    .entry-actions{ display:flex; gap:8px; }\n    .smallbtn{\n      height:30px;\n      padding:0 10px;\n      border-radius:10px;\n      border:1px solid rgba(255,255,255,.14);\n      background: rgba(0,0,0,.14);\n      color:rgba(255,255,255,.88);\n      cursor:pointer;\n      font-size:12px;\n      font-weight:700;\n      user-select:none;\n    }\n    .smallbtn:hover{ background: rgba(255,255,255,.06); }\n    .smallbtn.danger{\n      background: rgba(107,31,42,.38);\n      border-color: rgba(255,255,255,.12);\n    }\n    .smallbtn.danger:hover{ background: rgba(138,43,58,.42); }\n\n    label{\n      display:block;\n      font-size:11px;\n      color:var(--muted2);\n      letter-spacing:.06em;\n      text-transform:uppercase;\n      margin:0 0 6px 0;\n    }\n\n    /* Custom select styling */\n    .select{\n      width:100%;\n      height:36px;\n      border-radius:12px;\n      border:1px solid rgba(255,255,255,.12);\n      background: rgba(0,0,0,.18);\n      color:rgba(255,255,255,.92);\n      padding:0 12px;\n      outline:none;\n      font-weight:650;\n      appearance:none;\n      -webkit-appearance:none;\n      -moz-appearance:none;\n      background-image:\n        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.65) 50%),\n        linear-gradient(135deg, rgba(255,255,255,.65) 50%, transparent 50%),\n        linear-gradient(to right, transparent, transparent);\n      background-position:\n        calc(100% - 18px) 14px,\n        calc(100% - 13px) 14px,\n        0 0;\n      background-size:5px 5px, 5px 5px, 100% 100%;\n      background-repeat:no-repeat;\n    }\n    .select:focus{\n      border-color: rgba(59,130,246,.55);\n      box-shadow:0 0 0 5px rgba(59,130,246,.18);\n    }\n\n    /* Note: option styling support varies by browser; provide best effort. */\n    .select option{ background:#0b2a73; color:rgba(255,255,255,.95);\n      background:#0b1024;\n      color:rgba(255,255,255,.92);\n    }\n    .select option:checked{\n      background: var(--sel-bg);\n      color: var(--sel-fg);\n    }\n\n    textarea{\n      width:100%;\n      border-radius:14px;\n      border:1px solid rgba(255,255,255,.12);\n      background: rgba(0,0,0,.18);\n      color:rgba(255,255,255,.92);\n      padding:10px 12px;\n      outline:none;\n      resize:none;              /* we control growth */\n      min-height:56px;\n      line-height:1.35;\n      font-size:13px;\n    }\n    textarea:focus{\n      border-color: rgba(59,130,246,.55);\n      box-shadow:0 0 0 5px rgba(59,130,246,.18);\n    }\n\n    .countrow{\n      display:flex;\n      justify-content:flex-end;\n      margin-top:6px;\n      font-size:11px;\n      color:var(--muted2);\n      font-weight:700;\n    }\n\n    .panel-foot{\n      padding:12px 14px 14px 14px;\n      border-top:1px solid var(--stroke);\n      display:flex;\n      gap:10px;\n      justify-content:space-between;\n      align-items:center;\n      background: linear-gradient(180deg, transparent, rgba(0,0,0,.18));\n    }\n    .primary{\n      height:38px;\n      padding:0 14px;\n      border-radius:12px;\n      border:1px solid rgba(255,255,255,.14);\n      background: rgba(59,130,246,.22);\n      color:rgba(255,255,255,.92);\n      font-weight:800;\n      cursor:pointer;\n      user-select:none;\n    }\n    .primary:hover{ background: rgba(59,130,246,.30); }\n    .secondary{\n      height:38px;\n      padding:0 14px;\n      border-radius:12px;\n      border:1px solid rgba(255,255,255,.14);\n      background: rgba(0,0,0,.14);\n      color:rgba(255,255,255,.88);\n      font-weight:800;\n      cursor:pointer;\n      user-select:none;\n    }\n    .secondary:hover{ background: rgba(255,255,255,.06); }\n\n    /* ======= Helpers ======= */\n    .sr{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }\n    .row{ display:grid; grid-template-columns:1fr; gap:10px; }\n\n    /* Category dot colors */\n    .c-personal{ background: var(--cat-personal); }\n    .c-work{ background: var(--cat-work); }\n    .c-travel{ background: var(--cat-travel); }\n    .c-reminder{ background: var(--cat-reminder); }\n    .c-unlabeled{ background: var(--cat-unlabeled); }\n\n    /* For month pills, add subtle tint by category */\n    .pill-personal{ background: rgba(79,124,255,.18); border-color: rgba(79,124,255,.28); }\n    .pill-work{ background: rgba(53,211,154,.14); border-color: rgba(53,211,154,.26); }\n    .pill-travel{ background: rgba(139,92,246,.16); border-color: rgba(139,92,246,.28); }\n    .pill-reminder{ background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.26); }\n    .pill-unlabeled{ background: rgba(148,163,184,.10); border-color: rgba(148,163,184,.20); }\n\n    /* small legend color chip */\n    .chip{\n      width:10px; height:10px; border-radius:999px; display:inline-block;\n    }\n  \n/* ===== Scrollbar theme lock (blue, no gray/white on hover/active) ===== */\n.events::-webkit-scrollbar,\n.panel-body::-webkit-scrollbar{\n  width:8px;\n}\n.events::-webkit-scrollbar-track,\n.panel-body::-webkit-scrollbar-track{\n  background: transparent;\n}\n/* idle */\n.events::-webkit-scrollbar-thumb,\n.panel-body::-webkit-scrollbar-thumb{\n  background: rgba(59,130,246,.35);\n  border-radius:999px;\n}\n/* hover */\n.events::-webkit-scrollbar-thumb:hover,\n.panel-body::-webkit-scrollbar-thumb:hover{\n  background: rgba(59,130,246,.65);\n}\n/* active (dragging) */\n.events::-webkit-scrollbar-thumb:active,\n.panel-body::-webkit-scrollbar-thumb:active{\n  background: rgba(59,130,246,.85);\n}\n\n/* Firefox */\n.events, .panel-body{\n  scrollbar-width: thin;\n  scrollbar-color: rgba(59,130,246,.65) transparent;\n}\n\n\n/* ===== Entry Time (optional) \u2014 compact, theme-aligned ===== */\n.time-block{ margin-top:10px; }\n.time-row{\n  display:flex;\n  align-items:center;\n  gap:8px;\n}\n.time-label{\n  font-size:11px;\n  color:var(--muted2);\n  letter-spacing:.06em;\n  text-transform:uppercase;\n  margin:0 0 6px 0;\n  display:flex;\n  gap:8px;\n  align-items:center;\n}\n.time-label .opt{ opacity:.7; font-weight:800; }\n.time-inputs{\n  display:flex;\n  align-items:center;\n  gap:6px;\n}\n.time-field{\n  width:54px;\n  height:30px;\n  border-radius:10px;\n  border:1px solid rgba(255,255,255,.16);\n  background: rgba(0,0,0,.18);\n  color: var(--text);\n  padding: 0 10px;\n  font-weight:850;\n  font-size:12px;\n  text-align:center;\n}\n.time-field::placeholder{ color: rgba(255,255,255,.35); }\n.time-field:focus{\n  outline:none;\n  border-color: rgba(59,130,246,.65);\n  box-shadow:0 0 0 4px rgba(59,130,246,.16);\n}\n.time-sep{ opacity:.7; font-weight:900; }\n.time-ampm{\n  height:30px;\n  border-radius:10px;\n  border:1px solid rgba(59,130,246,.35);\n  background: rgba(59,130,246,.14);\n  color: var(--text);\n  padding: 0 10px;\n  font-weight:900;\n  font-size:12px;\n  appearance:none;\n  -webkit-appearance:none;\n  -moz-appearance:none;\n  background-image:\n    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.70) 50%),\n    linear-gradient(135deg, rgba(255,255,255,.70) 50%, transparent 50%),\n    linear-gradient(to right, transparent, transparent);\n  background-position:\n    calc(100% - 16px) 12px,\n    calc(100% - 11px) 12px,\n    0 0;\n  background-size:5px 5px, 5px 5px, 100% 100%;\n  background-repeat:no-repeat;\n}\n.time-ampm:focus{\n  outline:none;\n  border-color: rgba(59,130,246,.70);\n  box-shadow:0 0 0 4px rgba(59,130,246,.16);\n}\n.time-ampm option{\n  background:#0b1024;\n  color:rgba(255,255,255,.92);\n}\n.time-meta{\n  margin-left:auto;\n  font-size:11px;\n  opacity:.70;\n  white-space:nowrap;\n}\n.time-indicator{\n  margin-left:6px;\n  font-size:11px;\n  opacity:.78;\n  white-space:nowrap;\n}\n\n</style>\n</head>\n<body>\n  <div class=\"app\" id=\"app\">\n    <section class=\"month-shell\" aria-label=\"Month view\">\n      <div class=\"topbar\">\n        <div>\n          <div class=\"title\" id=\"monthTitle\">Month YYYY</div>\n        </div>\n        <div class=\"controls\">\n          <button class=\"iconbtn\" id=\"prevMonth\" aria-label=\"Previous month\" title=\"Previous month\">\n            <span aria-hidden=\"true\">\u25c0</span>\n          </button>\n          <button class=\"pillbtn\" id=\"todayBtn\" aria-label=\"Go to today\" title=\"Go to today\">Today</button>\n          <button class=\"iconbtn\" id=\"nextMonth\" aria-label=\"Next month\" title=\"Next month\">\n            <span aria-hidden=\"true\">\u25b6</span>\n          </button>\n        </div>\n      </div>\n\n      <div class=\"dow\" aria-hidden=\"true\">\n        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>\n      </div>\n\n      <div class=\"grid\" id=\"monthGrid\" role=\"grid\" aria-label=\"Calendar days\"></div>\n    </section>\n\n    <aside class=\"panel\" aria-label=\"Day view panel\">\n      <div class=\"panel-head\">\n        <div>\n          <div class=\"panel-title\" id=\"panelTitle\">Select a day</div>\n          <div class=\"panel-sub\" id=\"panelSub\">Read-only view of time; you can add reversible notes for this date.</div>\n        </div>\n        <button class=\"closebtn\" id=\"closePanel\" aria-label=\"Close day panel\" title=\"Close\">\n          <span aria-hidden=\"true\">\u2715</span>\n        </button>\n      </div>\n\n      <div class=\"panel-body\" id=\"panelBody\">\n        <div class=\"empty\" id=\"panelEmpty\">\n          Click any date in the Month view to open its Day panel. This panel only records what you enter for that date.\n          It does not recommend actions or priorities.\n        </div>\n      </div>\n\n      <div class=\"panel-foot\">\n        <button class=\"primary\" id=\"addEntryBtn\">Add entry</button>\n        <button class=\"secondary\" id=\"copyDayBtn\" title=\"Copy entries from this day to another date\">Copy day</button>\n      </div>\n    </aside>\n  </div>\n\n  <script>\n    (function(){\n      \"use strict\";\n\n      /* ==========================\n         Contract-compliant calendar:\n         - Month view: fixed layout, scroll inside each day cell for many entries.\n         - Day panel: details/edit for selected day, closes cleanly (X/Esc), scrolls independently.\n         - No recommendations/optimization; purely informational notes per date.\n         - All edits reversible; stored locally (localStorage).\n      ========================== */\n\n      const STORAGE_KEY = \"liongateos.calendar.v1.entries\";\n\n      // Attachment shape (ROWS-aligned, informational only):\n      // attachments?: [{ id, name, type, size, source, createdAt }]\n\n      const CATEGORIES = [\n        { id:\"personal\", label:\"Personal\", dotClass:\"c-personal\", pillClass:\"pill-personal\" },\n        { id:\"work\", label:\"Work\", dotClass:\"c-work\", pillClass:\"pill-work\" },\n        { id:\"travel\", label:\"Travel\", dotClass:\"c-travel\", pillClass:\"pill-travel\" },\n        { id:\"reminder\", label:\"Reminder\", dotClass:\"c-reminder\", pillClass:\"pill-reminder\" },\n        { id:\"unlabeled\", label:\"Unlabeled\", dotClass:\"c-unlabeled\", pillClass:\"pill-unlabeled\" },\n      ];\n\n      const LIMITS = {\n        descriptionChars: 280,\n        textareaMaxRows: 6,       // cap growth (prevents sloppy panel creep)\n      };\n\n      // ======= State model (single source of truth) =======\n      const state = {\n        viewYear: null,\n        viewMonth: null,       // 0-11\n        selectedDayISO: null,  // \"YYYY-MM-DD\" or null\n        entries: loadEntries(),// { [isoDate]: [ {id, category, description, createdAt, updatedAt} ] }\n      };\n\n      // ======= DOM refs =======\n      const monthTitleEl = document.getElementById(\"monthTitle\");\n      const gridEl = document.getElementById(\"monthGrid\");\n      const prevBtn = document.getElementById(\"prevMonth\");\n      const nextBtn = document.getElementById(\"nextMonth\");\n      const todayBtn = document.getElementById(\"todayBtn\");\n\n      const panelTitleEl = document.getElementById(\"panelTitle\");\n      const panelSubEl = document.getElementById(\"panelSub\");\n      const closePanelBtn = document.getElementById(\"closePanel\");\n      const panelBodyEl = document.getElementById(\"panelBody\");\n      const panelEmptyEl = document.getElementById(\"panelEmpty\");\n      const addEntryBtn = document.getElementById(\"addEntryBtn\");\n      const copyDayBtn = document.getElementById(\"copyDayBtn\");\n\n      // ======= Init =======\n      const now = new Date();\n      state.viewYear = now.getFullYear();\n      state.viewMonth = now.getMonth();\n\n      // Try restoring last selected day if it is within the current month; otherwise keep null.\n      // (No requirement, but keeps state stable across refresh without locking users.)\n      render();\n\n      // ======= Event wiring =======\n      prevBtn.addEventListener(\"click\", () => shiftMonth(-1));\n      nextBtn.addEventListener(\"click\", () => shiftMonth(1));\n      \ntodayBtn.addEventListener(\"click\", () => {\n  const now = new Date();\n  state.viewYear = now.getFullYear();\n  state.viewMonth = now.getMonth();\n  state.selectedDayISO = isoDate(now.getFullYear(), now.getMonth(), now.getDate());\n  render();\n});\n\n\n      closePanelBtn.addEventListener(\"click\", () => closeDayPanel());\n      addEntryBtn.addEventListener(\"click\", () => addEntryForSelectedDay());\n      copyDayBtn.addEventListener(\"click\", () => copySelectedDay());\n\n      document.addEventListener(\"keydown\", (e) => {\n        if (e.key === \"Escape\"){\n          // Esc closes Day panel (clears selection).\n          closeDayPanel();\n        }\n      });\n\n      // ======= Core helpers =======\n      function pad(n){ return String(n).padStart(2,\"0\"); }\n      function isoDate(y,m,d){ return `${y}-${pad(m+1)}-${pad(d)}`; }\n      function parseISO(iso){\n        const [y,mo,da] = iso.split(\"-\").map(Number);\n        return new Date(y, mo-1, da);\n      }\n\n      function monthName(y,m){\n        return new Date(y,m,1).toLocaleDateString(undefined, { month:\"long\", year:\"numeric\" });\n      }\n\n      function catMeta(id){\n        return CATEGORIES.find(c=>c.id===id) || CATEGORIES.find(c=>c.id===\"unlabeled\");\n      }\n\n      function loadEntries(){\n        try{\n          const raw = localStorage.getItem(STORAGE_KEY);\n          if(!raw) return {};\n          const parsed = JSON.parse(raw);\n          if(!parsed || typeof parsed !== \"object\") return {};\n          // Basic shape validation\n          for (const k of Object.keys(parsed)){\n            if (!Array.isArray(parsed[k])) parsed[k] = [];\n          }\n          // Entry-level normalization for forward compatibility.\n          for (const k of Object.keys(parsed)){\n            const arr = parsed[k];\n            if (!Array.isArray(arr)) continue;\n            for (const e of arr){\n              if (!e || typeof e !== \"object\") continue;\n              if (typeof e.timeExact !== \"string\") e.timeExact = \"\";\n              if (!Array.isArray(e.attachments)) e.attachments = (e.attachments ? e.attachments : []);\n            }\n          }\n\n          return parsed;\n        }catch{\n          return {};\n        }\n      }\n\n      function saveEntries(){\n        try{\n          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));\n        }catch{\n          // If storage fails, we still keep in-memory state.\n        }\n      }\n\n      function shiftMonth(delta){\n        const d = new Date(state.viewYear, state.viewMonth + delta, 1);\n        state.viewYear = d.getFullYear();\n        state.viewMonth = d.getMonth();\n        // Month changes do not force Day panel open/close; selection remains if still visible.\n        render();\n      }\n\n      function goToToday(){\n        const d = new Date();\n        state.viewYear = d.getFullYear();\n        state.viewMonth = d.getMonth();\n        // Do not auto-open Day panel (contract posture: no implied action).\n        state.selectedDayISO = null;\n        render();\n      }\n\n      function openDayPanel(iso){\n        state.selectedDayISO = iso;\n        renderPanel();\n        // Keep month render stable (do not re-render entire month unless needed).\n        highlightSelectedCell();\n      }\n\n      function closeDayPanel(){\n        state.selectedDayISO = null;\n        renderPanel();\n        highlightSelectedCell();\n      }\n\n      function ensureDayArray(iso){\n        if(!state.entries[iso]) state.entries[iso] = [];\n        if(!Array.isArray(state.entries[iso])) state.entries[iso] = [];\n      }\n\n      function addEntryForSelectedDay(){\n        if(!state.selectedDayISO){\n          // If no day selected, do nothing (no implicit selection).\n          return;\n        }\n        ensureDayArray(state.selectedDayISO);\n        const id = \"e_\" + Math.random().toString(36).slice(2,10) + \"_\" + Date.now().toString(36);\n        const entry = {\n          id,\n          category: \"personal\",\n          description: \"\",\n          timeExact: \"\",\n          createdAt: Date.now(),\n          updatedAt: Date.now()\n        };\n        state.entries[state.selectedDayISO].push(entry);\n        saveEntries();\n        renderPanel();\n        renderMonthOnlyCells(); // update pills in month grid (for this day)\n        // Focus the new textarea automatically.\n        const ta = panelBodyEl.querySelector(`textarea[data-entry-id=\"${id}\"]`);\n        if(ta){ ta.focus(); }\n      }\n\n      function deleteEntry(iso, entryId){\n        ensureDayArray(iso);\n        state.entries[iso] = state.entries[iso].filter(e => e.id !== entryId);\n        if(state.entries[iso].length === 0){\n          // keep empty array? remove key for cleanliness\n          delete state.entries[iso];\n        }\n        saveEntries();\n        renderPanel();\n        renderMonthOnlyCells();\n      }\n\n      function updateEntry(iso, entryId, patch){\n        ensureDayArray(iso);\n        const idx = state.entries[iso].findIndex(e => e.id === entryId);\n        if(idx === -1) return;\n        state.entries[iso][idx] = Object.assign({}, state.entries[iso][idx], patch, { updatedAt: Date.now() });\n        saveEntries();\n        // Month pills should reflect category/first line; update month grid with minimal work.\n        renderMonthOnlyCells();\n      }\n\n      function copySelectedDay(){\n        if(!state.selectedDayISO) return;\n        const fromISO = state.selectedDayISO;\n        const fromList = Array.isArray(state.entries[fromISO]) ? state.entries[fromISO] : [];\n        const prettyFrom = formatLongDate(fromISO);\n\n        const to = prompt(`Copy entries from:\\n${prettyFrom}\\n\\nEnter destination date (YYYY-MM-DD). Entries will be duplicated to that date:`);\n        if(!to) return;\n        if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(to)){\n          alert(\"Invalid date format. Use YYYY-MM-DD.\");\n          return;\n        }\n        // Basic date validity check:\n        const dt = parseISO(to);\n        if (Number.isNaN(dt.getTime())){\n          alert(\"Invalid date.\");\n          return;\n        }\n        ensureDayArray(to);\n\n        const copied = fromList.map(e => ({\n          id: \"e_\" + Math.random().toString(36).slice(2,10) + \"_\" + Date.now().toString(36),\n          category: e.category || \"unlabeled\",\n          description: e.description || \"\",\n          createdAt: Date.now(),\n          updatedAt: Date.now()\n        }));\n\n        state.entries[to] = (state.entries[to] || []).concat(copied);\n        saveEntries();\n\n        // If destination is in the current month, update month grid.\n        renderMonthOnlyCells();\n        alert(\"Copied. You can click the destination date to review.\");\n      }\n\n      function formatLongDate(iso){\n        const d = parseISO(iso);\n        return d.toLocaleDateString(undefined, { weekday:\"long\", month:\"long\", day:\"numeric\", year:\"numeric\" });\n      }\n\n      // ======= Rendering =======\n      function render(){\n        renderMonth();\n        renderPanel();\n      }\n\n      function renderMonth(){\n        monthTitleEl.textContent = monthName(state.viewYear, state.viewMonth);\n\n        // Build 6-week grid (42 cells)\n        const first = new Date(state.viewYear, state.viewMonth, 1);\n        const startDow = first.getDay(); // 0 Sun\n        const start = new Date(state.viewYear, state.viewMonth, 1 - startDow);\n\n        gridEl.innerHTML = \"\";\n        for(let i=0;i<42;i++){\n          const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);\n          const inMonth = d.getMonth() === state.viewMonth;\n          const iso = isoDate(d.getFullYear(), d.getMonth(), d.getDate());\n          const cell = document.createElement(\"div\");\n          cell.className = \"day\" + (inMonth ? \"\" : \" dim\");\n          cell.setAttribute(\"role\",\"gridcell\");\n          cell.setAttribute(\"tabindex\",\"0\");\n          cell.dataset.iso = iso;\n\n          const num = document.createElement(\"div\");\n          num.className = \"daynum\";\n          num.textContent = String(d.getDate());\n          cell.appendChild(num);\n\n          const eventsWrap = document.createElement(\"div\");\n          eventsWrap.className = \"events\";\n          eventsWrap.setAttribute(\"aria-label\",\"Events for \" + iso);\n\n          const items = (state.entries[iso] || []);\n          // Show all pills; container scrolls to handle many.\n          for(const e of items){\n            const meta = catMeta(e.category);\n            const pill = document.createElement(\"div\");\n            pill.className = \"evpill \" + meta.pillClass;\n            const dot = document.createElement(\"span\");\n            dot.className = \"dot \" + meta.dotClass;\n            const txt = document.createElement(\"span\");\n            txt.className = \"evtext\";\n            txt.textContent = (meta.label + \": \" + firstLine(e.description)).trim();\n            if(e.timeExact && String(e.timeExact).trim() !== \"\"){ txt.textContent += \" \u23f1 \" + prettyTime12(e.timeExact); }\n            if(e.attachments && e.attachments.length){ txt.textContent += \" \ud83d\udcce\"; }\n            pill.appendChild(dot);\n            if(e.timeExact){ const pd=document.createElement('span'); pd.className='time-indicator'; pd.textContent=' \u00b7 '+deriveDayPart(e.timeExact); pill.appendChild(pd);} pill.appendChild(txt);\n            eventsWrap.appendChild(pill);\n          }\n\n          cell.appendChild(eventsWrap);\n\n          cell.addEventListener(\"click\", (ev) => {\n            // Clicking inside month cell selects/open day panel (no other action).\n            openDayPanel(iso);\n          });\n\n          cell.addEventListener(\"keydown\", (ev) => {\n            if(ev.key === \"Enter\" || ev.key === \" \"){\n              ev.preventDefault();\n              openDayPanel(iso);\n            }\n          });\n\n          gridEl.appendChild(cell);\n        }\n\n        highlightSelectedCell();\n      }\n\n      function renderMonthOnlyCells(){\n        // Update only the pills for days in the current visible grid.\n        const cells = gridEl.querySelectorAll(\".day\");\n        cells.forEach(cell => {\n          const iso = cell.dataset.iso;\n          const eventsWrap = cell.querySelector(\".events\");\n          if(!eventsWrap) return;\n          eventsWrap.innerHTML = \"\";\n          const items = (state.entries[iso] || []);\n          for(const e of items){\n            const meta = catMeta(e.category);\n            const pill = document.createElement(\"div\");\n            pill.className = \"evpill \" + meta.pillClass;\n            const dot = document.createElement(\"span\");\n            dot.className = \"dot \" + meta.dotClass;\n            const txt = document.createElement(\"span\");\n            txt.className = \"evtext\";\n            txt.textContent = (meta.label + \": \" + firstLine(e.description)).trim();\n            if(e.timeExact && String(e.timeExact).trim() !== \"\"){ txt.textContent += \" \u23f1 \" + prettyTime12(e.timeExact); }\n            if(e.attachments && e.attachments.length){ txt.textContent += \" \ud83d\udcce\"; }\n            pill.appendChild(dot);\n            if(e.timeExact){ const pd=document.createElement('span'); pd.className='time-indicator'; pd.textContent=' \u00b7 '+deriveDayPart(e.timeExact); pill.appendChild(pd);} pill.appendChild(txt);\n            eventsWrap.appendChild(pill);\n          }\n        });\n      }\n\n      function highlightSelectedCell(){\n        const cells = gridEl.querySelectorAll(\".day\");\n        cells.forEach(c => c.classList.remove(\"selected\"));\n        if(!state.selectedDayISO) return;\n        const sel = gridEl.querySelector(`.day[data-iso=\"${cssEscape(state.selectedDayISO)}\"]`);\n        if(sel) sel.classList.add(\"selected\");\n      }\n\n      function renderPanel(){\n        // Panel is always present, but content changes and must be fully reversible.\n        panelBodyEl.innerHTML = \"\";\n        if(!state.selectedDayISO){\n          panelTitleEl.textContent = \"Select a day\";\n          panelSubEl.textContent = \"Month is an overview. Day is a detail panel. This planner does not recommend actions.\";\n          closePanelBtn.style.visibility = \"hidden\";  // no close needed when nothing selected\n          panelBodyEl.appendChild(panelEmptyEl);\n          panelEmptyEl.style.display = \"block\";\n          addEntryBtn.disabled = true;\n          copyDayBtn.disabled = true;\n          return;\n        }\n\n        closePanelBtn.style.visibility = \"visible\";\n        addEntryBtn.disabled = false;\n        copyDayBtn.disabled = false;\n\n        panelEmptyEl.style.display = \"none\";\n\n        const iso = state.selectedDayISO;\n        panelTitleEl.textContent = formatLongDate(iso);\n        panelSubEl.textContent = \"Entries you create for this date (informational, non-directive).\";\n\n        const items = (state.entries[iso] || []);\n        if(items.length === 0){\n          const empty = document.createElement(\"div\");\n          empty.className = \"empty\";\n          empty.textContent = \"No entries for this date. Use \u201cAdd entry\u201d to record an item. Nothing here creates a decision or obligation.\";\n          panelBodyEl.appendChild(empty);\n          return;\n        }\n\n        for(const e of items){\n          const meta = catMeta(e.category);\n          const card = document.createElement(\"div\");\n          card.className = \"entry\";\n          card.dataset.entryId = e.id;\n\n          const top = document.createElement(\"div\");\n          top.className = \"entry-top\";\n\n          const badge = document.createElement(\"div\");\n          badge.className = \"entry-badge\";\n          const chip = document.createElement(\"span\");\n          chip.className = \"chip \" + meta.dotClass;\n          const btxt = document.createElement(\"span\");\n          btxt.textContent = meta.label;\n          badge.appendChild(chip);\n          badge.appendChild(btxt);\n\n          const actions = document.createElement(\"div\");\n          actions.className = \"entry-actions\";\n          const del = document.createElement(\"button\");\n          del.className = \"smallbtn danger\";\n          del.textContent = \"Delete\";\n          del.addEventListener(\"click\", () => deleteEntry(iso, e.id));\n          actions.appendChild(del);\n\n          top.appendChild(badge);\n          top.appendChild(actions);\n\n          const row = document.createElement(\"div\");\n          row.className = \"row\";\n\n          const catWrap = document.createElement(\"div\");\n          const catLabel = document.createElement(\"label\");\n          catLabel.textContent = \"Category\";\n          const sel = document.createElement(\"select\");\n          sel.className = \"select\";\n          sel.setAttribute(\"aria-label\",\"Category\");\n          for(const c of CATEGORIES){\n            const opt = document.createElement(\"option\");\n            opt.value = c.id;\n            opt.textContent = c.label;\n            if(c.id === (e.category || \"unlabeled\")) opt.selected = true;\n            sel.appendChild(opt);\n          }\n          sel.addEventListener(\"change\", () => {\n            updateEntry(iso, e.id, { category: sel.value });\n            // Update badge instantly without full panel rerender (for responsiveness).\n            const newMeta = catMeta(sel.value);\n            chip.className = \"chip \" + newMeta.dotClass;\n            btxt.textContent = newMeta.label;\n          });\n\n          catWrap.appendChild(catLabel);\n          catWrap.appendChild(sel);\n\n          // Time (optional): visible, never required.\n          const timeWrap = document.createElement(\"div\");\n          timeWrap.className = \"time-block\";\n\n          const tLabel = document.createElement(\"div\");\n          tLabel.className = \"time-label\";\n          tLabel.innerHTML = 'Time <span class=\"opt\">(optional)</span>';\n\n          const tRow = document.createElement(\"div\");\n          tRow.className = \"time-row\";\n\n          const tInputs = document.createElement(\"div\");\n          tInputs.className = \"time-inputs\";\n\n          const hour = document.createElement(\"input\");\n          hour.className = \"time-field\";\n          hour.type = \"text\";\n          hour.inputMode = \"numeric\";\n          hour.placeholder = \"hh\";\n          hour.setAttribute(\"aria-label\",\"Hour\");\n\n          const sep = document.createElement(\"span\");\n          sep.className = \"time-sep\";\n          sep.textContent = \":\";\n\n          const minute = document.createElement(\"input\");\n          minute.className = \"time-field\";\n          minute.type = \"text\";\n          minute.inputMode = \"numeric\";\n          minute.placeholder = \"mm\";\n          minute.setAttribute(\"aria-label\",\"Minute\");\n\n          const ampm = document.createElement(\"select\");\n          ampm.className = \"time-ampm\";\n          ampm.setAttribute(\"aria-label\",\"AM/PM\");\n          [\"AM\",\"PM\"].forEach(v=>{\n            const opt = document.createElement(\"option\");\n            opt.value = v;\n            opt.textContent = v;\n            ampm.appendChild(opt);\n          });\n\n          const metaEl = document.createElement(\"div\");\n          metaEl.className = \"time-meta\";\n\n          if(typeof e.timeExact !== \"string\") e.timeExact = \"\";\n\n          function syncFromState(){\n            const parts = time24ToParts(e.timeExact);\n            hour.value = parts.h;\n            minute.value = parts.m;\n            ampm.value = parts.ampm;\n            const dp = deriveDayPart(e.timeExact);\n            metaEl.textContent = dp ? (\"\u2022 \" + dp) : \"\";\n          }\n\n          function normalizeField(el, min, max, pad2){\n            const raw = (el.value||\"\");\n            const digits = raw.replace(/[^\\d]/g,\"\").slice(0,2);\n            if(digits === \"\"){ el.value = \"\"; return; }\n            const n = clampInt(digits, min, max);\n            if(n === null) return;\n            el.value = pad2 ? String(n).padStart(2,\"0\") : String(n);\n          }\n\n          function commit(){\n            const h = (hour.value||\"\").replace(/[^\\d]/g,\"\").slice(0,2);\n            const m = (minute.value||\"\").replace(/[^\\d]/g,\"\").slice(0,2);\n\n            if(h === \"\" && m === \"\"){\n              e.timeExact = \"\";\n              updateEntry(iso, e.id, { timeExact: \"\" });\n              metaEl.textContent = \"\";\n              return;\n            }\n\n            const hh = clampInt(h, 1, 12);\n            if(hh === null) return;\n            const mm = (m === \"\") ? \"00\" : String(clampInt(m,0,59)).padStart(2,\"0\");\n\n            const t24 = partsTo24(String(hh), mm, ampm.value || \"AM\");\n            e.timeExact = t24;\n            updateEntry(iso, e.id, { timeExact: t24 });\n            const dp = deriveDayPart(t24);\n            metaEl.textContent = dp ? (\"\u2022 \" + dp) : \"\";\n          }\n\n          hour.addEventListener(\"input\", ()=>{ normalizeField(hour,1,12,false); commit(); });\n          minute.addEventListener(\"input\", ()=>{ normalizeField(minute,0,59,true); commit(); });\n          ampm.addEventListener(\"change\", ()=>{ commit(); syncFromState(); });\n\n          tInputs.appendChild(hour);\n          tInputs.appendChild(sep);\n          tInputs.appendChild(minute);\n          tInputs.appendChild(ampm);\n\n          tRow.appendChild(tInputs);\n          tRow.appendChild(metaEl);\n\n          timeWrap.appendChild(tLabel);\n          timeWrap.appendChild(tRow);\n\n          row.appendChild(timeWrap);\n\n          syncFromState();\n\n          const descWrap = document.createElement(\"div\");\n          const dLabel = document.createElement(\"label\");\n          dLabel.textContent = \"Description\";\n          const ta = document.createElement(\"textarea\");\n          ta.dataset.entryId = e.id;\n          ta.placeholder = \"Type here\u2026\"; // Not \u201cNew Event\u201d text; true placeholder\n          ta.value = (e.description || \"\");\n          ta.maxLength = LIMITS.descriptionChars;\n          ta.addEventListener(\"input\", () => {\n            // Enforce char limit; save on change (reversible).\n            const val = ta.value.slice(0, LIMITS.descriptionChars);\n            if(val !== ta.value) ta.value = val;\n            updateEntry(iso, e.id, { description: val });\n            autoSizeTextarea(ta);\n            // Update counter\n            counter.textContent = `${val.length} / ${LIMITS.descriptionChars}`;\n          });\n\n          // Prevent panel \"sloppiness\": cap growth by rows.\n          // We'll size on load too.\n          const counter = document.createElement(\"div\");\n          counter.className = \"countrow\";\n          counter.textContent = `${(ta.value||\"\").length} / ${LIMITS.descriptionChars}`;\n\n          descWrap.appendChild(dLabel);\n          descWrap.appendChild(ta);\n          descWrap.appendChild(counter);\n          // Attachments (read-only list + add)\n          const attWrap = document.createElement(\"div\");\n          const attLabel = document.createElement(\"label\");\n          attLabel.textContent = \"Attachments\";\n          const attList = document.createElement(\"div\");\n          attList.style.fontSize = \"12px\";\n          attList.style.color = \"rgba(255,255,255,.75)\";\n          (e.attachments||[]).forEach(a=>{\n            const d=document.createElement(\"div\");\n            d.textContent = \"\ud83d\udcce \" + a.name;\n            attList.appendChild(d);\n          });\n          const attBtn = document.createElement(\"button\");\n          attBtn.className=\"smallbtn\";\n          attBtn.textContent=\"Add attachment\";\n          attBtn.addEventListener(\"click\",()=>{\n            const f=document.createElement(\"input\");\n            f.type=\"file\";\n            f.onchange=()=>{\n              if(!f.files[0]) return;\n              const file=f.files[0];\n              e.attachments = e.attachments||[];\n              e.attachments.push({\n                id:\"a_\"+Date.now(),\n                name:file.name,\n                type:file.type,\n                size:file.size,\n                source:\"manual\",\n                createdAt:Date.now()\n              });\n              updateEntry(iso, e.id, { attachments: e.attachments });\n              renderPanel();\n            };\n            f.click();\n          });\n          attWrap.appendChild(attLabel);\n          attWrap.appendChild(attList);\n          attWrap.appendChild(attBtn);\n          descWrap.appendChild(attWrap);\n\n\n          row.appendChild(catWrap);\n          row.appendChild(descWrap);\n\n          card.appendChild(top);\n          card.appendChild(row);\n\n          panelBodyEl.appendChild(card);\n\n          // Size after insertion.\n          autoSizeTextarea(ta);\n        }\n      }\n\n      /* ===== Time helpers (optional) ===== */\n      function parseTime24(t){\n        if(!t || typeof t !== \"string\") return null;\n        const m = t.match(/^(\\d{2}):(\\d{2})$/);\n        if(!m) return null;\n        const hh = parseInt(m[1],10);\n        const mm = parseInt(m[2],10);\n        if(!Number.isFinite(hh) || !Number.isFinite(mm)) return null;\n        if(hh<0||hh>23||mm<0||mm>59) return null;\n        return {hh,mm};\n      }\n\n      function prettyTime12(t){\n        const p = parseTime24(t);\n        if(!p) return \"\";\n        const ampm = (p.hh>=12) ? \"PM\" : \"AM\";\n        let h = p.hh % 12; if(h===0) h=12;\n        return `${h}:${String(p.mm).padStart(2,\"0\")} ${ampm}`;\n      }\n\n      function deriveDayPart(t){\n        const p = parseTime24(t);\n        if(!p) return \"\";\n        const mins = p.hh*60 + p.mm;\n        if(mins >= 5*60 && mins < 12*60) return \"Morning\";\n        if(mins >= 12*60 && mins < 17*60) return \"Afternoon\";\n        if(mins >= 17*60 && mins < 21*60) return \"Evening\";\n        return \"Night\";\n      }\n\n      function clampInt(v, min, max){\n        const n = parseInt(v,10);\n        if(!Number.isFinite(n)) return null;\n        if(n < min) return min;\n        if(n > max) return max;\n        return n;\n      }\n\n      function partsTo24(hStr, mStr, ampm){\n        const h = clampInt(hStr, 1, 12);\n        const m = clampInt(mStr, 0, 59);\n        if(h === null || m === null) return \"\";\n        let hh = (h % 12);\n        if((ampm||\"AM\")===\"PM\") hh += 12;\n        return String(hh).padStart(2,\"0\") + \":\" + String(m).padStart(2,\"0\");\n      }\n\n      function time24ToParts(t24){\n        const p = parseTime24(t24);\n        if(!p) return {h:\"\", m:\"\", ampm:\"AM\"};\n        const ampm = (p.hh>=12) ? \"PM\" : \"AM\";\n        let h = p.hh % 12; if(h===0) h=12;\n        return {h:String(h), m:String(p.mm).padStart(2,\"0\"), ampm};\n      }\n\n\n      function firstLine(text){\n        const t = (text || \"\").trim();\n        if(!t) return \"(empty)\";\n        const line = t.split(/\\r?\\n/)[0].trim();\n        if(!line) return \"(empty)\";\n        // Keep month pill concise.\n        return line.length > 40 ? (line.slice(0, 40) + \"\u2026\") : line;\n      }\n\n      function autoSizeTextarea(ta){\n        // Reset to compute scrollHeight correctly.\n        ta.style.height = \"auto\";\n        const lineHeight = 18; // approx based on font-size/line-height; safe\n        const padding = 20;    // approx vertical padding\n        const maxHeight = (LIMITS.textareaMaxRows * lineHeight) + padding;\n        const newHeight = Math.min(ta.scrollHeight, maxHeight);\n        ta.style.height = newHeight + \"px\";\n        // If content exceeds maxHeight, textarea scrolls internally.\n        ta.style.overflowY = (ta.scrollHeight > maxHeight) ? \"auto\" : \"hidden\";\n      }\n\n      // Simple CSS.escape fallback\n      function cssEscape(s){\n        if(window.CSS && CSS.escape) return CSS.escape(s);\n        return s.replace(/[\"\\\\]/g, \"\\\\$&\");\n      }\n    })();\n  </script>\n</body>\n</html>\n";
+
+      function ensureCalendarLoaded(){
+        const frame = document.getElementById("calFrame");
+        if(frame.dataset.loaded === "1") return;
+        frame.srcdoc = CAL_HTML;
+        frame.dataset.loaded = "1";
+      }
+
+      // Buttons
+      document.getElementById("btnSignIn").addEventListener("click", () => {
+        alert("Login is not enabled yet. This button is a placeholder only.");
+      });
+
+      document.getElementById("btnExport").addEventListener("click", () => {
+        const apps = load();
+        const payload = {
+          exportedAt: new Date().toISOString(),
+          apps
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "liondataweb-progress.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 1200);
+      });
+
+      document.getElementById("btnReset").addEventListener("click", () => {
+        const ok = confirm("Reset Apps Progress back to defaults? (Calendar entries are not affected)");
+        if(!ok) return;
+        try{ localStorage.removeItem(KEY); }catch{}
+        renderApps();
+        alert("Apps Progress reset.");
+      });
+
+      // Default: load calendar in background so first click is instant
+      ensureCalendarLoaded();
+
+    })();
+  </script>
+
+
+<script>
+/* =========================================================
+   PHASE A RESET — SINGLE VISUAL ENGINE (Constellation only)
+   - Removes tracers / streaks entirely
+   - Visuals button controls ONE engine
+   - Controls map to particles/lines (not background)
+   - Pointer-safe: visuals never block clicks
+========================================================= */
+(() => {
+  const btn = document.getElementById('btnVisuals');
+  const layer = document.getElementById('lg-visuals');
+  const canvas = document.getElementById('lg-particles');
+  const controls = document.getElementById('visualControls');
+
+  const elSpeed = document.getElementById('vcSpeed');
+  const elCount = document.getElementById('vcCount');
+  const elBright = document.getElementById('vcBright');
+  const elGlow = document.getElementById('vcGlow');
+  const elColor = document.getElementById('vcColor');
+
+  if (!btn || !layer || !canvas) return;
+
+  // Ensure visuals never capture interaction.
+  layer.style.pointerEvents = 'none';
+  canvas.style.pointerEvents = 'none';
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+
+  const state = {
+    enabled: false,
+    dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1)),
+    w: 0,
+    h: 0,
+    raf: 0,
+    lastT: 0,
+    particles: [],
+    // normalized settings [0..1]
+    speed: (Number(elSpeed?.value || 35) / 100),
+    brightness: (Number(elBright?.value || 55) / 100),
+    glow: (Number(elGlow?.value || 35) / 100),
+    color: (Number(elColor?.value || 70) / 100),
+    count: Number(elCount?.value || 110)
+  };
+
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  function resize() {
+    const dpr = state.dpr;
+    const w = Math.floor(window.innerWidth);
+    const h = Math.floor(window.innerHeight);
+    if (w === state.w && h === state.h) return;
+    state.w = w; state.h = h;
+    canvas.width = Math.max(1, Math.floor(w * dpr));
+    canvas.height = Math.max(1, Math.floor(h * dpr));
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function rand(min, max){ return min + Math.random()*(max-min); }
+
+  function makeParticle() {
+    // v in normalized units per second
+    const base = 0.020; // baseline drift
+    const angle = rand(0, Math.PI*2);
+    const mag = base * rand(0.6, 1.3);
+    // assign a hue bucket; color slider increases hue diversity + adds warm hues
+    const coolHues = [205, 220, 235, 255, 275, 295, 315, 330];
+    const warmHues = [8, 18, 28, 38, 48]; // reds/oranges/yellows
+    const warmChance = clamp01((state.color - 0.4) / 0.6) * 0.55;
+    const hue = (Math.random() < warmChance)
+      ? warmHues[Math.floor(Math.random()*warmHues.length)]
+      : coolHues[Math.floor(Math.random()*coolHues.length)];
+
+    return {
+      x: Math.random(),
+      y: Math.random(),
+      vx: Math.cos(angle) * mag,
+      vy: Math.sin(angle) * mag,
+      hue,
+      // subtle individual variance
+      sat: lerp(55, 92, clamp01(state.color)),
+      val: lerp(70, 98, clamp01(state.brightness))
+    };
+  }
+
+  function rebuildParticles(targetCount) {
+    const n = Math.max(10, Math.min(260, Math.floor(targetCount)));
+    state.count = n;
+    const arr = state.particles;
+    if (arr.length > n) {
+      arr.length = n;
+      return;
+    }
+    while (arr.length < n) arr.push(makeParticle());
+  }
+
+  function rgbaFromHSV(h, s, v, a){
+    // h in deg, s/v 0..100
+    s /= 100; v /= 100;
+    const c = v * s;
+    const hp = (h % 360) / 60;
+    const x = c * (1 - Math.abs((hp % 2) - 1));
+    let r=0,g=0,b=0;
+    if (0<=hp && hp<1){ r=c; g=x; b=0; }
+    else if (1<=hp && hp<2){ r=x; g=c; b=0; }
+    else if (2<=hp && hp<3){ r=0; g=c; b=x; }
+    else if (3<=hp && hp<4){ r=0; g=x; b=c; }
+    else if (4<=hp && hp<5){ r=x; g=0; b=c; }
+    else { r=c; g=0; b=x; }
+    const m = v - c;
+    r = Math.round((r+m)*255);
+    g = Math.round((g+m)*255);
+    b = Math.round((b+m)*255);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function step(t) {
+    if (!state.enabled) return;
+    if (!state.lastT) state.lastT = t;
+    const dt = Math.min(0.05, Math.max(0.001, (t - state.lastT) / 1000));
+    state.lastT = t;
+
+    const speed = lerp(0.25, 2.0, clamp01(state.speed)); // global multiplier
+    const arr = state.particles;
+
+    for (let i=0;i<arr.length;i++){
+      const p = arr[i];
+      p.x += p.vx * dt * speed;
+      p.y += p.vy * dt * speed;
+
+      // wrap
+      if (p.x < -0.02) p.x = 1.02;
+      if (p.x > 1.02) p.x = -0.02;
+      if (p.y < -0.02) p.y = 1.02;
+      if (p.y > 1.02) p.y = -0.02;
+
+      // micro drift to avoid sameness
+      if (Math.random() < 0.0025){
+        const ang = rand(0, Math.PI*2);
+        const nud = 0.004 * rand(0.2, 1.0);
+        p.vx = lerp(p.vx, Math.cos(ang)*nud, 0.5);
+        p.vy = lerp(p.vy, Math.sin(ang)*nud, 0.5);
+      }
+    }
+
+    draw();
+    state.raf = requestAnimationFrame(step);
+  }
+
+  function draw() {
+    const w = state.w, h = state.h;
+    if (!w || !h) return;
+    ctx.clearRect(0,0,w,h);
+
+    const bright = clamp01(state.brightness);
+    const glow = clamp01(state.glow);
+    const color = clamp01(state.color);
+
+    const sh = clamp01(state.sharpness ?? 0.7);
+    const soft = 1 - sh;
+
+    // Dot size is independent from brightness; sharpness controls how "pinpoint" nodes look.
+    const dotR = lerp(1.9, 1.2, sh);
+    const haloR = dotR * lerp(2.2, 6.5, soft) * lerp(0.65, 1.8, glow);
+
+    // background presence (subtle)
+    ctx.globalAlpha = lerp(0.16, 0.28, glow);
+    const grd = ctx.createRadialGradient(w*0.45, h*0.6, 0, w*0.45, h*0.6, Math.max(w,h)*0.9);
+    grd.addColorStop(0, 'rgba(120, 90, 255, 0.18)');
+    grd.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,w,h);
+
+    ctx.globalAlpha = 1;
+
+    const arr = state.particles;
+
+    // Connection distance tuned by particle count (avoid spaghetti)
+    const baseDist = lerp(120, 78, clamp01((arr.length-40)/180)); // px
+    const maxDist2 = baseDist*baseDist;
+
+    // Lines
+    ctx.lineWidth = lerp(0.6, 1.25, bright);
+    ctx.shadowBlur = 0;
+    for (let i=0;i<arr.length;i++){
+      const a = arr[i];
+      const ax = a.x*w, ay = a.y*h;
+      for (let j=i+1;j<arr.length;j++){
+        const b = arr[j];
+        const bx = b.x*w, by = b.y*h;
+        const dx = ax-bx, dy = ay-by;
+        const d2 = dx*dx + dy*dy;
+        if (d2 > maxDist2) continue;
+
+        const d = Math.sqrt(d2);
+        const k = 1 - (d / baseDist);
+
+        const alpha = (lerp(0.05, 0.28, bright) * k) * lerp(0.85, 1.0, color);
+        // blend hue between points (more colorful as color increases)
+        const hue = lerp(a.hue, b.hue, 0.5);
+        const sat = lerp(35, 80, color);
+        const val = lerp(55, 95, bright);
+
+        ctx.strokeStyle = rgbaFromHSV(hue, sat, val, alpha);
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, by);
+        ctx.stroke();
+      }
+    }
+
+    // Dots with glow
+    ctx.shadowBlur = Math.floor(haloR);
+    for (let i=0;i<arr.length;i++){
+      const p = arr[i];
+      const x = p.x*w, y = p.y*h;
+
+      const sat = lerp(35, p.sat, color);
+      const val = lerp(55, p.val, bright);
+
+      // Core dot: alpha follows Brightness, radius is controlled by Sharpness (dotR).
+      const coreA = lerp(0.25, 0.98, bright);
+      const core = rgbaFromHSV(p.hue, sat, val, coreA);
+
+      // Halo: intensity follows Glow and Brightness; size follows Sharpness (haloR).
+      const haloA = coreA * lerp(0.0, 0.65, glow);
+
+      // Core (solid, crisp)
+      ctx.shadowColor = 'rgba(0,0,0,0)';
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.fillStyle = core;
+      ctx.arc(x, y, dotR, 0, Math.PI*2);
+      ctx.fill();
+
+      // Halo (soft falloff)
+      if (haloA > 0.001) {
+        const g = ctx.createRadialGradient(x, y, 0, x, y, haloR);
+        g.addColorStop(0, rgbaFromHSV(p.hue, sat, val, haloA*0.35));
+        g.addColorStop(0.35, rgbaFromHSV(p.hue, sat, val, haloA*0.18));
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, haloR, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Reset shadow to avoid affecting UI
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
+  }
+
+  function setEnabled(on){
+    state.enabled = !!on;
+    if (state.enabled) {
+      layer.classList.add('on');
+      if (controls) controls.hidden = false;
+      btn.textContent = 'Visuals: On';
+      resize();
+      rebuildParticles(state.count);
+      cancelAnimationFrame(state.raf);
+      state.lastT = 0;
+      state.raf = requestAnimationFrame(step);
+    } else {
+      btn.textContent = 'Visuals: Off';
+      if (controls) controls.hidden = true;
+      layer.classList.remove('on');
+      cancelAnimationFrame(state.raf);
+      state.raf = 0;
+      state.lastT = 0;
+      ctx.clearRect(0,0,state.w,state.h);
+    }
+  }
+
+  // Bind controls (map directly to visual behavior).
+  function bind(){
+    if (elSpeed) elSpeed.addEventListener('input', () => { state.speed = clamp01(Number(elSpeed.value)/100); });
+    if (elBright) elBright.addEventListener('input', () => { state.brightness = clamp01(Number(elBright.value)/100); });
+    if (elGlow) elGlow.addEventListener('input', () => { state.glow = clamp01(Number(elGlow.value)/100); });
+    if (elColor) elColor.addEventListener('input', () => { state.color = clamp01(Number(elColor.value)/100); });
+    if (elCount) elCount.addEventListener('input', () => { rebuildParticles(Number(elCount.value)); });
+
+    btn.addEventListener('click', () => setEnabled(!state.enabled));
+    window.addEventListener('resize', () => { resize(); });
+    document.addEventListener('visibilitychange', () => {
+      // Pause when tab hidden to reduce load; resume on visibility.
+      if (!state.enabled) return;
+      if (document.hidden) {
+        cancelAnimationFrame(state.raf);
+        state.raf = 0;
+      } else if (!state.raf) {
+        state.lastT = 0;
+        state.raf = requestAnimationFrame(step);
+      }
+    });
+  }
+
+  // Default: visuals off (user-controlled).
+  bind();
+  setEnabled(false);
+})();
+</script>
+
+</body>
+</html>

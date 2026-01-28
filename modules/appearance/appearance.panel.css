@@ -1,0 +1,45 @@
+
+/* Appearance / Controls Module Styles
+   Extracted safely from Core.
+   No global overrides.
+*/
+
+.drawer {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  border-radius: 14px;
+  background: rgba(18, 22, 46, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  z-index: 50;
+}
+
+.drawer h3 {
+  margin: 0 0 8px 0;
+}
+
+.drawer .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.drawer label {
+  font-size: 13px;
+  opacity: .9;
+}
+
+.drawer input[type="range"] {
+  width: 100%;
+}
+
+.drawer .close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
+}

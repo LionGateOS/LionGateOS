@@ -1,0 +1,263 @@
+{
+  "version": "b29-security-center-ui-1",
+  "registryPolicy": {
+    "authority": "os",
+    "evaluationOrder": [
+      "accountState",
+      "entitlementPolicy",
+      "permissionEngine",
+      "runtimeExecution"
+    ],
+    "defaultBehaviors": {
+      "grace": {
+        "ingestion": "deny",
+        "exports": "deny",
+        "mode": "read-only"
+      },
+      "suspended": {
+        "ingestion": "deny",
+        "exports": "deny",
+        "mode": "read-only"
+      },
+      "canceled": {
+        "ingestion": "deny",
+        "exports": "deny",
+        "mode": "read-only-until-period-end"
+      }
+    }
+  },
+  "apps": [
+    {
+      "id": "home",
+      "name": "Home",
+      "category": "system",
+      "status": "stable",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": false,
+        "minAccountState": "Guest",
+        "allowedStates": ["Guest", "Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Guest": "full",
+          "Grace": "full",
+          "Suspended": "full"
+        }
+      },
+      "features": [],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "home",
+        "sandbox": false,
+        "permissions": ["storage"]
+      }
+    },
+    {
+      "id": "ai",
+      "name": "AI Workspace",
+      "category": "ai",
+      "status": "stable",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "read-only",
+          "Suspended": "read-only"
+        }
+      },
+      "features": [
+        { "id": "ai.workspace", "requiredTier": "Free" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "ai",
+        "sandbox": true,
+        "permissions": ["storage"]
+      }
+    },
+    {
+      "id": "business",
+      "name": "Business Control Hub",
+      "category": "business",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Pro",
+        "allowedStates": ["Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "read-only",
+          "Suspended": "read-only"
+        }
+      },
+      "features": [
+        { "id": "business.dashboard", "requiredTier": "Pro" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "business",
+        "sandbox": true,
+        "permissions": ["storage"]
+      }
+    },
+    {
+      "id": "smartquoteai",
+      "name": "SmartQuoteAI",
+      "category": "apps",
+      "status": "alpha",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Pro",
+        "allowedStates": ["Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "view-only",
+          "Suspended": "locked"
+        }
+      },
+      "features": [
+        { "id": "smartquote.create", "requiredTier": "Pro" },
+        { "id": "smartquote.export", "requiredTier": "Pro" },
+        { "id": "smartquote.org", "requiredTier": "Commercial" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "smartquoteai",
+        "sandbox": true,
+        "permissions": ["storage", "network"]
+      }
+    },
+    {
+      "id": "travel-orchestrator",
+      "name": "Travel Orchestrator",
+      "category": "apps",
+      "status": "alpha",
+      "runsInsideOs": true,
+      "runsStandalone": true,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "read-only",
+          "Suspended": "read-only"
+        }
+      },
+      "features": [
+        { "id": "travels.plan", "requiredTier": "Free" },
+        { "id": "travels.share", "requiredTier": "Commercial" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "travel-orchestrator",
+        "sandbox": true,
+        "permissions": ["storage", "network"]
+      }
+    },
+    {
+      "id": "documents",
+      "name": "Document Generator",
+      "category": "tools",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "read-only",
+          "Suspended": "read-only"
+        }
+      },
+      "features": [
+        { "id": "documents.generate", "requiredTier": "Free" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "documents",
+        "sandbox": true,
+        "permissions": ["storage"]
+      }
+    },
+    {
+      "id": "estimator",
+      "name": "Estimator",
+      "category": "tools",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "read-only",
+          "Suspended": "read-only"
+        }
+      },
+      "features": [
+        { "id": "estimator.basic", "requiredTier": "Free" },
+        { "id": "estimator.advanced", "requiredTier": "Pro" }
+      ],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "estimator",
+        "sandbox": true,
+        "permissions": ["storage"]
+      }
+    },
+    {
+      "id": "security-events",
+      "name": "Security Events",
+      "category": "system",
+      "status": "beta",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "full",
+          "Suspended": "full"
+        }
+      },
+      "features": [],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "security-events",
+        "sandbox": false,
+        "permissions": []
+      }
+    },
+    {
+      "id": "security-center",
+      "name": "Security Center",
+      "category": "system",
+      "runsInsideOs": true,
+      "runsStandalone": false,
+      "access": {
+        "requiresLogin": true,
+        "minAccountState": "Free",
+        "allowedStates": ["Free", "Founder", "Pro", "Commercial", "Grace", "Suspended", "Canceled"],
+        "behaviorByState": {
+          "Grace": "full",
+          "Suspended": "full"
+        }
+      },
+      "features": [],
+      "integration": {
+        "osSlot": "workspace",
+        "path": "security-center",
+        "sandbox": false,
+        "permissions": []
+      }
+    }
+  ]
+}

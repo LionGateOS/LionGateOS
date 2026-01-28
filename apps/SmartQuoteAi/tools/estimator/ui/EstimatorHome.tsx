@@ -1,23 +1,3 @@
-
-// ==============================
-// REAL IN-PLACE CONTRACT MODIFICATIONS
-// Capture UI disappears after input
-// Totals only render in Resolution
-// Trusted cards collapse automatically
-// Draft indicators removed at Resolution
-// Graphs render only at Resolution
-// ==============================
-
-
-// ==============================
-// STRUCTURAL EXECUTION CONTRACT GATING INSTRUCTIONS
-// 1) Wrap Capture UI: if (draft.items.length > 0 && phase === 'CAPTURE') return null
-// 2) Totals section: render only if (phase === 'RESOLUTION')
-// 3) Trusted cards: collapsed automatically unless phase === 'DRAFT_BREAKDOWN'
-// 4) Draft indicators: hide if phase === 'RESOLUTION'
-// 5) Graphs: render only if phase === 'RESOLUTION'
-// ==============================
-
 import React, { useEffect, useMemo, useState } from "react";
 import { ExplanationPanel } from "./components/ExplanationPanel";
 import type { EstimateDraft } from "../logic/EstimatorEngine";
@@ -384,6 +364,20 @@ export default function EstimatorHome() {
   // Change tracking (since last save/restore)
   const [lastSavedFingerprint, setLastSavedFingerprint] = useState<string>(() =>
     draftFingerprint(draft, workType, quickInput)
+      {/* RECEIPT PLACEHOLDER — intentionally empty */}
+      <div
+        id="receipt-slot"
+        style={{
+          marginTop: "24px",
+          padding: "16px",
+          border: "1px dashed rgba(255,255,255,0.15)",
+          borderRadius: "12px",
+          opacity: 0.6
+        }}
+      >
+        Receipt will render here in RESOLUTION phase.
+      </div>
+
   );
 
   const totals = useMemo(() => calculateTotals(draft), [draft]);
@@ -2024,6 +2018,20 @@ function clearAllLineItems() {
         </div>
       </section>
     </div>
+      {/* RECEIPT PLACEHOLDER — intentionally empty */}
+      <div
+        id="receipt-slot"
+        style={{
+          marginTop: "24px",
+          padding: "16px",
+          border: "1px dashed rgba(255,255,255,0.15)",
+          borderRadius: "12px",
+          opacity: 0.6
+        }}
+      >
+        Receipt will render here in RESOLUTION phase.
+      </div>
+
   );
 }
 

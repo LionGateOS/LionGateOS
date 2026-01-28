@@ -1,32 +1,48 @@
 # ============================================================
-# UniversalBackupAndOpen_MASTER.ps1
+# UniversalBackupAndOpen.ps1
 # Project Lifesaver – Canonical Zero-Parameter Backup Script
-# TGZ only · App-local · No prompts · No parameters
+# Behavior:
+#   1) TGZ backup of entire module (centralized)
+#   2) Open index.html in NOTEPAD for inspection / copy-paste
 # ============================================================
 
-# Resolve script location (app root)
-$ScriptPath = $MyInvocation.MyCommand.Path
-$AppRoot = Split-Path -Parent $ScriptPath
-$AppName = Split-Path $AppRoot -Leaf
+$ErrorActionPreference = "Stop"
 
-# Backup directory
-$BACKUP_DIR = "I:\PROJECTS BACKUPS\Calendar_Backups"
-$BACKUP_DIR = "I:\PROJECTS BACKUPS\Calendar_Backups"
-$BACKUP_DIR = "I:\PROJECTS BACKUPS\Calendar_Backups"
+# Resolve module root
+$ScriptPath = $MyInvocation.MyCommand.Path
+$AppRoot    = Split-Path -Parent $ScriptPath
+$AppName    = Split-Path $AppRoot -Leaf
+
+# Target file to inspect
+$IndexFile = Join-Path $AppRoot "index.html"
+
+if (!(Test-Path $IndexFile)) {
+    Write-Error "index.html not found in $AppRoot"
+    exit 1
+}
+
+# Centralized backup directory
+$BACKUP_DIR = "I:\PROJECTS BACKUPS\${AppName}_Backups"
+
+if (!(Test-Path $BACKUP_DIR)) {
+    New-Item -ItemType Directory -Path $BACKUP_DIR | Out-Null
 }
 
 # Timestamp
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
-# Backup file name
-$BACKUP_DIR = "I:\PROJECTS BACKUPS\Calendar_Backups"
+# Backup file path
+$BackupFile = Join-Path $BACKUP_DIR "$AppName`_$Timestamp.tgz"
 
-Write-Host "Creating backup for app:"
-Write-Host "  $AppRoot"
+Write-Host ""
+Write-Host "Project Lifesaver Backup"
+Write-Host "------------------------"
+Write-Host "App Name : $AppName"
+Write-Host "App Root : $AppRoot"
+Write-Host "Backup   : $BackupFile"
 Write-Host ""
 
-# Create TGZ backup of entire app directory, excluding /backups and common heavy dirs
-# Note: We exclude /backups to avoid attempting to add the archive into itself.
+# Exclusions to avoid bloat / recursion
 $ExcludeArgs = @(
     "--exclude=backups",
     "--exclude=node_modules",
@@ -34,11 +50,13 @@ $ExcludeArgs = @(
     "--exclude=.git"
 )
 
+# Create TGZ archive
 tar -czf $BackupFile @ExcludeArgs -C $AppRoot .
 
-Write-Host "Backup created successfully:"
-Write-Host "  $BackupFile"
+Write-Host ""
+Write-Host "Backup created successfully."
+Write-Host "Opening index.html in Notepad..."
 Write-Host ""
 
-# Open app root for visual confirmation
-Start-Process explorer.exe $AppRoot
+# OPEN NOTEPAD FOR COPY / PASTE / REVIEW
+notepad.exe $IndexFile

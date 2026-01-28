@@ -45,13 +45,13 @@
         radial-gradient(900px 700px at 35% 88%, rgba(168,85,247,.12), transparent 60%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
       color:var(--text);
-      overflow:hidden; /* important: layout handles its own scrolling regions */
+      overflow:hidden;
     }
 
     /* ======= Layout ======= */
     .app{
-      height:100vh;
-      width:100vw;
+      height:100%;
+      width:100%;
       padding:14px;
       display:flex;
       gap:12px;
@@ -60,7 +60,7 @@
     /* When the viewport is tight, stack panel under month. */
     @media (max-width: 1080px){
       body{ overflow:auto; }
-      .app{ flex-direction:column; height:auto; min-height:100vh; overflow:visible; }
+      .app{ flex-direction:column; height:auto; min-height:100%; overflow:visible; }
     }
 
     .month-shell{
