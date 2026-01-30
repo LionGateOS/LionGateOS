@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"I:\\\\liongateos\\\\master_backup.ps1\")",
+      "Bash(git stash:*)",
+      "Bash(git merge:*)",
+      "Bash(powershell.exe -NoProfile -Command \"Select-String -Path ''index.html'' -Pattern ''<<<<<<<|=======|>>>>>>>'' -SimpleMatch | ForEach-Object { $_LineNumber.ToString\\(\\) + '': '' + $_Line }\")",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(python:*)",
+      "Bash(powershell.exe -NoProfile -Command \"[System.IO.Compression.ZipFile]::OpenRead\\(''I:\\\\liongateos\\\\assets\\\\Apple Image Playground Animation.lottie''\\).Entries | ForEach-Object { Write-Output $_FullName }\")"
+    ]
+  }
+}
