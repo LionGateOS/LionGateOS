@@ -11,7 +11,8 @@
       "Bash(git commit:*)",
       "Bash(git branch:*)",
       "Bash(python:*)",
-      "Bash(powershell.exe -NoProfile -Command \"[System.IO.Compression.ZipFile]::OpenRead\\(''I:\\\\liongateos\\\\assets\\\\Apple Image Playground Animation.lottie''\\).Entries | ForEach-Object { Write-Output $_FullName }\")"
+      "Bash(powershell.exe -NoProfile -Command \"[System.IO.Compression.ZipFile]::OpenRead\\(''I:\\\\liongateos\\\\assets\\\\Apple Image Playground Animation.lottie''\\).Entries | ForEach-Object { Write-Output $_FullName }\")",
+      "Bash(node -e:*)"
     ]
   }
 }
