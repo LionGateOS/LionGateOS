@@ -1,7 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
 
-  // 1. STYLE DROPDOWN (Neon vs Glass)
+  // 1. RE-LINK TABS (Overview, Calendar, Apps, Notes)
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach((tab, i) => {
+    tab.onclick = () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.style.display = 'none');
+      tab.classList.add('active');
+      if (panels[i]) panels[i].style.display = 'block';
+    };
+  });
+
+  // 2. STYLES (Neon vs Glass)
   const styleSelect = document.querySelector('select[id*="Style"]') || document.querySelector('select:nth-of-type(2)');
   if (styleSelect) {
     styleSelect.onchange = (e) => {
@@ -16,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // 2. SLIDERS (Radius, Glow Intensity, Opacity)
+  // 3. SLIDERS (Radius, Intensity, Glow)
   document.addEventListener("input", (e) => {
     if (e.target.type === 'range') {
       const val = e.target.value;
@@ -29,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 3. BACKGROUND UPLOADER (Fixing the "Doesn't pull up anything" bug)
+  // 4. BACKGROUND FIX (URL & Upload)
   const bgInput = document.querySelector('input[type="file"]');
   const bgUrlInput = document.querySelector('input[placeholder*="URL"]');
   
@@ -50,19 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // 4. NAVIGATION & DRAWER
+  // 5. APPEARANCE DRAWER
   const btnApp = document.getElementById("btnAppearance");
   const drawer = document.getElementById("drawer");
   if(btnApp) btnApp.onclick = () => drawer.classList.add("open");
-  
-  const tabs = document.querySelectorAll('.tab');
-  const panels = document.querySelectorAll('.panel');
-  tabs.forEach((tab, i) => {
-    tab.onclick = () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.style.display = 'none');
-      tab.classList.add('active');
-      if (panels[i]) panels[i].style.display = 'block';
-    };
-  });
 });
