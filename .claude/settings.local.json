@@ -12,7 +12,20 @@
       "Bash(git branch:*)",
       "Bash(python:*)",
       "Bash(powershell.exe -NoProfile -Command \"[System.IO.Compression.ZipFile]::OpenRead\\(''I:\\\\liongateos\\\\assets\\\\Apple Image Playground Animation.lottie''\\).Entries | ForEach-Object { Write-Output $_FullName }\")",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(git push)",
+      "Bash(git add:*)",
+      "Bash(copy \"I:\\\\liongateos\\\\index.html\" \"I:\\\\liongateos\\\\test.html\")",
+      "Bash(powershell:*)",
+      "Bash(dir:*)",
+      "Bash(git -C \"I:\\\\LionGateOS\" diff)",
+      "Bash(git -C \"I:\\\\LionGateOS\" log --oneline -5)",
+      "Bash(git -C \"I:\\\\LionGateOS\" add index.html test.html main.js apps/Calendar/index.html)",
+      "Bash(git -C \"I:\\\\LionGateOS\" commit -m \"$\\(cat <<''EOF''\nWire up dead Appearance controls and fix Firefox rendering\n\n- Connect --lg-text and --lg-bg0 to applyTheme\\(\\) so Text and BG Base\n  color pickers update live\n- Wire .title, .meta, .body to var\\(--lg-text\\) for full text color control\n- Replace background-layer gradient with solid var\\(--lg-bg0\\)\n- Neon frame: drop-shadow with calc\\(glow-intensity\\), remove overflow:hidden\n  so glow radiates outside the box on Firefox\n- Glass frame: bump saturate to 1.8, wire border to --lg-stroke\n- Active tab uses --lg-accent2 for visible Accent 2 connection\n- Unify all borders to --lg-stroke \\(replace --lg-stroke2 refs\\)\n- Add background-clip:padding-box + webkit-mask to .panel/.top for\n  Firefox corner-bleed fix\n- Calendar .day: height 120px !important + display:flex for Firefox\n- Sync all fixes across index.html, test.html, and main.js\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"I:\\\\LionGateOS\" status)",
+      "Bash(git -C \"I:\\\\LionGateOS\" show e9c76f9f:.gitmodules)",
+      "Bash(git -C \"I:\\\\LionGateOS\" config --file .gitmodules --list)",
+      "Bash(git -C:*)"
     ]
   }
 }

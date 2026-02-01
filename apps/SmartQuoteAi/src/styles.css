@@ -5,32 +5,29 @@
 /* Unified Blue‑Gold OS Visual Language */
 
 :root {
-  --accent-gold: #f6c976;
-  --accent-gold-strong: #fbd48b;
-  --accent-gold-glow: rgba(255,195,100,0.32);
-  --accent-gold-soft: rgba(255,195,100,0.18);
+  --accent-gold: var(--lg-accent2, #f6c976);
+  --accent-gold-strong: var(--lg-accent2, #fbd48b);
+  --accent-gold-glow: var(--lg-glow, rgba(255,195,100,0.32));
+  --accent-gold-soft: rgba(var(--lg-accent2-rgb, 246, 201, 118), 0.18);
 
-  --surface-00: rgba(15,23,42,1.00);
-  --surface-01: rgba(15,23,42,0.94);
-  --surface-02: rgba(18,30,56,0.90);
-  --surface-03: rgba(24,36,72,0.84);
-  --surface-glass: rgba(32,48,88,0.20);
+  --surface-00: var(--lg-bg0, rgba(15,23,42,1.00));
+  --surface-01: var(--lg-bg1, rgba(15,23,42,0.94));
+  --surface-02: var(--lg-surface, rgba(18,30,56,0.90));
+  --surface-03: var(--lg-surface2, rgba(24,36,72,0.84));
+  --surface-glass: var(--lg-surface, rgba(32,48,88,0.20));
 
-  --border-soft: rgba(255,195,100,0.22);
-  --border-strong: rgba(255,195,100,0.45);
+  --border-soft: var(--lg-stroke, rgba(255,195,100,0.22));
+  --border-strong: var(--lg-stroke2, rgba(255,195,100,0.45));
 
-  --radius: 14px;
+  --radius: var(--lg-frame-radius, 14px);
 }
 
 /* Global App Background */
 body, html, #root {
-  background: radial-gradient(circle at center,
-    rgba(30,58,138,0.55),
-    rgba(15,23,42,0.96) 70%) !important;
-  background-attachment: fixed !important;
+  /* background: handled by theme.css */
   margin: 0;
   padding: 0;
-  color: #e2e8f0;
+  color: var(--lg-text, #e2e8f0);
   font-family: 'Inter', sans-serif;
 }
 

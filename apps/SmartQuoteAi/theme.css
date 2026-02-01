@@ -1,16 +1,17 @@
-:root{
-  --bg:#070a12;
-  --panel:rgba(14,18,34,.78);
-  --text:#e8edf7;
-  --muted:#aab6d6;
-  --accent:#5aa0ff;
-  --gold:rgba(215,179,90,.6);
-  --radius:26px;
-  --shadow:0 22px 60px rgba(0,0,0,.55);
-  --panelBorder:1px solid rgba(255,255,255,.14);
-  --sparkleOpacity:0.45;
-  --bgOpacity:0.28;
-  --font:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+:root {
+    --bg: var(--lg-bg0);
+    --accent: var(--lg-accent);
+    --panel: var(--lg-bg1);
+    --text: var(--lg-text);
+    --glass: var(--lg-surface);
+    --muted: var(--lg-muted);
+    --gold: rgba(215,179,90,.6);
+    --radius: var(--lg-frame-radius, 26px);
+    --shadow: 0 22px 60px rgba(0,0,0,.55);
+    --panelBorder: 1px solid var(--lg-stroke);
+    --sparkleOpacity: 0.45;
+    --bgOpacity: 0.28;
+    --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
 *{box-sizing:border-box}
@@ -27,14 +28,12 @@ a{color:inherit}
 .small{font-size:.92rem;color:var(--muted)}
 .hidden{display:none!important}
 
-#ambient{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(900px 600px at 20% 20%, rgba(90,160,255,.08), transparent 60%),
-    radial-gradient(900px 650px at 85% 55%, rgba(215,179,90,.06), transparent 65%),
-    url("assets/ambient_purple.png") center/cover no-repeat;
-  opacity:var(--bgOpacity);
-  transform:translateZ(0);
+#ambient {
+    background: radial-gradient(circle at top left, var(--lg-accent), transparent 70%), var(--lg-bg0);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }
 
 #vignette{

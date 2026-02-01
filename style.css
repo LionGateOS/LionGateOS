@@ -1,0 +1,92 @@
+/* --- LIONGATE THEMED SCROLLBARS (NUCLEAR OPTION) --- */
+::-webkit-scrollbar {
+  width: 12px !important;
+  background: #0f0f12 !important;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3) !important;
+  border-left: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--lg-accent) !important; /* SYNC WITH THEME */
+  border: 3px solid transparent !important;
+  background-clip: content-box !important;
+  border-radius: 99px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--lg-accent2) !important;
+}
+
+/* Apply Glow to Panels (controlled by slider) */
+/* --- PANEL FRAME CONNECTIONS --- */
+
+/* 1. Defaults */
+:root {
+  --lg-radius: 12px;
+  --lg-glow-spread: 0px;
+  --lg-glow-opacity: 0.0;
+}
+
+/* 2. Apply Radius */
+.panel, .card, .app-card, .sidebar, .modal {
+  border-radius: var(--lg-radius) !important;
+  transition: border-radius 0.3s ease;
+}
+
+/* 3. Apply Glow */
+.panel, .card, .app-card {
+  box-shadow: 0 0 var(--lg-glow-spread) var(--lg-accent) !important;
+  transition: box-shadow 0.2s ease;
+}
+
+.panel { display: none !important; }
+#tab-overview { display: block; }
+
+.status {
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--lg-accent) !important;
+}
+
+.content {
+    flex: 1 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+/* FORCE PANEL VISIBILITY LOGIC */
+.panel { display: none !important; }
+#tab-overview { display: block; } /* Start on Overview */
+
+/* THE HAMMER: OVERRIDE ALL DISPLAYS */
+.hidden { display: none !important; }
+.panel.active { display: block !important; }
+
+@import url('recovery.css');
+
+/* FORCE VISIBILITY ON START */
+.panel { display: none !important; }
+
+/* Keep the first panel (Overview) visible on start */
+#tab-overview, .panel:first-of-type { display: block; }
+
+/* RECOVERY: DRAWER VISIBILITY */
+#drawer {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    background: #0f0f12;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 9999;
+}
+
+#drawer.open {
+    transform: translateX(0) !important;
+}

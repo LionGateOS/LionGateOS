@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { ExplanationPanel } from "./components/ExplanationPanel";
 import type { EstimateDraft } from "../logic/EstimatorEngine";
 
@@ -299,7 +299,8 @@ function inferFromLabelAndQtyWithWorkType(
    Component
    ========================= */
 
-export default function EstimatorHome() {
+export default function EstimatorHome({ onUpdateTotal, userPlan }) {
+  const lastEmittedTotal = useRef(0);
   const [draft, setDraft] = useState<EstimateDraft>(() => buildEmptyDraft());
 
   // Context only (no pricing impact yet)
@@ -364,20 +365,6 @@ export default function EstimatorHome() {
   // Change tracking (since last save/restore)
   const [lastSavedFingerprint, setLastSavedFingerprint] = useState<string>(() =>
     draftFingerprint(draft, workType, quickInput)
-      {/* RECEIPT PLACEHOLDER — intentionally empty */}
-      <div
-        id="receipt-slot"
-        style={{
-          marginTop: "24px",
-          padding: "16px",
-          border: "1px dashed rgba(255,255,255,0.15)",
-          borderRadius: "12px",
-          opacity: 0.6
-        }}
-      >
-        Receipt will render here in RESOLUTION phase.
-      </div>
-
   );
 
   const totals = useMemo(() => calculateTotals(draft), [draft]);
@@ -839,6 +826,114 @@ function clearAllLineItems() {
     const now = draftFingerprint(draft, workType, quickInput);
     return now !== lastSavedFingerprint;
   })();
+
+  // SYNC ENGINE: Sends totals to the Main Magnets (Circuit Breaker Installed)
+  React.useEffect(() => {
+     if (onUpdateTotal && totals !== undefined) {
+       // Only speak if the number is different from the last time we spoke
+       if (Math.abs(lastEmittedTotal.current - totals.grandTotal) > 0.01) {
+         lastEmittedTotal.current = totals.grandTotal;
+         onUpdateTotal(totals.grandTotal);
+       }
+     }
+  }, [totals?.grandTotal, onUpdateTotal]);
+
+  const renderExpenses = () => {
+    // VALUE LOGIC: Real-time Profit Analysis
+    const monthlyBurn = 4250.00;
+    const projectCost = totals.baseCost + totals.overheadCost; // Using deterministic costs
+    const grossProfit = totals.grandTotal - projectCost;
+    const burnCoverage = (grossProfit / monthlyBurn) * 100;
+    
+    return (
+      <div style={{ padding: '20px 0', color: '#fff' }}>
+        
+        {/* MAIN PROFIT CARD */}
+        <div style={{ 
+          background: 'linear-gradient(145deg, #1a1a20, #0f0f12)', 
+          padding: '20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)',
+          marginBottom: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' 
+        }}>
+          <h3 style={{ margin: '0 0 15px 0', fontSize: '13px', color: '#888', letterSpacing: '1px' }}>REALITY CHECK: PROFIT & BURN</h3>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '15px' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: '#888', marginBottom: '5px' }}>NET PROFIT ON THIS JOB</div>
+              <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#fff' }}>${grossProfit.toFixed(2)}</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '11px', color: '#888', marginBottom: '5px' }}>COVERS MONTHLY BURN</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: burnCoverage > 100 ? '#4caf50' : '#ff9800' }}>
+                {burnCoverage.toFixed(1)}%
+              </div>
+            </div>
+          </div>
+          
+          {/* PROGRESS BAR */}
+          <div style={{ height: '8px', background: '#222', borderRadius: '4px', overflow: 'hidden', border: '1px solid #333' }}>
+            <div style={{ 
+              width: `${Math.min(burnCoverage, 100)}%`, 
+              height: '100%', 
+              background: burnCoverage > 100 ? '#4caf50' : 'linear-gradient(90deg, #ff9800, #ff5722)',
+              transition: 'width 0.5s ease'
+            }} />
+          </div>
+        </div>
+
+        {/* BREAKDOWN GRID */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+          <div style={{ padding: '15px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ fontSize: '11px', color: '#888', marginBottom: '5px' }}>TOTAL REVENUE</div>
+            <div style={{ fontSize: '16px', color: '#fff' }}>${(totals.grandTotal || 0).toFixed(2)}</div>
+          </div>
+          <div style={{ padding: '15px', background: 'rgba(255, 75, 43, 0.05)', borderRadius: '10px', border: '1px solid rgba(255, 75, 43, 0.2)' }}>
+            <div style={{ fontSize: '11px', color: '#ff4b2b', marginBottom: '5px' }}>HARD COSTS (MAT + LABOR)</div>
+            <div style={{ fontSize: '16px', color: '#ff4b2b' }}>-${projectCost.toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderAIReview = () => {
+    // VALUE LOGIC: Generate Client Rationale
+    const standardPrice = (totals.grandTotal || 0).toFixed(2);
+    const premiumPrice = ((totals.grandTotal || 0) * 1.35).toFixed(2);
+    
+    return (
+      <div style={{ padding: '30px', color: '#e0e0e0', maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '30px', borderLeft: '3px solid #5b8cff', paddingLeft: '20px' }}>
+          <h2 style={{ margin: '0 0 10px 0', fontSize: '24px', color: '#fff' }}>Client Proposal Draft</h2>
+          <p style={{ fontSize: '14px', opacity: 0.7 }}>
+            AI-generated rationale based on your risk factors and scope. Copy and paste this directly to your client.
+          </p>
+        </div>
+
+        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '25px', borderRadius: '12px', fontFamily: 'monospace', lineHeight: '1.6', fontSize: '13px', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <p><strong>Subject:</strong> Estimate for your project (Options Attached)</p>
+          <p>Hi there,</p>
+          <p>Based on our site visit and the scope we discussed, I have put together three options for you. I want to be transparent about where these numbers come from.</p>
+          
+          <p><strong>The Reality of the Project:</strong><br/>
+          We identified a few key factors (such as {totals.byType['labor'] > totals.byType['material'] ? 'labor intensity' : 'material quality'}) that drive this estimate. To ensure the work is done right and covers the specific conditions of your home, we have structured the quote to avoid surprise costs later.</p>
+
+          <p><strong>Option 1: Standard Scope (${standardPrice})</strong><br/>
+          This covers exactly what we discussed: valid execution with standard grade materials. It gets the job done reliably.</p>
+
+          <p><strong>Option 2: Professional Grade (${premiumPrice})</strong><br/>
+          This is what I recommend. It includes upgraded materials and additional prep work that ensures longevity. Given the {totals.byType['labor'] > 2000 ? 'complexity of the installation' : 'finish quality required'}, this offers the best value over time.</p>
+
+          <p>Let me know which tier you are comfortable with, and we can get this scheduled.</p>
+          <p>Best,<br/>[Your Name]</p>
+        </div>
+        
+        <button style={{ marginTop: '20px', padding: '12px 25px', background: '#5b8cff', border: 'none', borderRadius: '8px', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>
+          Copy to Clipboard
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div
       style={{
@@ -1508,7 +1603,7 @@ function clearAllLineItems() {
           }}
         >
           <h2 style={{ fontSize: "16px", margin: 0 }}>Saved estimates</h2>
-          <div style={{ fontSize: "12px", opacity: 0.65 }}>
+          <div style={{ fontSize: "12px", opacity: 0.7 }}>
             Local-only list of saved projects (restore, duplicate, delete).
           </div>
         </div>
@@ -2016,22 +2111,12 @@ function clearAllLineItems() {
             Client price: {formatMoney(totals.grandTotal)}
           </div>
         </div>
-      </section>
-    </div>
-      {/* RECEIPT PLACEHOLDER — intentionally empty */}
-      <div
-        id="receipt-slot"
-        style={{
-          marginTop: "24px",
-          padding: "16px",
-          border: "1px dashed rgba(255,255,255,0.15)",
-          borderRadius: "12px",
-          opacity: 0.6
-        }}
-      >
-        Receipt will render here in RESOLUTION phase.
-      </div>
 
+        {renderExpenses()}
+      </section>
+
+      {renderAIReview()}
+    </div>
   );
 }
 
