@@ -143,7 +143,10 @@
 
     /* Fixed month cell height to prevent layout creep. */
     .day{
-      height:110px;
+      height:120px !important;
+      min-height:120px;
+      display:flex !important;
+      flex-direction:column;
       border-radius:16px;
       border:1px solid var(--stroke);
       background: rgba(0,0,0,.16);

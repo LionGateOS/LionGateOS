@@ -33,7 +33,7 @@
 
   const state = {
     particles: { enabled: false, count: 120, speed: 35, distance: 120, brightness: 60, color: '#3b82f6', colorMode: 'single', sizeVar: 3, animationId: null, points: [] },
-    tracers: { enabled: false, count: 1, color: '#3b82f6', speed: 50, speedVar: 10, thickness: 4, glow: 60, glowVar: 10, trail: 80, direction: 'clockwise', target: 'perimeter', animationId: null, tracerInstances: [] },
+    tracers: { enabled: false, count: 1, color: '#3b82f6', speed: 50, speedVar: 10, thickness: 4, glow: 60, glowVar: 10, trail: 80, direction: 'clockwise', target: 'panels', animationId: null, tracerInstances: [] },
     screensaver: { enabled: false, idleMinutes: 5, type: 'particles', mediaUrl: '', active: false, ssAnimationId: null },
     theme: { preset: 'dark', accent: '#3b82f6', accent2: '#6366f1', bgBase: '#060814', surface: '#0b1024', text: '#ffffff', muted: '#aaaaaa', stroke: '#333333', glow: 100 },
     frames: { style: 'default', radius: 22, glowColor: '#3b82f6', glowIntensity: 0 },
@@ -80,6 +80,8 @@
     root.style.setProperty('--lg-accent', state.theme.accent);
     root.style.setProperty('--lg-accent2', state.theme.accent2);
     root.style.setProperty('--lg-glow', state.theme.glow / 100);
+    root.style.setProperty('--lg-text', state.theme.text);
+    root.style.setProperty('--lg-bg0', state.theme.bgBase);
     const statusTheme = $('statusTheme');
     if (statusTheme) statusTheme.textContent = state.theme.preset.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     broadcastTheme();
@@ -215,41 +217,57 @@
   function animateTracers() {
     if (!state.tracers.enabled || !tracersCtx) return;
     const w = tracersCanvas.width, h = tracersCanvas.height, ctx = tracersCtx;
-    const margin = 14, innerW = w - margin * 2, innerH = h - margin * 2;
-    const r = Math.min(state.frames.radius, innerW / 2, innerH / 2);
-    const straightH = innerH - 2 * r, straightW = innerW - 2 * r, arcLen = Math.PI / 2 * r;
-    const perimeter = 2 * straightW + 2 * straightH + 2 * Math.PI * r;
     ctx.clearRect(0, 0, w, h);
-    const segs = [straightW, arcLen, straightH, arcLen, straightW, arcLen, straightH, arcLen];
-    function getPoint(p) {
-      p = ((p % perimeter) + perimeter) % perimeter;
-      let seg = 0, acc = 0;
-      for (; seg < 8; seg++) { if (p < acc + segs[seg]) break; acc += segs[seg]; }
-      const t = p - acc;
-      switch (seg) {
-        case 0: return { x: margin + r + t, y: margin };
-        case 1: { const a = -Math.PI / 2 + (t / r); return { x: margin + innerW - r + Math.cos(a) * r, y: margin + r + Math.sin(a) * r }; }
-        case 2: return { x: margin + innerW, y: margin + r + t };
-        case 3: { const a = 0 + (t / r); return { x: margin + innerW - r + Math.cos(a) * r, y: margin + innerH - r + Math.sin(a) * r }; }
-        case 4: return { x: margin + innerW - r - t, y: margin + innerH };
-        case 5: { const a = Math.PI / 2 + (t / r); return { x: margin + r + Math.cos(a) * r, y: margin + innerH - r + Math.sin(a) * r }; }
-        case 6: return { x: margin, y: margin + innerH - r - t };
-        case 7: { const a = Math.PI + (t / r); return { x: margin + r + Math.cos(a) * r, y: margin + r + Math.sin(a) * r }; }
-        default: return { x: margin + r, y: margin };
+    const r = state.frames.radius;
+    function buildPath(rx, ry, rw, rh) {
+      var cr = Math.min(r, rw / 2, rh / 2);
+      var straightW = rw - 2 * cr, straightH = rh - 2 * cr;
+      var arcLen = Math.PI / 2 * cr;
+      var perimeter = 2 * straightW + 2 * straightH + 2 * Math.PI * cr;
+      var segs = [straightW, arcLen, straightH, arcLen, straightW, arcLen, straightH, arcLen];
+      function getPoint(p) {
+        p = ((p % perimeter) + perimeter) % perimeter;
+        var seg = 0, acc = 0;
+        for (; seg < 8; seg++) { if (p < acc + segs[seg]) break; acc += segs[seg]; }
+        var t = p - acc;
+        switch (seg) {
+          case 0: return { x: rx + cr + t, y: ry };
+          case 1: { var a = -Math.PI / 2 + (t / cr); return { x: rx + rw - cr + Math.cos(a) * cr, y: ry + cr + Math.sin(a) * cr }; }
+          case 2: return { x: rx + rw, y: ry + cr + t };
+          case 3: { var a = 0 + (t / cr); return { x: rx + rw - cr + Math.cos(a) * cr, y: ry + rh - cr + Math.sin(a) * cr }; }
+          case 4: return { x: rx + rw - cr - t, y: ry + rh };
+          case 5: { var a = Math.PI / 2 + (t / cr); return { x: rx + cr + Math.cos(a) * cr, y: ry + rh - cr + Math.sin(a) * cr }; }
+          case 6: return { x: rx, y: ry + rh - cr - t };
+          case 7: { var a = Math.PI + (t / cr); return { x: rx + cr + Math.cos(a) * cr, y: ry + cr + Math.sin(a) * cr }; }
+          default: return { x: rx + cr, y: ry };
+        }
       }
+      return { perimeter: perimeter, getPoint: getPoint };
     }
-    state.tracers.tracerInstances.forEach(tracer => {
+    var paths = [];
+    if (state.tracers.target === 'panels') {
+      var topEl = document.querySelector('.top');
+      var activePanel = document.querySelector('.panel:not(.hidden)');
+      if (topEl) { var b = topEl.getBoundingClientRect(); paths.push(buildPath(b.left, b.top, b.width, b.height)); }
+      if (activePanel) { var b2 = activePanel.getBoundingClientRect(); paths.push(buildPath(b2.left, b2.top, b2.width, b2.height)); }
+    }
+    if (paths.length === 0) {
+      var margin = 14;
+      paths.push(buildPath(margin, margin, w - margin * 2, h - margin * 2));
+    }
+    state.tracers.tracerInstances.forEach(function(tracer, i) {
+      var path = paths[i % paths.length];
       tracer.position += (state.tracers.speed / 10) * tracer.speedMod * tracer.direction;
-      if (tracer.position > perimeter) tracer.position = 0;
-      if (tracer.position < 0) tracer.position = perimeter;
-      const pos = tracer.position, trail = state.tracers.trail, thickness = state.tracers.thickness, glowIntensity = state.tracers.glow * tracer.glowMod;
+      if (tracer.position > path.perimeter) tracer.position -= path.perimeter;
+      if (tracer.position < 0) tracer.position += path.perimeter;
+      var pos = tracer.position, trail = state.tracers.trail, thickness = state.tracers.thickness, glowIntensity = state.tracers.glow * tracer.glowMod;
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       if (glowIntensity > 0) { ctx.shadowColor = state.tracers.color; ctx.shadowBlur = glowIntensity / 3; }
-      for (let i = 0; i < trail; i++) {
-        const alpha = 1 - (i / trail), p1 = getPoint(pos - i * tracer.direction), p2 = getPoint(pos - (i + 1) * tracer.direction);
-        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.strokeStyle = state.tracers.color; ctx.globalAlpha = alpha * 0.8; ctx.lineWidth = thickness * (1 - i / trail * 0.5); ctx.stroke();
+      for (var j = 0; j < trail; j++) {
+        var alpha = 1 - (j / trail), p1 = path.getPoint(pos - j * tracer.direction), p2 = path.getPoint(pos - (j + 1) * tracer.direction);
+        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.strokeStyle = state.tracers.color; ctx.globalAlpha = alpha * 0.8; ctx.lineWidth = thickness * (1 - j / trail * 0.5); ctx.stroke();
       }
-      const head = getPoint(pos);
+      var head = path.getPoint(pos);
       ctx.beginPath(); ctx.arc(head.x, head.y, thickness * 1.5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.globalAlpha = 1; ctx.fill(); ctx.shadowBlur = 0;
     });
     ctx.globalAlpha = 1;
@@ -405,7 +423,7 @@
           renderer: 'canvas',
           loop: true,
           autoplay: true,
-          path: 'assets/ai-orb-living-liquid.json'
+          path: 'assets/ai-orb.json'
         });
         aiLottie.addEventListener('DOMLoaded', function() { console.log('AI Orb: Lottie animation loaded'); });
       } else { console.warn('AI Orb: #aiLottieContainer element not found'); }
