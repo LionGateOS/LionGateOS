@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
 
-  // 1. RE-LINK TABS (Overview, Calendar, Apps, Notes)
+  // 1. TABS: Match Buttons to Panels (Overview, Calendar, Apps, Notes)
   const tabs = document.querySelectorAll('.tab');
   const panels = document.querySelectorAll('.panel');
   tabs.forEach((tab, i) => {
@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  // 2. STYLES (Neon vs Glass)
-  const styleSelect = document.querySelector('select[id*="Style"]') || document.querySelector('select:nth-of-type(2)');
+  // 2. PANEL STYLES: Neon vs Glass
+  const styleSelect = document.querySelector('select[id*="Style"]') || document.querySelectorAll('select')[1];
   if (styleSelect) {
     styleSelect.onchange = (e) => {
       const style = e.target.value.toLowerCase();
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // 3. SLIDERS (Radius, Intensity, Glow)
+  // 3. SLIDERS: Radius, Glow Intensity, and Glow Color
   document.addEventListener("input", (e) => {
     if (e.target.type === 'range') {
       const val = e.target.value;
@@ -37,22 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (label.includes('radius')) root.style.setProperty('--lg-radius', val + 'px');
       if (label.includes('intensity')) root.style.setProperty('--lg-glow-opacity', val / 100);
       if (label.includes('glow')) root.style.setProperty('--lg-glow-spread', (val / 2) + 'px');
-      if (label.includes('opacity')) root.style.setProperty('--lg-bg-opacity', val / 100);
+    }
+    if (e.target.type === 'color') {
+      root.style.setProperty('--lg-accent', e.target.value);
     }
   });
 
-  // 4. BACKGROUND FIX (URL & Upload)
+  // 4. BACKGROUND: URL & File Upload Fix
   const bgInput = document.querySelector('input[type="file"]');
   const bgUrlInput = document.querySelector('input[placeholder*="URL"]');
-  
   if (bgInput) {
     bgInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        document.body.style.backgroundImage = `url('${url}')`;
-        document.body.style.backgroundSize = "cover";
-      }
+      const url = URL.createObjectURL(e.target.files[0]);
+      document.body.style.backgroundImage = `url('${url}')`;
+      document.body.style.backgroundSize = "cover";
     };
   }
   if (bgUrlInput) {
@@ -66,4 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnApp = document.getElementById("btnAppearance");
   const drawer = document.getElementById("drawer");
   if(btnApp) btnApp.onclick = () => drawer.classList.add("open");
+  const close = document.getElementById("closeDrawerBtn");
+  if(close) close.onclick = () => drawer.classList.remove("open");
 });

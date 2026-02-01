@@ -90,3 +90,23 @@
 #drawer.open {
     transform: translateX(0) !important;
 }
+
+/* CORE UI REPAIR: PANELS & DRAWER */
+.panel { display: none !important; }
+.panel:first-of-type, .panel.active { display: block !important; }
+
+#drawer {
+  position: fixed; 
+  right: 0; 
+  top: 0; 
+  width: 400px; 
+  height: 100%;
+  background: #0f0f12; 
+  transition: transform 0.3s ease; 
+  transform: translateX(100%);
+  z-index: 9999; 
+  border-left: 1px solid #333;
+}
+#drawer.open {
+  transform: translateX(0) !important;
+}
