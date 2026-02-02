@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MobileCamera } from './MobileCamera';
 import { ReviewScreen } from './ReviewScreen';
 import { processPhotoEstimate } from './visionProcessor';
+import EstimatorHome from './EstimatorHome';
 
 export default function App() {
   const [view, setView] = useState('dashboard');
@@ -43,6 +44,12 @@ export default function App() {
             className={`p-3 rounded-md text-left transition-colors ${view === 'capture' ? 'bg-[#0b9888] text-white font-semibold' : 'text-[#0b9888] font-semibold hover:bg-gray-800'}`}
           >
             SmartQuoteAI
+          </button>
+          <button 
+            onClick={() => setView('pro')} 
+            className={`p-3 rounded-md text-left transition-colors ${view === 'pro' ? 'bg-[#0b9888] text-white font-semibold' : 'text-gray-400 hover:bg-gray-800'}`}
+          >
+            Pro Estimator
           </button>
         </nav>
         <div className="mt-auto pt-6 border-t border-gray-800 text-[10px] text-gray-500 uppercase tracking-widest text-center">
@@ -115,6 +122,10 @@ export default function App() {
                 </div>
               )}
             </div>
+          )}
+
+          {view === 'pro' && (
+            <EstimatorHome />
           )}
 
           {view === 'capture' && (
