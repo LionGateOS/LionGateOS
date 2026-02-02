@@ -5,6 +5,7 @@ import { processPhotoEstimate } from './visionProcessor';
 
 export default function App() {
   const [view, setView] = useState('dashboard');
+  const [items, setItems] = useState<any[]>([]);
   const [estimates, setEstimates] = useState<any>(null);
 
   const handlePhoto = async (img: string) => {
@@ -13,13 +14,21 @@ export default function App() {
     setView('review');
   };
 
+  const addTieredItems = () => {
+    if (estimates) {
+      setItems([...items, estimates]);
+      setView('dashboard');
+      setEstimates(null);
+    }
+  };
+
   return (
     <div className="bg-black min-h-screen text-white p-8 font-sans">
-      {/* Header Section */}
+      {/* Professional Header */}
       <div className="flex justify-between border-b border-gray-800 pb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">SMARTQUOTEAI</h1>
-          <p className="text-gray-500 mt-2">LIONGATEOS Restoration Engine</p>
+          <h1 className="text-3xl font-bold">SMARTQUOTEAI</h1>
+          <p className="text-gray-500">LIONGATEOS Intelligence</p>
         </div>
         <div className="flex gap-4">
           <button 
@@ -38,33 +47,35 @@ export default function App() {
       </div>
 
       {view === 'dashboard' && (
-        <div className="mt-12 grid grid-cols-12 items-start gap-8">
-          <div className="col-span-12 lg:col-span-8">
-            <h2 className="text-xl font-semibold mb-4">Project Line Items</h2>
-            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-              <div className="p-8 text-center text-gray-500">
-                No items added. Use AIFIELD CAPTURE to generate line items from photos.
-              </div>
-            </div>
-          </div>
-          <div className="col-span-12 lg:col-span-4 bg-gray-900 p-8 rounded-xl border border-gray-800">
-            <h3 className="text-lg font-bold mb-4">Estimate Summary</h3>
-            <div className="space-y-4 text-gray-400">
-              <div className="flex justify-between items-center pb-2 border-b border-gray-800">
-                <span>Budget Total</span>
-                <span className="text-white font-mono">$0.00</span>
-              </div>
-              <div className="flex justify-between items-center pb-2 border-b border-gray-800">
-                <span>Premium Total</span>
-                <span className="text-white font-mono">$0.00</span>
-              </div>
-              <div className="pt-4">
-                <button className="w-full py-3 bg-gray-800 rounded-md text-gray-400 cursor-not-allowed">
-                  Finalize Quote
-                </button>
-              </div>
-            </div>
-          </div>
+        <div className="mt-8 overflow-x-auto">
+          <table className="w-full bg-gray-900 rounded-xl overflow-hidden border-collapse">
+            <thead className="bg-gray-800 text-left">
+              <tr>
+                <th className="p-4 border-b border-gray-700">DESCRIPTION</th>
+                <th className="p-4 border-b border-gray-700">BUDGET</th>
+                <th className="p-4 border-b border-gray-700">STANDARD</th>
+                <th className="p-4 border-b border-gray-700">PREMIUM</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-8 text-center text-gray-500 italic">
+                    No items added. Use AIFIELD CAPTURE to generate line items from photos.
+                  </td>
+                </tr>
+              ) : (
+                items.map((item, i) => (
+                  <tr key={i} className="border-t border-gray-800 hover:bg-gray-800/50 transition-colors">
+                    <td className="p-4">{item.budget.name.replace(' (Repair)', '')}</td>
+                    <td className="p-4 font-mono text-blue-400">${item.budget.cost.toFixed(2)}</td>
+                    <td className="p-4 font-mono text-green-400">${item.standard.cost.toFixed(2)}</td>
+                    <td className="p-4 font-mono text-purple-400">${item.premium.cost.toFixed(2)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -73,7 +84,7 @@ export default function App() {
       {view === 'review' && (
         <ReviewScreen 
           estimates={estimates} 
-          onConfirm={() => setView('dashboard')} 
+          onConfirm={addTieredItems} 
         />
       )}
     </div>
