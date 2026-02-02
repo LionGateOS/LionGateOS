@@ -1,11 +1,30 @@
+/* --- LIONGATE GLOBAL AUTHORITY --- */
+:root {
+  /* AUTHORITY COLORS */
+  --lg-bg-deep: #0f0f12;
+  --lg-border-standard: #333;
+  --lg-overlay-soft: rgba(0,0,0,0.3);
+  
+  /* ACCENT SYNC */
+  --lg-accent-primary: #5da9ff;
+  --lg-accent-secondary: #b15dff;
+  --lg-pure-black: #000000;
+  --lg-bg-overlay-deep: rgba(18, 22, 46, 0.9);
+
+  /* UI DEFAULTS */
+  --lg-radius: 12px;
+  --lg-glow-spread: 0px;
+  --lg-glow-opacity: 0.0;
+}
+
 /* --- LIONGATE THEMED SCROLLBARS (NUCLEAR OPTION) --- */
 ::-webkit-scrollbar {
   width: 12px !important;
-  background: #0f0f12 !important;
+  background: var(--lg-bg-deep) !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.3) !important;
+  background: var(--lg-overlay-soft) !important;
   border-left: 1px solid rgba(255,255,255,0.05) !important;
 }
 
@@ -20,30 +39,17 @@
   background-color: var(--lg-accent2) !important;
 }
 
-/* Apply Glow to Panels (controlled by slider) */
 /* --- PANEL FRAME CONNECTIONS --- */
-
-/* 1. Defaults */
-:root {
-  --lg-radius: 12px;
-  --lg-glow-spread: 0px;
-  --lg-glow-opacity: 0.0;
-}
-
-/* 2. Apply Radius */
 .panel, .card, .app-card, .sidebar, .modal {
   border-radius: var(--lg-radius) !important;
   transition: border-radius 0.3s ease;
 }
 
-/* 3. Apply Glow */
+/* Apply Glow */
 .panel, .card, .app-card {
   box-shadow: 0 0 var(--lg-glow-spread) var(--lg-accent) !important;
   transition: box-shadow 0.2s ease;
 }
-
-.panel { display: none !important; }
-#tab-overview { display: block; }
 
 .status {
     font-weight: 800 !important;
@@ -60,19 +66,12 @@
 
 /* FORCE PANEL VISIBILITY LOGIC */
 .panel { display: none !important; }
-#tab-overview { display: block; } /* Start on Overview */
+#tab-overview, .panel:first-of-type, .panel.active { display: block !important; }
 
 /* THE HAMMER: OVERRIDE ALL DISPLAYS */
 .hidden { display: none !important; }
-.panel.active { display: block !important; }
 
 @import url('recovery.css');
-
-/* FORCE VISIBILITY ON START */
-.panel { display: none !important; }
-
-/* Keep the first panel (Overview) visible on start */
-#tab-overview, .panel:first-of-type { display: block; }
 
 /* RECOVERY: DRAWER VISIBILITY */
 #drawer {
@@ -81,7 +80,8 @@
     top: 0;
     width: 400px;
     height: 100%;
-    background: #0f0f12;
+    background: var(--lg-bg-deep);
+    border-left: 1px solid var(--lg-border-standard);
     transform: translateX(100%);
     transition: transform 0.3s ease;
     z-index: 9999;
@@ -91,22 +91,19 @@
     transform: translateX(0) !important;
 }
 
-/* CORE UI REPAIR: PANELS & DRAWER */
-.panel { display: none !important; }
-.panel:first-of-type, .panel.active { display: block !important; }
+/* --- LIGHT THEME PRESET (FIXED MODIFICATION) --- */
+[data-theme="light"] {
+  --lg-bg0: rgb(232, 235, 248); 
+  --lg-sfc: #ffffff;            
+  --lg-text: #1d1d1f;
+  --lg-muted: #86858b;
+  --lg-accent: #007aff;
+  --lg-accent2: #585dff;
+  --lg-accent3: #ff2d55;
+  --lg-stroke: rgba(0,0,0,0.1);
+  /* Override Authority for Light Mode */
+  --lg-bg-deep: #f0f0f5;
+  --lg-border-standard: #ccc;
+} 
 
-#drawer {
-  position: fixed; 
-  right: 0; 
-  top: 0; 
-  width: 400px; 
-  height: 100%;
-  background: #0f0f12; 
-  transition: transform 0.3s ease; 
-  transform: translateX(100%);
-  z-index: 9999; 
-  border-left: 1px solid #333;
-}
-#drawer.open {
-  transform: translateX(0) !important;
-}
+.glow-controls { display: none !important; }

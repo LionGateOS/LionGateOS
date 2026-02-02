@@ -43,8 +43,8 @@
   );
   animation: ve-spin calc(6s / var(--ve-motion-intensity)) linear infinite;
   mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+    linear-gradient(var(--lg-pure-black) 0 0) content-box,
+    linear-gradient(var(--lg-pure-black) 0 0);
   mask-composite: exclude;
   padding: 2px;
   pointer-events: none;

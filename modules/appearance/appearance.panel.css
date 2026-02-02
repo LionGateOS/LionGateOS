@@ -11,7 +11,7 @@
   width: 320px;
   max-width: calc(100vw - 32px);
   border-radius: 14px;
-  background: rgba(18, 22, 46, 0.9);
+  background: var(--lg-bg-overlay-deep);
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 40px rgba(0,0,0,.35);
   z-index: 50;

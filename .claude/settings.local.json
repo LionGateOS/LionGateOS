@@ -25,7 +25,15 @@
       "Bash(git -C \"I:\\\\LionGateOS\" status)",
       "Bash(git -C \"I:\\\\LionGateOS\" show e9c76f9f:.gitmodules)",
       "Bash(git -C \"I:\\\\LionGateOS\" config --file .gitmodules --list)",
-      "Bash(git -C:*)"
+      "Bash(git -C:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm install:*)",
+      "Bash(del \"theme\\\\colors.js\")",
+      "Bash(del \"theme\\\\theme.js\")",
+      "Bash(del \"theme\\\\index.js\")",
+      "Bash(del \"logic\\\\theme.js\")",
+      "Bash(del:*)",
+      "Bash(del \"theme.js\")"
     ]
   }
 }

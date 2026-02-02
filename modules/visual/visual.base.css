@@ -26,8 +26,8 @@
   --ve-glow-strength: 0.35; /* 0..1 */
 
   /* Palette inputs (Core/Appearance own these vars; Visual Layer only consumes) */
-  --lg-accent: #5da9ff;
-  --lg-accent2: #b15dff;
+  --lg-accent: var(--lg-accent-primary);
+  --lg-accent2: var(--lg-accent-secondary);
 }
 
 /* Root flags (JS toggles these) */
@@ -98,8 +98,8 @@ html.ve-enabled.ve-ambient-on body::before{
   transition: opacity 220ms ease;
   /* Mask to show border only */
   -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+    linear-gradient(var(--lg-pure-black) 0 0) content-box,
+    linear-gradient(var(--lg-pure-black) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
