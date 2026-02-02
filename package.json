@@ -1,24 +1,17 @@
-{
-  "name": "liongateos-os-shell",
+﻿{
+  "name": "liongateos",
   "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "main": "electron.cjs",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "electron": "electron ."
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-draggable": "^4.5.0",
-    "react-router-dom": "^7.11.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "electron": "^30.0.0",
-    "vite": "^6.4.1"
+    "react-router-dom": "^6.22.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5"
   }
 }
