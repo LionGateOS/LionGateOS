@@ -27,129 +27,109 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#f4f7f6] min-h-screen text-gray-800 font-sans">
-      {/* Visual Authority Header */}
-      <div className="bg-white border-b border-[#e0e4e7] p-4 shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-[#0b9888] rounded-md flex items-center justify-center text-white font-bold">LP</div>
-            <h1 className="text-xl font-bold text-[#21252a]">SMARTQUOTEAI</h1>
-          </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => setView('dashboard')} 
-              className={`px-4 py-2 text-sm rounded-md transition-colors ${view === 'dashboard' ? 'bg-[#f4f7f6] font-semibold' : 'hover:bg-gray-50'}`}
-            >
-              Dashboard
-            </button>
+    <div className="flex min-h-screen bg-[#f4f7f6] text-[#21252a] font-sans">
+      {/* Sidebar */}
+      <div className="w-64 bg-[#21252a] text-white p-6 flex flex-col gap-8 shadow-2xl">
+        <div className="text-2xl font-bold tracking-tight">LIONGATEOS</div>
+        <nav className="flex flex-col gap-4 text-sm">
+          <button 
+            onClick={() => setView('dashboard')} 
+            className={`p-3 rounded-md text-left transition-colors ${view === 'dashboard' ? 'bg-[#0b9888] text-white font-semibold' : 'text-gray-400 hover:bg-gray-800'}`}
+          >
+            Dashboard
+          </button>
+          <button 
+            onClick={() => setView('capture')} 
+            className={`p-3 rounded-md text-left transition-colors ${view === 'capture' ? 'bg-[#0b9888] text-white font-semibold' : 'text-[#0b9888] font-semibold hover:bg-gray-800'}`}
+          >
+            SmartQuoteAI
+          </button>
+        </nav>
+        <div className="mt-auto pt-6 border-t border-gray-800 text-[10px] text-gray-500 uppercase tracking-widest text-center">
+          Intelligence Module v2.0
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 p-10 overflow-y-auto">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-2xl font-bold">Project Estimator</h1>
             <button 
               onClick={() => setView('capture')} 
-              className="px-4 py-2 text-sm bg-[#0b9888] text-white rounded-md font-semibold hover:bg-[#097a7a] transition-colors"
+              className="bg-[#0b9888] hover:bg-[#097a7a] text-white px-6 py-2 rounded-md shadow-sm font-semibold transition-all transform hover:scale-105"
             >
               AIFIELD OPTIONS
             </button>
           </div>
-        </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto p-8">
-        {view === 'dashboard' && (
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-12 lg:col-span-8">
-              {/* Project Details Card */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e0e4e7] mb-6">
-                <h3 className="text-sm font-bold text-[#0b9888] uppercase mb-4 tracking-wider">Project Details</h3>
-                <div className="grid grid-cols-2 gap-8 text-sm">
-                  <div>
-                    <label className="text-xs text-gray-400 uppercase font-semibold">Client</label>
-                    <div className="font-medium text-[#21252a]">New Restoration Project</div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-400 uppercase font-semibold">Location</label>
-                    <div className="font-medium text-[#21252a]">Toronto, ON</div>
-                  </div>
+          {view === 'dashboard' && (
+            <div className="relative bg-white p-8 rounded-xl border border-[#e0e4e7] shadow-sm overflow-hidden">
+              {/* AI Motion Effect Layer */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0b9888] to-transparent animate-pulse"></div>
+              
+              <h3 className="text-xs text-gray-400 uppercase font-bold mb-6 tracking-wider">Active Estimate</h3>
+              
+              {items.length === 0 ? (
+                <div className="py-20 text-center text-gray-400">
+                  <div className="mb-4 text-4xl">📸</div>
+                  No data present. Use AI Capture to begin processing.
                 </div>
-              </div>
-
-              {/* Line Items Table */}
-              <div className="bg-white rounded-lg shadow-sm border border-[#e0e4e7] overflow-hidden">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-[#f8f9fa] text-gray-600 border-b border-[#e0e4e7]">
-                    <tr>
-                      <th className="p-4 font-semibold">DESCRIPTION</th>
-                      <th className="p-4 font-semibold text-center">BUDGET</th>
-                      <th className="p-4 font-semibold text-center">STANDARD</th>
-                      <th className="p-4 font-semibold text-center">PREMIUM</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#e0e4e7]">
-                    {items.length === 0 ? (
-                      <tr>
-                        <td colSpan={4} className="p-12 text-center text-gray-400 italic">
-                          Awaiting AIFIELD CAPTURE data...
-                        </td>
-                      </tr>
-                    ) : (
-                      items.map((item, i) => (
-                        <tr key={i} className="hover:bg-gray-50 transition-colors">
-                          <td className="p-4 font-medium text-[#21252a]">
-                            {item.budget.name.replace(' (Repair)', '')}
-                          </td>
-                          <td className="p-4 text-center font-mono text-blue-600">
-                            ${item.budget.cost.toFixed(2)}
-                          </td>
-                          <td className="p-4 text-center font-mono text-[#0b9888]">
-                            ${item.standard.cost.toFixed(2)}
-                          </td>
-                          <td className="p-4 text-center font-mono text-purple-600">
-                            ${item.premium.cost.toFixed(2)}
-                          </td>
+              ) : (
+                <div className="space-y-6">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead className="text-gray-400 border-b border-gray-100">
+                        <tr>
+                          <th className="pb-4 font-semibold">DESCRIPTION</th>
+                          <th className="pb-4 font-semibold text-center">BUDGET</th>
+                          <th className="pb-4 font-semibold text-center">STANDARD</th>
+                          <th className="pb-4 font-semibold text-center">PREMIUM</th>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Financial Summary Sidebar */}
-            <div className="col-span-12 lg:col-span-4">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e0e4e7]">
-                <h3 className="text-sm font-bold text-[#0b9888] uppercase mb-6 tracking-wider">Financial Summary</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center text-gray-500">
-                    <span>Subtotal (Standard)</span>
-                    <span className="font-mono text-[#21252a]">${calculateTotal()}</span>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {items.map((item, i) => (
+                          <tr key={i} className="group hover:bg-gray-50/50 transition-colors">
+                            <td className="py-4 font-medium text-[#21252a]">
+                              {item.budget.name.replace(' (Repair)', '')}
+                            </td>
+                            <td className="py-4 text-center font-mono text-blue-600">
+                              ${item.budget.cost.toFixed(2)}
+                            </td>
+                            <td className="py-4 text-center font-mono text-[#0b9888]">
+                              ${item.standard.cost.toFixed(2)}
+                            </td>
+                            <td className="py-4 text-center font-mono text-purple-600">
+                              ${item.premium.cost.toFixed(2)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  <div className="flex justify-between items-center text-gray-500">
-                    <span>Tax (Estimated)</span>
-                    <span className="font-mono text-[#21252a]">$0.00</span>
+                  
+                  <div className="pt-6 border-t border-gray-100 flex justify-between items-center">
+                    <span className="text-sm font-bold text-gray-500 uppercase">Project Total (Standard)</span>
+                    <span className="text-2xl font-bold text-[#0b9888]">${calculateTotal()}</span>
                   </div>
-                  <div className="pt-4 border-t border-[#e0e4e7] flex justify-between items-center">
-                    <span className="font-bold text-[#21252a]">Total Estimate</span>
-                    <span className="text-xl font-bold text-[#0b9888]">${calculateTotal()}</span>
-                  </div>
-                  <button className={`w-full mt-6 py-3 rounded-md font-bold transition-all ${items.length > 0 ? 'bg-[#0b9888] hover:bg-[#097a7a] text-white shadow-md' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
-                    GENERATE PROPOSAL
-                  </button>
                 </div>
-              </div>
+              )}
             </div>
-          </div>
-        )}
+          )}
 
-        {view === 'capture' && (
-          <div className="max-w-2xl mx-auto">
-            <MobileCamera onPhoto={handlePhoto} />
-          </div>
-        )}
-        
-        {view === 'review' && (
-          <ReviewScreen 
-            estimates={estimates} 
-            onConfirm={addTieredItems} 
-          />
-        )}
+          {view === 'capture' && (
+            <div className="max-w-2xl mx-auto">
+              <MobileCamera onPhoto={handlePhoto} />
+            </div>
+          )}
+          
+          {view === 'review' && (
+            <ReviewScreen 
+              estimates={estimates} 
+              onConfirm={addTieredItems} 
+            />
+          )}
+        </div>
       </div>
     </div>
   );
