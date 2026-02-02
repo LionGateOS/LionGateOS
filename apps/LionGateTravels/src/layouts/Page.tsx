@@ -10,7 +10,7 @@ export default function Page({ children }: PageProps) {
     <div
       style={{
         minHeight: '100vh',
-        background: '#0b1020',
+        background: 'var(--lg-travel-bg)',
         color: '#f5f7ff',
         padding: '24px',
         fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',

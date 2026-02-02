@@ -1,7 +1,7 @@
 :root {
   color-scheme: dark;
   --bg: #050816;
-  --bg-soft: #0b1020;
+  --bg-soft: var(--lg-travel-bg);
   --accent: #e7b85a;
   --accent-soft: rgba(34,42,68,0.45);
   --accent-strong: #f2c97d;

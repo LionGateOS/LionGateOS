@@ -1,45 +1,36 @@
-import React from "react";
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { ErrorResponse } from "./ErrorResponse";
 
-type ErrorBoundaryProps = {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-};
+interface Props {
+  children: ReactNode;
+}
 
-type ErrorBoundaryState = {
+interface State {
   hasError: boolean;
-};
+  error: Error | null;
+}
 
-class ErrorBoundary extends React.Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
   }
 
-  componentDidCatch(error: unknown, info: unknown) {
-    console.error("LionGateOS Shell ErrorBoundary caught an error:", error, info);
-  }
-
-  render() {
+  public render() {
     if (this.state.hasError) {
       return (
-        this.props.fallback ?? (
-          <div className="os-fallback">
-            <div className="os-fallback-card">
-              <div className="os-fallback-title">Shell auto-recovered</div>
-              <div className="os-fallback-text">
-                An internal error occurred, but the LionGateOS shell recovered
-                automatically. Open Shell Diagnostics for more details.
-              </div>
-            </div>
-          </div>
-        )
+        <ErrorResponse
+          error={this.state.error}
+          reset={() => window.location.reload()}
+        />
       );
     }
 

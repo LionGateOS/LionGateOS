@@ -7,13 +7,13 @@
 <title>Iceland — LionGateOS Travels</title>
 <style>
 :root {
-  --bg-base: #0a0b16;
+  --bg-base: var(--lg-travel-bg);
   --glow-main: rgba(120,90,255,0.35);
   --card: rgba(18,20,45,0.95);
   --border: rgba(140,120,255,0.35);
   --text: #e8e9f2;
-  --muted: #b8bbdf;
-  --accent: #8f85ff;
+  --muted: var(--lg-travel-text-muted);
+  --accent: var(--lg-travel-accent);
 
   /* Layout rhythm */
   --gutter: clamp(16px, 4vw, 36px);
@@ -158,7 +158,7 @@ p, li {
   margin-right: 10px;
   border-radius: 14px;
   background: linear-gradient(135deg,#7f6cff,#9f95ff);
-  color: #0a0b16;
+  color: var(--lg-travel-bg);
   text-decoration: none;
   font-weight: 800;
   box-shadow: 0 0 28px rgba(140,120,255,0.6);

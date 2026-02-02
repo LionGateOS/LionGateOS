@@ -39,7 +39,8 @@
       "Bash(ls:*)",
       "Bash(findstr:*)",
       "Bash(npx tsc:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(git rm:*)"
     ]
   }
 }

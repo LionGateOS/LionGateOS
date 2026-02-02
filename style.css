@@ -1,6 +1,6 @@
 /* --- LIONGATE GLOBAL AUTHORITY --- */
 :root {
-  /* AUTHORITY COLORS */
+  /* AUTHORITY COLORS (CORE) */
   --lg-bg-deep: #0f0f12;
   --lg-border-standard: #333;
   --lg-overlay-soft: rgba(0,0,0,0.3);
@@ -10,6 +10,11 @@
   --lg-accent-secondary: #b15dff;
   --lg-pure-black: #000000;
   --lg-bg-overlay-deep: rgba(18, 22, 46, 0.9);
+
+  /* TRAVELS MODULE AUTHORITY (NEW) */
+  --lg-travel-bg: var(--lg-travel-bg);     /* Primary Dark Background */
+  --lg-travel-accent: var(--lg-travel-accent); /* Travels Brand Purple */
+  --lg-travel-text-muted: var(--lg-travel-text-muted); /* Muted Descriptive Text */
 
   /* UI DEFAULTS */
   --lg-radius: 12px;
@@ -29,7 +34,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--lg-accent) !important; /* SYNC WITH THEME */
+  background-color: var(--lg-accent) !important; 
   border: 3px solid transparent !important;
   background-clip: content-box !important;
   border-radius: 99px !important;
@@ -101,9 +106,12 @@
   --lg-accent2: #585dff;
   --lg-accent3: #ff2d55;
   --lg-stroke: rgba(0,0,0,0.1);
+  
   /* Override Authority for Light Mode */
   --lg-bg-deep: #f0f0f5;
   --lg-border-standard: #ccc;
+  --lg-travel-bg: #ffffff;
+  --lg-travel-text-muted: #6b7280;
 } 
 
 .glow-controls { display: none !important; }

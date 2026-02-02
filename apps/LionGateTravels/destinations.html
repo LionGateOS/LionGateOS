@@ -6,13 +6,13 @@
 <title>destinations</title>
 <style>
 :root {
-  --bg-base: #0a0b16;
+  --bg-base: var(--lg-travel-bg);
   --glow-main: rgba(120,90,255,0.35);
   --card: rgba(18,20,45,0.95);
   --border: rgba(140,120,255,0.35);
   --text: #e8e9f2;
-  --muted: #b8bbdf;
-  --accent: #8f85ff;
+  --muted: var(--lg-travel-text-muted);
+  --accent: var(--lg-travel-accent);
   --gutter: clamp(16px, 4vw, 36px);
   --content-max: 1040px;
   --reading-max: 900px;
@@ -85,7 +85,7 @@ p { line-height:1.7; color:var(--muted); font-size:clamp(13.5px,1.2vw,15px); }
   display:inline-block; padding:12px 18px; margin-top:8px;
   border-radius:14px;
   background:linear-gradient(135deg,#7f6cff,#9f95ff);
-  color:#0a0b16; text-decoration:none;
+  color:var(--lg-travel-bg); text-decoration:none;
   font-weight:800; font-size:14px;
 }
 footer {

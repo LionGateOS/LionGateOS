@@ -1,6 +1,6 @@
 :root{
   /* LionGateOS theme variables (Core-controlled) */
-  --lg-bg: #0b1020;
+  --lg-bg: var(--lg-travel-bg);
   --lg-bg-secondary: #0a1229;
   --lg-surface: rgba(20, 28, 50, 0.72);
   --lg-surface-2: rgba(20, 28, 50, 0.48);
