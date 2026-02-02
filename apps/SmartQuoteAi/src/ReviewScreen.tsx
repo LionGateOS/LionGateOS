@@ -4,7 +4,7 @@ export const ReviewScreen = ({ estimates, onSelect }) => {
   const handleSelect = (tier, data) => {
     // Prepare data for ROWS (Immutable Ledger)
     const payload = {
-      timestamp: new Date().isoIsoString(),
+      timestamp: new Date().toISOString(),
       module: "SmartQuoteAI",
       description: data.name,
       amount: data.cost,
