@@ -1,0 +1,10 @@
+{
+  "source": "Combined",
+  "fields": {
+    "fullName": "Charlie Davis",
+    "documentNumber": "X55566677",
+    "expirationDate": "2029-03-22",
+    "nationality": "UK",
+    "address": "789 Queen St, London, UK"
+  }
+}

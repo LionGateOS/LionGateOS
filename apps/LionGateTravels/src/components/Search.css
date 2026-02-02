@@ -1,0 +1,447 @@
+/**
+ * SEARCH & RESULTS STYLES
+ * 
+ * Theme-controlled styling using LionGateOS CSS variables
+ * NO hardcoded colors
+ */
+
+/* ============================================================================
+   SEARCH HEADER & LOGO
+   ============================================================================ */
+
+.travels-search {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.travels-search-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.travels-logo {
+  height: 120px;
+  width: auto;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.travels-tagline {
+  color: var(--lg-text-muted);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* ============================================================================
+   SEARCH FORM
+   ============================================================================ */
+
+.travels-search-form {
+  background: var(--lg-panel);
+  border: 1px solid var(--lg-border);
+  border-radius: var(--lg-radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.travels-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.travels-form-row:last-child {
+  margin-bottom: 0;
+}
+
+.travels-form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.travels-form-field--large {
+  flex: 2;
+}
+
+.travels-form-field--small {
+  flex: 0.5;
+}
+
+.travels-form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--lg-text);
+}
+
+.travels-input {
+  padding: 12px;
+  background: var(--lg-bg);
+  border: 1px solid var(--lg-border);
+  border-radius: var(--lg-radius-md);
+  color: var(--lg-text);
+  font-size: 14px;
+  transition: border-color var(--lg-transition-fast);
+}
+
+.travels-input:focus {
+  outline: none;
+  border-color: var(--lg-accent);
+}
+
+.travels-input::placeholder {
+  color: var(--lg-text-muted);
+}
+
+.travels-search-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--lg-accent);
+  border: none;
+  border-radius: var(--lg-radius-md);
+  color: var(--lg-bg);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--lg-transition-fast);
+}
+
+.travels-search-btn:hover:not(:disabled) {
+  background: var(--lg-accent-hover);
+  transform: translateY(-1px);
+}
+
+.travels-search-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   LOADING
+   ============================================================================ */
+
+.travels-loading {
+  text-align: center;
+  padding: 48px;
+}
+
+.travels-loading-spinner {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border: 4px solid var(--lg-border);
+  border-top-color: var(--lg-accent);
+  border-radius: 50%;
+  animation: travels-spin 1s linear infinite;
+}
+
+@keyframes travels-spin {
+  to { transform: rotate(360deg); }
+}
+
+.travels-loading p {
+  color: var(--lg-text-muted);
+  font-size: 14px;
+}
+
+/* ============================================================================
+   RESULTS TABS
+   ============================================================================ */
+
+.travels-results-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--lg-border);
+}
+
+.travels-tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--lg-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--lg-transition-fast);
+}
+
+.travels-tab:hover {
+  color: var(--lg-text);
+}
+
+.travels-tab--active {
+  color: var(--lg-accent);
+  border-bottom-color: var(--lg-accent);
+}
+
+/* ============================================================================
+   RESULTS LIST
+   ============================================================================ */
+
+.travels-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.travels-no-results {
+  text-align: center;
+  padding: 48px;
+  color: var(--lg-text-muted);
+}
+
+/* ============================================================================
+   RESULT CARD
+   ============================================================================ */
+
+.travels-result-card {
+  display: flex;
+  gap: 16px;
+  background: var(--lg-panel);
+  border: 1px solid var(--lg-border);
+  border-radius: var(--lg-radius-lg);
+  padding: 16px;
+  transition: all var(--lg-transition-fast);
+}
+
+.travels-result-card:hover {
+  border-color: var(--lg-accent);
+  box-shadow: var(--lg-glow);
+}
+
+.travels-result-image {
+  flex-shrink: 0;
+  width: 200px;
+  height: 150px;
+  border-radius: var(--lg-radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.travels-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.travels-result-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  background: var(--lg-accent);
+  color: var(--lg-bg);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.travels-result-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.travels-result-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--lg-text);
+}
+
+.travels-result-subtitle {
+  font-size: 14px;
+  color: var(--lg-text-muted);
+}
+
+.travels-result-location {
+  font-size: 14px;
+  color: var(--lg-text-secondary);
+}
+
+.travels-result-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--lg-text);
+}
+
+.travels-result-reviews {
+  color: var(--lg-text-muted);
+  font-size: 13px;
+}
+
+.travels-result-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.travels-amenity-tag {
+  padding: 4px 8px;
+  background: rgba(var(--lg-accent-rgb), 0.1);
+  border: 1px solid rgba(var(--lg-accent-rgb), 0.3);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--lg-text-secondary);
+}
+
+.travels-result-description {
+  margin: 0;
+  font-size: 13px;
+  color: var(--lg-text-muted);
+  line-height: 1.5;
+}
+
+.travels-result-action {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.travels-result-price {
+  text-align: right;
+}
+
+.travels-price-amount {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lg-accent);
+}
+
+.travels-price-unit {
+  display: block;
+  font-size: 12px;
+  color: var(--lg-text-muted);
+}
+
+.travels-book-btn {
+  padding: 10px 20px;
+  background: var(--lg-accent);
+  border: none;
+  border-radius: var(--lg-radius-md);
+  color: var(--lg-bg);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--lg-transition-fast);
+  white-space: nowrap;
+}
+
+.travels-book-btn:hover {
+  background: var(--lg-accent-hover);
+  transform: translateY(-1px);
+}
+
+/* ============================================================================
+   CAR SPECIFIC
+   ============================================================================ */
+
+.travels-car-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--lg-text-secondary);
+}
+
+.travels-car-location,
+.travels-car-mileage {
+  font-size: 13px;
+  color: var(--lg-text-muted);
+}
+
+/* ============================================================================
+   ACTIVITY SPECIFIC
+   ============================================================================ */
+
+.travels-activity-duration {
+  font-size: 13px;
+  color: var(--lg-text-secondary);
+}
+
+.travels-activity-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.travels-highlight {
+  font-size: 13px;
+  color: var(--lg-text-secondary);
+}
+
+.travels-activity-policy {
+  font-size: 12px;
+  color: var(--lg-text-muted);
+  font-style: italic;
+}
+
+/* ============================================================================
+   DISCLOSURE
+   ============================================================================ */
+
+.travels-disclosure {
+  margin-top: 32px;
+  padding: 16px;
+  background: rgba(var(--lg-accent-rgb), 0.05);
+  border: 1px solid rgba(var(--lg-accent-rgb), 0.2);
+  border-radius: var(--lg-radius-md);
+}
+
+.travels-disclosure p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--lg-text-muted);
+  line-height: 1.6;
+}
+
+.travels-disclosure strong {
+  color: var(--lg-text);
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .travels-logo {
+    height: 80px;
+  }
+  
+  .travels-form-row {
+    flex-direction: column;
+  }
+  
+  .travels-form-field,
+  .travels-form-field--large,
+  .travels-form-field--small {
+    flex: 1;
+  }
+  
+  .travels-result-card {
+    flex-direction: column;
+  }
+  
+  .travels-result-image {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .travels-result-action {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

@@ -33,7 +33,13 @@
       "Bash(del \"theme\\\\index.js\")",
       "Bash(del \"logic\\\\theme.js\")",
       "Bash(del:*)",
-      "Bash(del \"theme.js\")"
+      "Bash(del \"theme.js\")",
+      "Bash(cd /d I:growdaily)",
+      "Bash(git mv:*)",
+      "Bash(ls:*)",
+      "Bash(findstr:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git status:*)"
     ]
   }
 }

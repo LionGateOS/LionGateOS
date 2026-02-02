@@ -1,0 +1,10 @@
+{
+  "source": "DigitalID",
+  "fields": {
+    "fullName": "Alice Johnson",
+    "documentNumber": "D12345678",
+    "expirationDate": "2030-06-15",
+    "nationality": "US",
+    "address": "123 Main St, New York, NY, USA"
+  }
+}

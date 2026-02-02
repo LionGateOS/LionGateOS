@@ -1,0 +1,11 @@
+{
+  "version": "v46",
+  "description": "Admin metrics scaffold (test mode)",
+  "counters": {
+    "actions_total": 0,
+    "cancel": 0,
+    "change": 0,
+    "issue": 0
+  },
+  "last_updated": "2025-12-14T21:35:12.129399Z"
+}

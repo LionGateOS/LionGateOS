@@ -1,0 +1,18 @@
+{
+  "version": "v31",
+  "mode": "TEST",
+  "rules": {
+    "cancel": {
+      "recommended": "cancel_without_fee",
+      "alternative": "keep_booking"
+    },
+    "change": {
+      "recommended": "change_basic",
+      "alternative": "no_change"
+    },
+    "issue": {
+      "recommended": "file_issue",
+      "alternative": "no_action"
+    }
+  }
+}

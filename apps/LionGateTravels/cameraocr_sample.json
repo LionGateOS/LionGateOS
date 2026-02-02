@@ -1,0 +1,10 @@
+{
+  "source": "CameraOCR",
+  "fields": {
+    "fullName": "Bob Smith",
+    "documentNumber": "C98765432",
+    "expirationDate": "2028-12-01",
+    "nationality": "Canada",
+    "address": "456 Maple Rd, Toronto, ON, Canada"
+  }
+}

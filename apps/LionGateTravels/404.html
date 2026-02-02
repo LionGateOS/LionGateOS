@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Page not found | LionGateOS Travels</title>
+<meta name="robots" content="noindex"/>
+<style>
+
+:root {
+  --bg-base: #0a0b16;
+  --glow-main: rgba(120,90,255,0.35);
+  --card: rgba(18,20,45,0.95);
+  --border: rgba(140,120,255,0.35);
+  --text: #e8e9f2;
+  --muted: #b8bbdf;
+  --accent: #8f85ff;
+
+  /* Layout rhythm */
+  --gutter: clamp(16px, 4vw, 36px);
+  --content-max: 1040px;         /* slightly wider for desktop */
+  --reading-max: 900px;          /* keeps long text from stretching */
+  --card-pad: clamp(16px, 2.2vw, 22px);
+  --card-radius: 18px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 600px at 50% 25%, var(--glow-main), transparent 70%),
+    var(--bg-base);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(10,11,22,0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+main { flex: 1; }
+
+/* Global wrap always leaves breathing room */
+.wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 26px var(--gutter);
+}
+
+/* Reading block to center and keep symmetry (no edge-to-edge cards) */
+.reading {
+  max-width: var(--reading-max);
+  margin: 0 auto;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  margin-right: 18px;
+  font-weight: 600;
+}
+
+
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    padding: 16px 0 12px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  nav a {
+    margin-right: 0;
+  }
+nav a:hover { color: var(--accent); }
+
+h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: clamp(18px, 2.2vw, 22px);
+  margin: 26px 0 10px;
+}
+h3 {
+  font-size: clamp(16px, 1.8vw, 18px);
+  margin: 18px 0 8px;
+}
+
+p, li {
+  line-height: 1.7;
+  color: var(--muted);
+  font-size: clamp(13.5px, 1.2vw, 15px);
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(30,32,70,0.85), rgba(18,20,45,0.95));
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: var(--card-pad);
+  margin: 16px 0;
+  box-shadow: 0 0 35px rgba(120,90,255,0.25);
+}
+
+/* Make large “hero” cards not span too wide */
+.card.reading {
+  max-width: var(--reading-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive destination grid that never touches edges */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Buttons */
+.cta {
+  display: inline-block;
+  padding: 12px 18px;
+  margin-right: 10px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#7f6cff,#9f95ff);
+  color: #0a0b16;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 0 28px rgba(140,120,255,0.6);
+  font-size: 14px;
+}
+
+.cta.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+/* Footer pinned naturally by flex; keep consistent spacing */
+footer {
+  border-top: 1px solid var(--border);
+  background: rgba(10,11,22,0.85);
+}
+
+footer .wrap {
+  padding: 18px var(--gutter);
+}
+
+/* Small-screen: reduce nav wrap to avoid cramped look */
+@media (max-width: 520px) {
+  nav a { margin-right: 12px; }
+}
+
+/* === SPACING NORMALIZATION FIX === */
+:root {
+  --lg-gutter: 24px;
+}
+
+body > * {
+  padding-left: var(--lg-gutter);
+  padding-right: var(--lg-gutter);
+}
+
+.divider,
+.top-divider {
+  margin-bottom: var(--lg-gutter);
+}
+
+.pill,
+.hero-pill,
+.badge {
+  margin-top: var(--lg-gutter);
+}
+
+
+.hero-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+  }
+.hero-logo {
+    width: clamp(120px, 14vw, 180px);
+    height: auto;
+    display: grid;
+    place-items: center;
+  }
+.hero-title{
+  justify-self:start;
+}
+@media (max-width: 768px){
+  .hero-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .hero-title{
+    justify-self:center;
+  }
+}
+
+
+
+  .logo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.45));
+  }
+
+
+  @media (max-width: 900px) {
+    .hero {
+      padding-top: 36px;
+    }
+    .hero-header {
+      margin-top: 16px;
+    }
+  }
+
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<nav style="display:flex;justify-content:center;">
+<a href="index.html">Home</a>
+<a href="destinations.html">Destinations</a>
+<a href="how-it-works.html">How It Works</a>
+<a href="about.html">About</a>
+<a href="disclosures.html">Disclosures</a>
+</nav>
+</div></header>
+<main>
+  <div class="wrap">
+    <div class="reading">
+      <div class="tag">404</div>
+      <h1>Page not found</h1>
+      <div class="card">
+        <p class="muted" style="margin-top:0;">
+          The page you requested does not exist. Use the links below to continue.
+        </p>
+        <div style="margin-top:10px">
+          <a class="cta" href="index.html">Home</a>
+          <a class="cta secondary" href="destinations.html">Destinations</a>
+          <a class="cta secondary" href="affiliate-overview.html">Affiliate overview</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer style="text-align:center;">
+<div class="wrap">
+<p><div style="text-align:center;">LionGateOS Travels is a planning-first travel experience. Booking is completed on third-party platforms.</div></p>
+</div>
+</footer>
+</body>
+</html>

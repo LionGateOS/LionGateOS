@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>destinations</title>
+<style>
+:root {
+  --bg-base: #0a0b16;
+  --glow-main: rgba(120,90,255,0.35);
+  --card: rgba(18,20,45,0.95);
+  --border: rgba(140,120,255,0.35);
+  --text: #e8e9f2;
+  --muted: #b8bbdf;
+  --accent: #8f85ff;
+  --gutter: clamp(16px, 4vw, 36px);
+  --content-max: 1040px;
+  --reading-max: 900px;
+  --card-pad: clamp(16px, 2.2vw, 22px);
+  --card-radius: 18px;
+}
+html, body { margin:0; padding:0; height:100%; }
+body {
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 50% 25%, var(--glow-main), transparent 70%),
+    var(--bg-base);
+}
+header {
+  position:sticky; top:0; z-index:10;
+  background:rgba(10,11,22,0.85);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+main { flex:1; }
+.wrap {
+  max-width:var(--content-max);
+  margin:0 auto;
+  padding:26px var(--gutter);
+}
+nav a {
+  color:var(--text); text-decoration:none;
+  margin-right:18px; font-weight:600;
+}
+
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    padding: 16px 0 12px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  nav a {
+    margin-right: 0;
+  }
+nav a:hover { color:var(--accent); }
+h1 { font-size:clamp(28px,3.6vw,38px); margin:0 0 14px; }
+h2 { font-size:clamp(18px,2.2vw,22px); margin:18px 0 8px; }
+p { line-height:1.7; color:var(--muted); font-size:clamp(13.5px,1.2vw,15px); }
+.card {
+  background: linear-gradient(180deg, rgba(30,32,70,0.85), rgba(18,20,45,0.95));
+  border:1px solid var(--border);
+  border-radius:var(--card-radius);
+  padding:var(--card-pad);
+  margin:16px 0;
+  box-shadow:0 0 35px rgba(120,90,255,0.25);
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+@media (max-width:980px){ .grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+.cta {
+  display:inline-block; padding:12px 18px; margin-top:8px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#7f6cff,#9f95ff);
+  color:#0a0b16; text-decoration:none;
+  font-weight:800; font-size:14px;
+}
+footer {
+  border-top:1px solid var(--border);
+  background:rgba(10,11,22,0.85);
+}
+footer .wrap { padding:18px var(--gutter); }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<nav>
+<a href="index.html">Home</a>
+<a href="destinations.html">Destinations</a>
+<a href="how-it-works.html">How It Works</a>
+<a href="about.html">About</a>
+<a href="disclosures.html">Disclosures</a>
+</nav>
+</div></header>
+<main>
+<div class="wrap">
+<h1>Destinations</h1>
+<div class="card" style="margin-top:16px;">
+  <h2 style="margin-top:0">Partner Preview Data Sources</h2>
+  <p class="muted">This Partner Preview build includes live, context-only signals to demonstrate how LionGateOS Travels becomes interactive after partner approval.</p>
+<ul>
+  <li><strong>OpenStreetMap</strong> maps (geographic context only; no listings)</li>
+  <li><strong>Open‑Meteo</strong> weather reality checks (planning context)</li>
+  <li><strong>Teleport</strong> city signals where available (high-level context)</li>
+  <li><strong>Unsplash</strong> imagery (visual context only)</li>
+</ul>
+<p class="muted" style="margin-bottom:0;">Open any destination page to see the live preview modules.</p>
+</div>
+
+<p>Destinations are treated as decision environments. Each page focuses on preparation, pacing, and practical tradeoffs that matter before booking.</p>
+
+<h2>Country Destinations</h2>
+<div class="grid">
+  <div class="card"><h2>India</h2><p>High preparation, administrative friction, and regional variance.</p><a class="cta" href="india.html">View India</a></div>
+  <div class="card"><h2>Japan</h2><p>Structure-heavy systems, expectation alignment, and precision planning.</p><a class="cta" href="japan.html">View Japan</a></div>
+  <div class="card"><h2>United States</h2><p>Macro layer for city-level planning across a large, decentralized country.</p><a class="cta" href="usa.html">View USA</a></div>
+  <div class="card"><h2>Brazil</h2><p>Regional variance, entry considerations, and preparation depth.</p><a class="cta" href="brazil.html">View Brazil</a></div>  <div class="card"><h2>Portugal</h2><p>Atlantic access, regional variance, and expectation alignment across Lisbon, coastal zones, and seasonal intensity.</p><a class="cta" href="portugal.html">View Portugal</a></div>
+  <div class="card"><h2>Colombia</h2><p>High-contrast regions, altitude and infrastructure variance, and strong planning value for neighborhood and timing decisions.</p><a class="cta" href="colombia.html">View Colombia</a></div>
+
+</div>
+
+<h2>City & Location Destinations</h2>
+<div class="grid">
+  <div class="card">
+    <h3>New York City</h3>
+    <p>High-density urban compression and pacing realism.</p>
+    <a class="cta" href="nyc.html">View NYC</a>
+  </div>
+
+  <div class="card">
+    <h3>Tampa Bay</h3>
+    <p>Spread-out metro, car dependence, and climate-driven pacing.</p>
+    <a class="cta" href="tampa-bay.html">View Tampa Bay</a>
+  </div>
+
+  <div class="card">
+    <h3>Las Vegas</h3>
+    <p>High-compression environment with time and cost distortion.</p>
+    <a class="cta" href="las-vegas.html">View Las Vegas</a>
+  </div>
+
+  <div class="card">
+    <h3>Bogotá</h3>
+    <p>Altitude, neighborhood friction, and high-context decision planning.</p>
+    <a class="cta" href="bogota.html">View Bogotá</a>
+  </div>
+
+  <div class="card">
+    <h3>Villamaría, Caldas</h3>
+    <p>Coffee Region mobility, terrain realism, and expectation alignment.</p>
+    <a class="cta" href="villamaria-caldas.html">View Villamaría</a>
+  </div>
+
+  <div class="card">
+    <h3>Lisbon</h3>
+    <p>Walkable density, hills, seasonality, and district-based planning.</p>
+    <a class="cta" href="lisbon.html">View Lisbon</a>
+  </div>
+
+  <div class="card">
+    <h3>Algarve</h3>
+    <p>Seasonal crowd dynamics, mobility planning, and coastal logistics.</p>
+    <a class="cta" href="algarve.html">View Algarve</a>
+  </div>
+
+  <div class="card">
+    <h3>Rome</h3>
+    <p>Mid-friction historical density and seasonal crowd pressure.</p>
+    <a class="cta" href="rome.html">View Rome</a>
+  </div>
+
+  <div class="card">
+    <h3>Rio de Janeiro</h3>
+    <p>Situational awareness city with neighborhood-driven outcomes.</p>
+    <a class="cta" href="rio.html">View Rio</a>
+  </div>
+
+  <div class="card">
+    <h3>Caracas</h3>
+    <p>High-variance environment requiring local context and preparation.</p>
+    <a class="cta" href="caracas.html">View Caracas</a>
+  </div>
+
+  <div class="card">
+    <h3>Dubai</h3>
+    <p>Heat management, transit access, and high-contrast comfort planning.</p>
+    <a class="cta" href="dubai.html">View Dubai</a>
+  </div>
+
+  <div class="card">
+    <h3>Toronto</h3>
+    <p>Weather-driven planning, neighborhood scale, and transit-versus-car tradeoffs.</p>
+    <a class="cta" href="toronto.html">View Toronto</a>
+  </div>
+
+</div>
+
+<footer>
+<div class="wrap">
+<p><div style="text-align:center;">LionGateOS Travels is a planning-first travel experience. Booking is completed on third-party platforms.</p>
+</div>
+</footer>
+</body>
+</html>

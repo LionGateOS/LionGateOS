@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LionGateOS Travels — Start Here</title>
+<style>
+:root{
+  --bg-dark:#0b0e1a;
+  --bg-mid:#1a1f3a;
+  --accent:#7b6cff;
+  --text-main:#f2f3f7;
+  --text-muted:#b6b9d6;
+  --card-bg:rgba(255,255,255,0.03);
+  --card-shadow:0 0 20px rgba(0,0,0,0.35);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg-dark);
+  color:var(--text-main);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:radial-gradient(1200px 600px at top center,#2a235c,var(--bg-dark)),
+             linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+}
+header{
+  background:var(--bg-mid);
+  padding:1.5rem 1rem;
+  border-bottom:1px solid var(--accent);
+}
+.header-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.brand img{
+  height:120px;
+  width:auto;
+}
+nav{
+  display:flex;
+  gap:2rem;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+nav a{
+  color:var(--text-main);
+  text-decoration:none;
+  font-size:1rem;
+}
+nav a:hover{opacity:0.9}
+main{
+  flex:1;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1.5rem;
+}
+.section{
+  width:90%;
+  max-width:1100px;
+  background:var(--card-bg);
+  padding:2rem;
+  margin:1.5rem 0;
+  border-radius:var(--radius);
+  box-shadow:var(--card-shadow);
+  text-align:center;
+}
+.card-link{
+  display:inline-block;
+  padding:0.6rem 0.9rem;
+  border-radius:10px;
+  background:rgba(123,108,255,0.1);
+  margin:0.5rem 0;
+}
+.card-link a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.card-link a:hover{text-decoration:underline}
+footer{
+  text-align:center;
+  padding:1.5rem 1rem 2.5rem;
+  border-top:1px solid var(--accent);
+  color:var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="assets/logo.png" alt="LionGateOS Travels">
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="destinations.html">Destinations</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="disclosures.html">Disclosures</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <h1>Start Here</h1>
+    <p>Planning a trip can feel overwhelming when you don’t know where to begin.</p>
+    <p>You don’t need to plan everything at once. Start with the first guide below, then move forward step by step.</p>
+  </section>
+
+  <section class="section">
+    <h2>Start with this</h2>
+    <div class="card-link"><a href="blog.html">What to Book First When Planning a Trip</a></div>
+    <p>If you book things in the wrong order, you can waste money or lock yourself into bad decisions. This guide explains the correct sequence so the rest of your planning is easier and more flexible.</p>
+  </section>
+
+  <section class="section">
+    <h2>Then explore</h2>
+    <div class="card-link"><a href="destinations.html">Browse Destinations</a></div>
+    <p>Once you understand the booking order, explore destinations and travel intelligence without guessing.</p>
+  </section>
+</main>
+
+<footer>
+  LionGateOS Travels is a planning-first travel experience. Booking is completed on third-party platforms.
+
+</body>
+</html>

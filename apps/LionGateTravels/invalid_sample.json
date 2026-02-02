@@ -1,0 +1,10 @@
+{
+  "source": "CameraOCR",
+  "fields": {
+    "fullName": "",
+    "documentNumber": null,
+    "expirationDate": null,
+    "nationality": null,
+    "address": null
+  }
+}

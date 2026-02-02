@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://liongateostravels.com/sitemap.xml

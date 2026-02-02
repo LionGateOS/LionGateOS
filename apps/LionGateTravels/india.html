@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>India — LionGateOS Travels</title>
+<style>
+:root {
+  --bg-base: #0a0b16;
+  --glow-main: rgba(120,90,255,0.35);
+  --card: rgba(18,20,45,0.95);
+  --border: rgba(140,120,255,0.35);
+  --text: #e8e9f2;
+  --muted: #b8bbdf;
+  --accent: #8f85ff;
+
+  /* Layout rhythm */
+  --gutter: clamp(16px, 4vw, 36px);
+  --content-max: 1040px;         /* slightly wider for desktop */
+  --reading-max: 900px;          /* keeps long text from stretching */
+  --card-pad: clamp(16px, 2.2vw, 22px);
+  --card-radius: 18px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 600px at 50% 25%, var(--glow-main), transparent 70%),
+    var(--bg-base);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(10,11,22,0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+main { flex: 1; }
+
+/* Global wrap always leaves breathing room */
+.wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 26px var(--gutter);
+}
+
+/* Reading block to center and keep symmetry (no edge-to-edge cards) */
+.reading {
+  max-width: var(--reading-max);
+  margin: 0 auto;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  margin-right: 18px;
+  font-weight: 600;
+}
+
+
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    padding: 16px 0 12px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  nav a {
+    margin-right: 0;
+  }
+nav a:hover { color: var(--accent); }
+
+h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: clamp(18px, 2.2vw, 22px);
+  margin: 26px 0 10px;
+}
+h3 {
+  font-size: clamp(16px, 1.8vw, 18px);
+  margin: 18px 0 8px;
+}
+
+p, li {
+  line-height: 1.7;
+  color: var(--muted);
+  font-size: clamp(13.5px, 1.2vw, 15px);
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(30,32,70,0.85), rgba(18,20,45,0.95));
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: var(--card-pad);
+  margin: 16px 0;
+  box-shadow: 0 0 35px rgba(120,90,255,0.25);
+}
+
+/* Make large “hero” cards not span too wide */
+.card.reading {
+  max-width: var(--reading-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive destination grid that never touches edges */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Buttons */
+.cta {
+  display: inline-block;
+  padding: 12px 18px;
+  margin-right: 10px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#7f6cff,#9f95ff);
+  color: #0a0b16;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 0 28px rgba(140,120,255,0.6);
+  font-size: 14px;
+}
+
+.cta.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+/* Footer pinned naturally by flex; keep consistent spacing */
+footer {
+  border-top: 1px solid var(--border);
+  background: rgba(10,11,22,0.85);
+}
+
+footer .wrap {
+  padding: 18px var(--gutter);
+}
+
+/* Small-screen: reduce nav wrap to avoid cramped look */
+@media (max-width: 520px) {
+  nav a { margin-right: 12px; }
+}
+
+/* === SPACING NORMALIZATION FIX === */
+:root {
+  --lg-gutter: 24px;
+}
+
+body > * {
+  padding-left: var(--lg-gutter);
+  padding-right: var(--lg-gutter);
+}
+
+.divider,
+.top-divider {
+  margin-bottom: var(--lg-gutter);
+}
+
+.pill,
+.hero-pill,
+.badge {
+  margin-top: var(--lg-gutter);
+}
+
+
+/* FIX: constrain destination detail content on large screens */
+.page-container, .content, .section {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Partner Preview Minimal Stack v1 (visual layer) */
+.lg-live-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 900px){
+  .lg-live-grid{
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: start;
+  }
+}
+.lg-live-photo{
+  width:100%;
+  border-radius: 14px;
+  border: 1px solid rgba(140,120,255,0.25);
+  display:block;
+  box-shadow: 0 18px 60px rgba(120,90,255,0.18);
+}
+#lg-map{
+  height: 280px;
+  width: 100%;
+  border-radius: 14px;
+  overflow:hidden;
+  border: 1px solid rgba(140,120,255,0.25);
+  box-shadow: 0 18px 60px rgba(120,90,255,0.12);
+}
+.lg-map-caption{ margin-top: 8px; }
+.lg-mini-table{
+  width:100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+.lg-mini-table th, .lg-mini-table td{
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align:left;
+}
+.lg-signal-list{
+  margin:0;
+  padding-left: 18px;
+}
+.lg-fallback{
+  padding: 14px;
+}
+
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="partner-preview-minstack.js"></script>
+
+</head>
+<body data-lg-lat="20.5937" data-lg-lon="78.9629" data-lg-zoom="4">
+<header><div class="wrap">
+<nav>
+<a href="index.html">Home</a>
+<a href="destinations.html">Destinations</a>
+<a href="how-it-works.html">How It Works</a>
+<a href="about.html">About</a>
+<a href="disclosures.html">Disclosures</a>
+</nav>
+</div></header>
+<main class="wrap">
+
+<h1>India</h1>
+<p class="muted">Destination intelligence for travelers who want clarity before booking.</p>
+<div class="card lg-live" style="margin-top:16px;">
+  <h2 style="margin-top:0">Live Planning Signals (Partner Preview)</h2>
+  <p class="muted">Context-only signals powered by OpenStreetMap, Open‑Meteo, Teleport (where available), and Unsplash. No pricing. No availability. No booking.</p>
+  <div class="lg-live-grid">
+    <div>
+      <img class="lg-live-photo" data-unsplash="India" alt="India travel context image"/>
+    </div>
+    <div>
+      <div id="lg-map"></div>
+      <div class="muted lg-map-caption">Map shows geographic context only (no listings).</div>
+    </div>
+  </div>
+  <div class="lg-live-grid" style="margin-top:14px;">
+    <div class="card" style="margin:0;">
+      <h3 style="margin-top:0">Weather Reality Check</h3>
+      <div data-role="weather" class="muted">Loading weather context…</div>
+    </div>
+    <div class="card" style="margin:0;">
+      <h3 style="margin-top:0">City Signals</h3>
+      <div data-role="teleport" class="muted">Loading city signals…</div>
+      <div class="muted" style="margin-top:8px;">Signals are high-level context only and are not recommendations.</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card">
+<h2 style="margin-top:0">Who India is for</h2>
+<ul>
+<li>Travelers comfortable with intensity, variability, and sensory density</li>
+<li>People willing to plan deliberately and adapt as conditions change</li>
+<li>Visitors seeking cultural depth over convenience</li>
+</ul>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Who should seriously reconsider</h2>
+<ul>
+<li>Travelers expecting consistency across regions</li>
+<li>People with low tolerance for noise, crowds, or heat</li>
+<li>Visitors relying on rigid schedules with no flexibility</li>
+</ul>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Visa & entry reality</h2>
+<p>Most travelers require advance entry approval. Processing times vary and errors can delay or deny entry. Visa preparation should be treated as a critical path item.</p>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Administrative & regional variance</h2>
+<p>India is not a single experience. Climate, infrastructure, language, and pacing differ widely by region. Assumptions do not generalize well.</p>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Time, fatigue & pacing</h2>
+<p>Transit time, heat, and constant decision-making compress energy quickly. Plans that look light on paper often feel heavy in practice.</p>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Planning-level cost awareness</h2>
+<p>India can be cost-effective, but comfort, internal travel, and seasonality change outcomes significantly.</p>
+<p class="muted">We do not show live prices or availability. This is planning context only.</p>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Decision summary</h2>
+<p>India rewards preparation and intention. When approached casually, it can feel overwhelming; when approached deliberately, it offers unmatched depth.</p>
+</div>
+
+<p><a class="cta secondary" href="destinations.html">Back to destinations</a></p>
+
+</main>
+<footer>
+<div class="wrap">
+<p><div style="text-align:center;">LionGateOS Travels is a planning-first travel experience. Booking is completed on third-party platforms.</p>
+</div>
+</footer>
+</body>
+</html>

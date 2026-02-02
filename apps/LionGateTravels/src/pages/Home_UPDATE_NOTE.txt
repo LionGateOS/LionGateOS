@@ -1,0 +1,1 @@
+Home.tsx must be updated to include new state 'FLIGHT_DETAILS' and proper routing.
