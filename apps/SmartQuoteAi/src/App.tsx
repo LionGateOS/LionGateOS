@@ -5,7 +5,7 @@ import { processPhotoEstimate } from './visionProcessor';
 
 export default function App() {
   const [view, setView] = useState('dashboard');
-  const [estimates, setEstimates] = useState(null);
+  const [estimates, setEstimates] = useState<any>(null);
 
   const handlePhoto = async (img: string) => {
     const res = await processPhotoEstimate(img, "CONSTRUCTION");
@@ -14,29 +14,56 @@ export default function App() {
   };
 
   return (
-    <main className="bg-black min-h-screen text-white p-4">
-      <div className="flex gap-4 mb-8 border-b border-gray-800 pb-4">
-        <button 
-          onClick={() => setView('dashboard')} 
-          className={`px-4 py-2 rounded ${view === 'dashboard' ? 'bg-blue-600' : 'bg-gray-800'}`}
-        >
-          Dashboard
-        </button>
-        <button 
-          onClick={() => setView('capture')} 
-          className={`px-4 py-2 rounded ${view === 'capture' ? 'bg-blue-600' : 'bg-gray-800'}`}
-        >
-          AI Camera
-        </button>
+    <div className="bg-black min-h-screen text-white p-8 font-sans">
+      {/* Header Section */}
+      <div className="flex justify-between border-b border-gray-800 pb-8">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">SMARTQUOTEAI</h1>
+          <p className="text-gray-500 mt-2">LIONGATEOS Restoration Engine</p>
+        </div>
+        <div className="flex gap-4">
+          <button 
+            onClick={() => setView('dashboard')} 
+            className={`px-6 py-2 rounded-md transition-colors ${view === 'dashboard' ? 'bg-blue-600' : 'bg-gray-800 hover:bg-gray-700'}`}
+          >
+            Dashboard
+          </button>
+          <button 
+            onClick={() => setView('capture')} 
+            className={`px-6 py-2 rounded-md transition-colors ${view === 'capture' ? 'bg-blue-600' : 'bg-blue-600 hover:bg-blue-500'}`}
+          >
+            AIFIELD CAPTURE
+          </button>
+        </div>
       </div>
 
       {view === 'dashboard' && (
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold">SmartQuoteAI Dashboard</h1>
-          <p className="text-gray-400">Your material registry and previous quotes are listed here.</p>
-          
-          <div className="mt-8 p-6 border border-dashed border-gray-700 rounded-lg text-center">
-            <p className="text-gray-500">No recent quotes found. Use the AI Camera to start a new estimate.</p>
+        <div className="mt-12 grid grid-cols-12 items-start gap-8">
+          <div className="col-span-12 lg:col-span-8">
+            <h2 className="text-xl font-semibold mb-4">Project Line Items</h2>
+            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+              <div className="p-8 text-center text-gray-500">
+                No items added. Use AIFIELD CAPTURE to generate line items from photos.
+              </div>
+            </div>
+          </div>
+          <div className="col-span-12 lg:col-span-4 bg-gray-900 p-8 rounded-xl border border-gray-800">
+            <h3 className="text-lg font-bold mb-4">Estimate Summary</h3>
+            <div className="space-y-4 text-gray-400">
+              <div className="flex justify-between items-center pb-2 border-b border-gray-800">
+                <span>Budget Total</span>
+                <span className="text-white font-mono">$0.00</span>
+              </div>
+              <div className="flex justify-between items-center pb-2 border-b border-gray-800">
+                <span>Premium Total</span>
+                <span className="text-white font-mono">$0.00</span>
+              </div>
+              <div className="pt-4">
+                <button className="w-full py-3 bg-gray-800 rounded-md text-gray-400 cursor-not-allowed">
+                  Finalize Quote
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -49,6 +76,6 @@ export default function App() {
           onConfirm={() => setView('dashboard')} 
         />
       )}
-    </main>
+    </div>
   );
 }
