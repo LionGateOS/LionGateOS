@@ -27,78 +27,81 @@ export default function App() {
   };
 
   return (
-    <div className="bg-black min-h-screen text-gray-200 p-6 font-sans">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="flex justify-between items-center border-b border-gray-800 pb-6 mb-8">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">SMARTQUOTEAI PRO</h1>
-            <p className="text-xs text-gray-500 uppercase tracking-widest">LIONGATEOS Restoration Protocol</p>
+    <div className="bg-[#f4f7f6] min-h-screen text-gray-800 font-sans">
+      {/* Visual Authority Header */}
+      <div className="bg-white border-b border-[#e0e4e7] p-4 shadow-sm">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-[#0b9888] rounded-md flex items-center justify-center text-white font-bold">LP</div>
+            <h1 className="text-xl font-bold text-[#21252a]">SMARTQUOTEAI</h1>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button 
               onClick={() => setView('dashboard')} 
-              className={`px-4 py-2 rounded-md border transition-all ${view === 'dashboard' ? 'bg-gray-800 border-gray-700 text-white' : 'bg-transparent border-gray-800 hover:border-gray-700'}`}
+              className={`px-4 py-2 text-sm rounded-md transition-colors ${view === 'dashboard' ? 'bg-[#f4f7f6] font-semibold' : 'hover:bg-gray-50'}`}
             >
               Dashboard
             </button>
             <button 
               onClick={() => setView('capture')} 
-              className="px-4 py-2 bg-blue-600 text-white rounded-md font-bold hover:bg-blue-500 transition-colors"
+              className="px-4 py-2 text-sm bg-[#0b9888] text-white rounded-md font-semibold hover:bg-[#097a7a] transition-colors"
             >
-              AI FIELD CAPTURE
+              AIFIELD OPTIONS
             </button>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto p-8">
         {view === 'dashboard' && (
           <div className="grid grid-cols-12 gap-8">
-            {/* Main Content */}
-            <div className="col-span-12 lg:col-span-8 space-y-6">
-              <div className="bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-800">
-                <h3 className="text-sm font-bold text-gray-500 uppercase mb-4">Project Details</h3>
-                <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-12 lg:col-span-8">
+              {/* Project Details Card */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e0e4e7] mb-6">
+                <h3 className="text-sm font-bold text-[#0b9888] uppercase mb-4 tracking-wider">Project Details</h3>
+                <div className="grid grid-cols-2 gap-8 text-sm">
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">CLIENT</label>
-                    <div className="text-sm font-medium">New Restoration Project</div>
+                    <label className="text-xs text-gray-400 uppercase font-semibold">Client</label>
+                    <div className="font-medium text-[#21252a]">New Restoration Project</div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">LOCATION</label>
-                    <div className="text-sm font-medium">Toronto, ON</div>
+                    <label className="text-xs text-gray-400 uppercase font-semibold">Location</label>
+                    <div className="font-medium text-[#21252a]">Toronto, ON</div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
-                <table className="w-full text-left text-sm border-collapse">
-                  <thead className="bg-gray-800 text-gray-400">
+              {/* Line Items Table */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e0e4e7] overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-[#f8f9fa] text-gray-600 border-b border-[#e0e4e7]">
                     <tr>
-                      <th className="p-4 font-semibold">ITEM DESCRIPTION</th>
+                      <th className="p-4 font-semibold">DESCRIPTION</th>
                       <th className="p-4 font-semibold text-center">BUDGET</th>
                       <th className="p-4 font-semibold text-center">STANDARD</th>
                       <th className="p-4 font-semibold text-center">PREMIUM</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-800">
+                  <tbody className="divide-y divide-[#e0e4e7]">
                     {items.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="p-12 text-center text-gray-600 italic">
-                          No data available. Use AI Camera to scan site.
+                        <td colSpan={4} className="p-12 text-center text-gray-400 italic">
+                          Awaiting AIFIELD CAPTURE data...
                         </td>
                       </tr>
                     ) : (
                       items.map((item, i) => (
-                        <tr key={i} className="hover:bg-gray-800/30 transition-colors">
-                          <td className="p-4 font-medium text-white">
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          <td className="p-4 font-medium text-[#21252a]">
                             {item.budget.name.replace(' (Repair)', '')}
                           </td>
-                          <td className="p-4 text-center font-mono text-blue-400">
+                          <td className="p-4 text-center font-mono text-blue-600">
                             ${item.budget.cost.toFixed(2)}
                           </td>
-                          <td className="p-4 text-center font-mono text-green-400">
+                          <td className="p-4 text-center font-mono text-[#0b9888]">
                             ${item.standard.cost.toFixed(2)}
                           </td>
-                          <td className="p-4 text-center font-mono text-purple-400">
+                          <td className="p-4 text-center font-mono text-purple-600">
                             ${item.premium.cost.toFixed(2)}
                           </td>
                         </tr>
@@ -109,16 +112,24 @@ export default function App() {
               </div>
             </div>
 
-            {/* Sidebar Summary */}
-            <div className="col-span-12 lg:col-span-4 space-y-6">
-              <div className="bg-blue-900/10 p-6 rounded-lg border border-blue-900/30">
-                <h3 className="text-sm font-bold text-blue-400 uppercase mb-4">Financial Summary</h3>
-                <div className="flex justify-between items-end">
-                  <span className="text-gray-400">Project Total (Est)</span>
-                  <span className="text-2xl font-bold text-white">${calculateTotal()}</span>
-                </div>
-                <div className="mt-6 pt-6 border-t border-blue-900/20">
-                  <button className={`w-full py-3 rounded-md font-bold transition-all ${items.length > 0 ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}>
+            {/* Financial Summary Sidebar */}
+            <div className="col-span-12 lg:col-span-4">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e0e4e7]">
+                <h3 className="text-sm font-bold text-[#0b9888] uppercase mb-6 tracking-wider">Financial Summary</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center text-gray-500">
+                    <span>Subtotal (Standard)</span>
+                    <span className="font-mono text-[#21252a]">${calculateTotal()}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-gray-500">
+                    <span>Tax (Estimated)</span>
+                    <span className="font-mono text-[#21252a]">$0.00</span>
+                  </div>
+                  <div className="pt-4 border-t border-[#e0e4e7] flex justify-between items-center">
+                    <span className="font-bold text-[#21252a]">Total Estimate</span>
+                    <span className="text-xl font-bold text-[#0b9888]">${calculateTotal()}</span>
+                  </div>
+                  <button className={`w-full mt-6 py-3 rounded-md font-bold transition-all ${items.length > 0 ? 'bg-[#0b9888] hover:bg-[#097a7a] text-white shadow-md' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
                     GENERATE PROPOSAL
                   </button>
                 </div>
@@ -127,7 +138,11 @@ export default function App() {
           </div>
         )}
 
-        {view === 'capture' && <MobileCamera onPhoto={handlePhoto} />}
+        {view === 'capture' && (
+          <div className="max-w-2xl mx-auto">
+            <MobileCamera onPhoto={handlePhoto} />
+          </div>
+        )}
         
         {view === 'review' && (
           <ReviewScreen 
