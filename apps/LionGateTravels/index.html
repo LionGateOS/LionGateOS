@@ -1,131 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LionGateOS Travels — Home</title>
-<link rel="stylesheet" href="theme.css">
-<style>
-/* :root variables moved to theme.css */
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:var(--bg-dark);
-  color:var(--text-main);
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  /* background handled in theme.css */
-}
-header{
-  background:var(--bg-mid);
-  padding:1.5rem 1rem;
-  border-bottom:1px solid var(--accent);
-}
-.header-inner{
-  max-width:1200px;
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.brand img{
-  height:120px;
-  width:auto;
-}
-nav{
-  display:flex;
-  gap:2rem;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-nav a{
-  color:var(--text-main);
-  text-decoration:none;
-  font-size:1rem;
-}
-nav a:hover{opacity:0.9}
-main{
-  flex:1;
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:1.5rem;
-}
-.section{
-  width:90%;
-  max-width:1100px;
-  background:var(--card-bg);
-  padding:2rem;
-  margin:1.5rem 0;
-  border-radius:var(--radius);
-  box-shadow:var(--card-shadow);
-  text-align:center;
-}
-.card-link{
-  display:inline-block;
-  padding:0.6rem 0.9rem;
-  border-radius:10px;
-  background:rgba(123,108,255,0.1);
-  margin:0.5rem 0;
-}
-.card-link a{
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:500;
-}
-.card-link a:hover{text-decoration:underline}
-footer{
-  text-align:center;
-  padding:1.5rem 1rem 2.5rem;
-  border-top:1px solid var(--accent);
-  color:var(--text-muted);
-}
-</style>
+    <meta charset="UTF-8">
+    <title>LionGateOS Travels | Plan Your Perfect Trip</title>
+    <style>
+        body { font-family: sans-serif; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .partner-shield { background: #f4f4f9; padding: 15px; border-left: 5px solid #003580; margin: 20px 0; }
+        .integrity-footer { font-size: 12px; color: #666; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <div class="brand">
-      <img src="assets/logo.png" alt="LionGateOS Travels">
+    <div class="container">
+        <h1>L.G.O.S. Travels </h1>
+        <p>We help you map out destinations and costs before you book with our world-class partners.</p>
+        
+        <div class="partner-shield">
+            <h3>Why Plan Here?</h3>
+            <ul>
+                <li><b>Confirmed Partners:</b> Official Expedia Affiliate Partner.</li>
+                <li><b>Transparent Costs:</b> No hidden fees, just smart planning.</li>
+                <li><b>Secure Booking:</b> All reservations are handled directly by our verified suppliers.</li>
+            </ul>
+        </div>
+
+        <!-- THIS IS WHERE YOUR SEARCH WIDGET GOES -->
+        <div style="padding: 40px; border: 2px dashed #ccc;text-align:center;">
+            [Expedia Search Widget Loading...]
+        </div>
+
+        <div class="integrity-footer">
+            <p><b>Affiliate Disclosure:</b> As an affiliate partner, we may earn a commission from qualifying bookings made through this page, at no extra cost to you.</p>
+        </div>
     </div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="destinations.html">Destinations</a>
-      <a href="how-it-works.html">How It Works</a>
-      <a href="about.html">About</a>
-      <a href="disclosures.html">Disclosures</a>
-    </nav>
-  </div>
-</header>
-<main>
-  <section class="section">
-    <h1>Welcome to LionGateOS Travels</h1>
-    <p>Your travel planning platform. Navigate the guides and resources to plan your trips efficiently.</p>
-  </section>
-
-  <section class="section">
-    <h2>Start Here</h2>
-    <div class="card-link"><a href="start_here.html">Begin with the correct order to plan</a></div>
-    <p>Quick access to foundational guides for first-time and returning travelers.</p>
-  </section>
-
-  <section class="section">
-    <h2>Explore</h2>
-    <div class="card-link"><a href="destinations.html">Browse Destinations</a></div>
-    <p>Learn about destination guides, environmental considerations, and travel intelligence resources.</p>
-  </section>
-</main>
-<footer>
-  LionGateOS Travels is a planning-first travel experience. Booking is completed on third-party platforms.
-</footer>
 </body>
 </html>
