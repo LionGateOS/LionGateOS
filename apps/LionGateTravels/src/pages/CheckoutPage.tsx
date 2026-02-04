@@ -13,12 +13,9 @@ type CheckoutPageProps = {
 export default function CheckoutPage({ order, onBack, onConfirm }: CheckoutPageProps) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvc, setCvc] = useState('');
 
   const handleConfirm = () => {
-    if (!fullName || !email || !cardNumber || !expiry || !cvc) {
+    if (!fullName || !email) {
       alert('Please fill in all required fields before confirming.');
       return;
     }
@@ -52,27 +49,11 @@ export default function CheckoutPage({ order, onBack, onConfirm }: CheckoutPageP
           </div>
 
           <h3 style={{ marginTop: '16px' }}>Payment Details</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <input
-              placeholder="Card number"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-            />
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                placeholder="MM/YY"
-                value={expiry}
-                onChange={(e) => setExpiry(e.target.value)}
-                style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-              />
-              <input
-                placeholder="CVC"
-                value={cvc}
-                onChange={(e) => setCvc(e.target.value)}
-                style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-              />
-            </div>
+          <div style={{ padding: '16px', backgroundColor: '#f5f5f5', borderRadius: '4px', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontWeight: 'bold' }}>Redirecting to Secure Payment Gateway...</p>
+            <p style={{ margin: '8px 0 0 0', fontSize: '0.9em', color: '#666' }}>
+              Your transaction will be completed securely on our partner's website.
+            </p>
           </div>
 
           <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>

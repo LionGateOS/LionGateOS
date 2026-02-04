@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleCheckoutStart = (newOrder: TripOrder) => {
     setOrder(newOrder);
-    setView('CHECKOUT');
+    window.open('https://www.expedia.com', '_blank', 'noopener,noreferrer');
   };
 
   const handleBookingConfirmed = () => {

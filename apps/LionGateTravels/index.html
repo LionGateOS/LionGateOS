@@ -1,37 +1,44 @@
 <!DOCTYPE html>
-<html lang="en-CA">
-<head>
-    <meta charset="UTF-8">
-    <title>LionGateOS Travels | Plan Your Perfect Trip</title>
-    <style>
-        body { font-family: sans-serif; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; }
-        .partner-shield { background: #f4f4f9; padding: 15px; border-left: 5px solid #003580; margin: 20px 0; }
-        .integrity-footer { font-size: 12px; color: #666; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>L.G.O.S. Travels </h1>
-        <p>We help you map out destinations and costs before you book with our world-class partners.</p>
-        
-        <div class="partner-shield">
-            <h3>Why Plan Here?</h3>
-            <ul>
-                <li><b>Confirmed Partners:</b> Official Expedia Affiliate Partner.</li>
-                <li><b>Transparent Costs:</b> No hidden fees, just smart planning.</li>
-                <li><b>Secure Booking:</b> All reservations are handled directly by our verified suppliers.</li>
-            </ul>
-        </div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LionGateOS Travels</title>
+    <link rel="stylesheet" href="/theme.css">
+    
+    <script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
+      (function () {
+          var script = document.createElement("script");
+          script.async = 1;
+          script.src = 'https://emrldtp.cc/NDk1Mjc4.js?t=495278';
+          document.head.appendChild(script);
+      })();
+    </script>
 
-        <!-- THIS IS WHERE YOUR SEARCH WIDGET GOES -->
-        <div style="padding: 40px; border: 2px dashed #ccc;text-align:center;">
-            [Expedia Search Widget Loading...]
-        </div>
-
-        <div class="integrity-footer">
-            <p><b>Affiliate Disclosure:</b> As an affiliate partner, we may earn a commission from qualifying bookings made through this page, at no extra cost to you.</p>
-        </div>
-    </div>
-</body>
+    <script type="module">
+      // Link Theme logic
+      async function syncTheme() {
+        try {
+          const response = await fetch('../../settings.json');
+          if (response.ok) {
+            const settings = await response.json();
+            if (settings.variables) {
+              Object.entries(settings.variables).forEach(([key, val]) => {
+                document.documentElement.style.setProperty(key, val);
+              });
+              console.log('✓ Theme linked and synced from LionGateOS/settings.json');
+            }
+          }
+        } catch (e) {
+          console.warn('Theme link failed, using local defaults');
+        }
+      }
+      syncTheme();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

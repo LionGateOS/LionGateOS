@@ -113,7 +113,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ coreAPI, tripContext }
       setIsStreaming(false);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'I apologize, but I'm having trouble connecting right now. Please try again.',
+        content: 'I apologize, but I\'m having trouble connecting right now. Please try again.',
       }]);
     }
   };

@@ -15,9 +15,9 @@ export function initializeProviders() {
   // Expedia Rapid API Configuration
   // Keys should come from environment variables or LionGateOS Core
   const expediaConfig = {
-    apiKey: process.env.REACT_APP_EXPEDIA_API_KEY || '',
-    apiSecret: process.env.REACT_APP_EXPEDIA_API_SECRET || '',
-    affiliateId: process.env.REACT_APP_EXPEDIA_AFFILIATE_ID || 'liongateos',
+    apiKey: (import.meta as any).env.VITE_EXPEDIA_API_KEY || '',
+    apiSecret: (import.meta as any).env.VITE_EXPEDIA_API_SECRET || '',
+    affiliateId: (import.meta as any).env.VITE_EXPEDIA_AFFILIATE_ID || 'liongateos',
   };
   
   // Configure Expedia if keys are available
@@ -34,5 +34,5 @@ export function initializeProviders() {
  * Check if real providers are configured
  */
 export function hasRealProviders(): boolean {
-  return !!process.env.REACT_APP_EXPEDIA_API_KEY;
+  return !!(import.meta as any).env.VITE_EXPEDIA_API_KEY;
 }
