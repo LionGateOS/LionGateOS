@@ -11,6 +11,7 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { FlightSearch } from './components/FlightSearch';
 import Logo from '@/assets/logo.png';
 
 // ============================================
@@ -508,6 +509,11 @@ const SearchMatrix: React.FC<{ onFilterChange: (filters: any) => void }> = ({ on
           <Filter className="w-3 h-3 mr-1" />
           Reset
         </MagneticButton>
+      </div>
+
+      {/* Flight Search Widget */}
+      <div className="mb-6 bg-white/5 rounded-xl p-1 overflow-hidden">
+        <FlightSearch />
       </div>
 
       <div className="grid grid-cols-4 gap-4">
