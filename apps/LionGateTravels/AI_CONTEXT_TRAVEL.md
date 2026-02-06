@@ -1,3 +1,18 @@
+# LionGate Travel Module - Master Baseline (2026-02-04)
+
+## Overview
+This document serves as the "Save State" for the Travel Module. It contains the verified, hardened logic for the Unified Search Engine and the high-density layout.
+
+## Current Working Version - Status: MASTER BASELINE
+- **Singleton Script Fixed**: `FlightSearch.tsx` prevents duplicate injection.
+- **Widget Placement**: Injected specifically into `containerRef`, not leaking to body.
+- **Layout**: Tightened 60px min-height, unified dashboard feel.
+- **Diagnostics**: "Light Check" and "Smart Shield" fully active.
+
+---
+
+### src/components/FlightSearch.tsx
+```tsx
 import React, { useEffect, useRef } from 'react';
 
 /**
@@ -44,3 +59,31 @@ export const FlightSearch: React.FC = () => {
     </div>
   );
 };
+```
+
+---
+
+### src/App.tsx (Main Layout Section)
+```tsx
+        <main className="space-y-2">
+          {/* Horizontal Search Matrix Bar - Priority Positioning */}
+          <div className="mb-2">
+            <SearchMatrix 
+              onFilterChange={(newFilters) => setFilters(newFilters)} 
+              filteredCount={filteredHotels.length}
+              mode={mode}
+            />
+          </div>
+
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-12 gap-2">
+            {/* Left Column - 8 cols */}
+            <div className="col-span-8 space-y-2">
+              <GlobalConnectivityHub />
+              <RouteVisualizer />
+              <ExpediaIntegration filters={filters} filteredHotels={filteredHotels} />
+            </div>
+            {/* ... */}
+          </div>
+        </main>
+```

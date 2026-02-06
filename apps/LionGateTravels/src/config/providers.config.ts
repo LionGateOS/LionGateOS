@@ -21,7 +21,7 @@ export function initializeProviders() {
   };
   
   // Configure Expedia if keys are available
-  if (expediaConfig.apiKey) {
+  if (false && expediaConfig.apiKey) {
     configureExpedia(expediaConfig);
     console.log('✓ Expedia Rapid API configured');
   } else {

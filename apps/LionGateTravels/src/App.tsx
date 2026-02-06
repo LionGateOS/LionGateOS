@@ -11,34 +11,13 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { FlightSearch } from './components/FlightSearch';
 import Logo from '@/assets/logo.png';
+import { MOCK_HOTELS, HotelData } from './data/mockResults';
+import { SearchMatrix, SearchFilters } from './components/SearchMatrix';
 
 // ============================================
 // TYPE DEFINITIONS
 // ============================================
-
-interface HotelData {
-  hotel_id: string;
-  property_metadata: {
-    name: string;
-    address: string;
-    rating: number;
-    reviews: number;
-    images: string[];
-    amenities: string[];
-  };
-  room_inventory: {
-    type: string;
-    count: number;
-    price_per_night: number;
-  }[];
-  dynamic_pricing_index: number;
-  geospatial_coordinates: {
-    lat: number;
-    lng: number;
-  };
-}
 
 interface WorldClock {
   city: string;
@@ -149,99 +128,6 @@ const useParallax = (speed: number = 0.5) => {
 // ============================================
 // MOCK DATA
 // ============================================
-
-const MOCK_HOTELS: HotelData[] = [
-  {
-    hotel_id: 'HTL-001',
-    property_metadata: {
-      name: 'Aetheris Grand Tokyo',
-      address: '2-1-1 Nihonbashi, Chuo City, Tokyo',
-      rating: 4.9,
-      reviews: 2847,
-      images: [],
-      amenities: ['Spa', 'Pool', 'Gym', 'WiFi', 'Bar', 'Restaurant']
-    },
-    room_inventory: [
-      { type: 'Deluxe Suite', count: 12, price_per_night: 450 },
-      { type: 'Executive Room', count: 24, price_per_night: 320 },
-      { type: 'Standard Room', count: 48, price_per_night: 180 }
-    ],
-    dynamic_pricing_index: 1.15,
-    geospatial_coordinates: { lat: 35.6762, lng: 139.6503 }
-  },
-  {
-    hotel_id: 'HTL-002',
-    property_metadata: {
-      name: 'Nebula Resort Dubai',
-      address: 'Sheikh Zayed Road, Downtown Dubai',
-      rating: 4.8,
-      reviews: 1923,
-      images: [],
-      amenities: ['Beach', 'Spa', 'Pool', 'Gym', 'WiFi', 'Club']
-    },
-    room_inventory: [
-      { type: 'Royal Suite', count: 8, price_per_night: 1200 },
-      { type: 'Ocean View', count: 32, price_per_night: 580 },
-      { type: 'Garden Room', count: 56, price_per_night: 340 }
-    ],
-    dynamic_pricing_index: 0.95,
-    geospatial_coordinates: { lat: 25.2048, lng: 55.2708 }
-  },
-  {
-    hotel_id: 'HTL-003',
-    property_metadata: {
-      name: 'Cosmos Hotel NYC',
-      address: '5th Avenue, Manhattan, New York',
-      rating: 4.7,
-      reviews: 3156,
-      images: [],
-      amenities: ['Rooftop', 'Gym', 'WiFi', 'Bar', 'Business Center']
-    },
-    room_inventory: [
-      { type: 'Penthouse', count: 4, price_per_night: 2800 },
-      { type: 'City View', count: 40, price_per_night: 520 },
-      { type: 'Classic Room', count: 80, price_per_night: 280 }
-    ],
-    dynamic_pricing_index: 1.35,
-    geospatial_coordinates: { lat: 40.7128, lng: -74.0060 }
-  },
-  {
-    hotel_id: 'HTL-004',
-    property_metadata: {
-      name: 'Stellar Palace London',
-      address: 'Kensington Gardens, London SW7',
-      rating: 4.9,
-      reviews: 1567,
-      images: [],
-      amenities: ['Spa', 'Pool', 'Gym', 'WiFi', 'Tea Room', 'Garden']
-    },
-    room_inventory: [
-      { type: 'Heritage Suite', count: 10, price_per_night: 890 },
-      { type: 'Park View', count: 28, price_per_night: 450 },
-      { type: 'Cozy Room', count: 64, price_per_night: 220 }
-    ],
-    dynamic_pricing_index: 1.08,
-    geospatial_coordinates: { lat: 51.5074, lng: -0.1278 }
-  },
-  {
-    hotel_id: 'HTL-005',
-    property_metadata: {
-      name: 'Quantum Bay Singapore',
-      address: 'Marina Bay, Singapore',
-      rating: 4.8,
-      reviews: 2234,
-      images: [],
-      amenities: ['Infinity Pool', 'Spa', 'Gym', 'WiFi', 'Sky Bar', 'Casino']
-    },
-    room_inventory: [
-      { type: 'Sky Suite', count: 16, price_per_night: 750 },
-      { type: 'Marina View', count: 36, price_per_night: 420 },
-      { type: 'Urban Room', count: 72, price_per_night: 240 }
-    ],
-    dynamic_pricing_index: 1.22,
-    geospatial_coordinates: { lat: 1.3521, lng: 103.8198 }
-  }
-];
 
 const WORLD_CLOCKS: WorldClock[] = [
   { city: 'New York', timezone: 'America/New_York', offset: 'UTC-5', weather: { temp: 18, condition: 'sunny', humidity: 45, wind: 12 } },
@@ -460,158 +346,6 @@ const GlobalConnectivityHub: React.FC = () => {
 };
 
 // ============================================
-// MODULE 2: SEARCH MATRIX
-// ============================================
-
-const SearchMatrix: React.FC<{ onFilterChange: (filters: any) => void }> = ({ onFilterChange }) => {
-  const [filters, setFilters] = useState({
-    priceRange: [100, 2000],
-    amenities: {
-      wifi: true,
-      pool: false,
-      spa: false,
-      gym: true,
-      restaurant: false,
-      bar: false
-    },
-    neighborhoods: {
-      downtown: true,
-      beachfront: false,
-      airport: false,
-      historic: true,
-      business: false
-    },
-    safetyScore: 7
-  });
-
-  const updateFilter = (key: string, value: any) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
-  };
-
-  const toggleAmenity = (key: string) => {
-    updateFilter('amenities', { ...filters.amenities, [key]: !filters.amenities[key as keyof typeof filters.amenities] });
-  };
-
-  const toggleNeighborhood = (key: string) => {
-    updateFilter('neighborhoods', { ...filters.neighborhoods, [key]: !filters.neighborhoods[key as keyof typeof filters.neighborhoods] });
-  };
-
-  return (
-    <div className="glass-panel rounded-xl p-4 neon-border-gold">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Search className="w-5 h-5 text-yellow-400" />
-          <h3 className="text-lg font-bold text-gradient-gold">SEARCH MATRIX</h3>
-        </div>
-        <MagneticButton variant="gold" className="text-xs py-1 px-3">
-          <Filter className="w-3 h-3 mr-1" />
-          Reset
-        </MagneticButton>
-      </div>
-
-      {/* Flight Search Widget */}
-      <div className="mb-6 bg-white/5 rounded-xl p-1 overflow-hidden">
-        <FlightSearch />
-      </div>
-
-      <div className="grid grid-cols-4 gap-4">
-        {/* Price Column */}
-        <div className="glass-card rounded-lg p-3">
-          <h4 className="text-sm font-semibold text-yellow-400 mb-3 flex items-center gap-2">
-            <DollarSign className="w-4 h-4" />
-            PRICE RANGE
-          </h4>
-          <div className="mb-4">
-            <Slider
-              value={filters.priceRange}
-              min={50}
-              max={5000}
-              step={50}
-              onValueChange={(value) => updateFilter('priceRange', value)}
-              className="w-full"
-            />
-          </div>
-          <div className="flex justify-between text-sm text-white/70">
-            <span>${filters.priceRange[0]}</span>
-            <span>${filters.priceRange[1]}</span>
-          </div>
-          <div className="mt-3 flex items-center gap-2">
-            <TrendingDown className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-green-400">23 deals found</span>
-          </div>
-        </div>
-
-        {/* Amenities Column */}
-        <div className="glass-card rounded-lg p-3">
-          <h4 className="text-sm font-semibold text-cyan-400 mb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4" />
-            AMENITIES
-          </h4>
-          <div className="space-y-2">
-            {Object.entries(filters.amenities).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between">
-                <span className="text-xs text-white/70 capitalize">{key}</span>
-                <div 
-                  className={`neon-toggle ${value ? 'active' : ''}`}
-                  onClick={() => toggleAmenity(key)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Neighborhood Column */}
-        <div className="glass-card rounded-lg p-3">
-          <h4 className="text-sm font-semibold text-fuchsia-400 mb-3 flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            NEIGHBORHOOD
-          </h4>
-          <div className="space-y-2">
-            {Object.entries(filters.neighborhoods).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between">
-                <span className="text-xs text-white/70 capitalize">{key}</span>
-                <div 
-                  className={`neon-toggle ${value ? 'active' : ''}`}
-                  onClick={() => toggleNeighborhood(key)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Safety Score Column */}
-        <div className="glass-card rounded-lg p-3">
-          <h4 className="text-sm font-semibold text-emerald-400 mb-3 flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            SAFETY SCORE
-          </h4>
-          <div className="text-center mb-3">
-            <span className="text-4xl font-bold text-emerald-400">{filters.safetyScore}</span>
-            <span className="text-white/50">/10</span>
-          </div>
-          <div className="mb-2">
-            <Slider
-              value={[filters.safetyScore]}
-              min={1}
-              max={10}
-              step={1}
-              onValueChange={(value) => updateFilter('safetyScore', value[0])}
-              className="w-full"
-            />
-          </div>
-          <div className="flex items-center gap-2 mt-3">
-            <Check className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-emerald-400">Verified Properties</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ============================================
 // MODULE 3: ROUTE VISUALIZER
 // ============================================
 
@@ -772,7 +506,7 @@ const RouteVisualizer: React.FC = () => {
   }, [selectedRoute]);
 
   return (
-    <div className="glass-panel rounded-xl p-4 neon-border-magenta">
+    <div className="route-visualizer glass-panel rounded-xl p-4 neon-border-magenta">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Navigation className="w-5 h-5 text-fuchsia-400" />
@@ -804,7 +538,27 @@ const RouteVisualizer: React.FC = () => {
                 className={`glass-card rounded-lg p-3 cursor-pointer transition-all ${
                   selectedRoute === route ? 'border-fuchsia-500/50 bg-fuchsia-500/10' : ''
                 }`}
-                onClick={() => setSelectedRoute(route)}
+                onClick={() => {
+                  setSelectedRoute(route);
+                  
+                  // Visual "Brain" Notification
+                  const flash = document.createElement('div');
+                  flash.innerText = `Visualizing Route to ${route.to.name} at $${route.price}`;
+                  flash.style.position = 'fixed';
+                  flash.style.top = '20px';
+                  flash.style.right = '20px';
+                  flash.style.background = '#00ff00';
+                  flash.style.color = '#000';
+                  flash.style.padding = '10px';
+                  flash.style.borderRadius = '8px';
+                  flash.style.zIndex = '9999';
+                  flash.style.fontWeight = 'bold';
+                  flash.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.4)';
+                  document.body.appendChild(flash);
+                  setTimeout(() => flash.remove(), 3000);
+                  
+                  console.log(`✅ Route Visualizer: Mapping path to ${route.to.name}`);
+                }}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-fuchsia-400">{route.from.name}</span>
@@ -1158,7 +912,7 @@ const TripDurationBudget: React.FC = () => {
 // EXPEDIA API INTEGRATION LAYER
 // ============================================
 
-const ExpediaIntegration: React.FC = () => {
+const ExpediaIntegration: React.FC<{ filters: SearchFilters; filteredHotels: HotelData[] }> = ({ filters, filteredHotels }) => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
   const [hotels, setHotels] = useState<HotelData[]>(MOCK_HOTELS);
@@ -1207,48 +961,54 @@ const ExpediaIntegration: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-5 gap-3">
-        {hotels.map(hotel => (
-          <TiltCard key={hotel.hotel_id}>
-            <div 
-              className={`glass-card rounded-lg p-3 cursor-pointer transition-all ${
-                selectedHotel?.hotel_id === hotel.hotel_id ? 'border-violet-500/50 bg-violet-500/10' : ''
-              }`}
-              onClick={() => setSelectedHotel(hotel)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <Badge variant="outline" className="text-xs border-violet-500/50 text-violet-400">
-                  {hotel.hotel_id}
-                </Badge>
-                <div className={`flex items-center gap-1 text-xs ${
-                  hotel.dynamic_pricing_index > 1 ? 'text-red-400' : 'text-green-400'
-                }`}>
-                  <TrendingDown className="w-3 h-3" />
-                  {(hotel.dynamic_pricing_index * 100).toFixed(0)}%
+        {filteredHotels.length > 0 ? (
+          filteredHotels.map(hotel => (
+            <TiltCard key={hotel.hotel_id}>
+              <div 
+                className={`hotel-card glass-card rounded-lg p-3 cursor-pointer transition-all ${
+                  selectedHotel?.hotel_id === hotel.hotel_id ? 'border-violet-500/50 bg-violet-500/10' : ''
+                }`}
+                onClick={() => setSelectedHotel(hotel)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <Badge variant="outline" className="text-xs border-violet-500/50 text-violet-400">
+                    {hotel.hotel_id}
+                  </Badge>
+                  <div className={`flex items-center gap-1 text-xs ${
+                    hotel.dynamic_pricing_index > 1 ? 'text-red-400' : 'text-green-400'
+                  }`}>
+                    <TrendingDown className="w-3 h-3" />
+                    {(hotel.dynamic_pricing_index * 100).toFixed(0)}%
+                  </div>
+                </div>
+                <h4 className="text-sm font-semibold text-white mb-1 line-clamp-1">{hotel.property_metadata.name}</h4>
+                <div className="flex items-center gap-1 mb-2">
+                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs text-white/70">{hotel.property_metadata.rating}</span>
+                  <span className="text-xs text-white/40">({hotel.property_metadata.reviews})</span>
+                </div>
+                <div className="space-y-1">
+                  {hotel.room_inventory.slice(0, 2).map((room, idx) => (
+                    <div key={idx} className="flex justify-between text-xs">
+                      <span className="text-white/50">{room.type}</span>
+                      <span className="text-cyan-400">${room.price_per_night}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+                  <MapPin className="w-3 h-3 text-white/40" />
+                  <span className="text-xs text-white/40 truncate">
+                    {hotel.property_metadata.neighborhood}
+                  </span>
                 </div>
               </div>
-              <h4 className="text-sm font-semibold text-white mb-1 line-clamp-1">{hotel.property_metadata.name}</h4>
-              <div className="flex items-center gap-1 mb-2">
-                <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                <span className="text-xs text-white/70">{hotel.property_metadata.rating}</span>
-                <span className="text-xs text-white/40">({hotel.property_metadata.reviews})</span>
-              </div>
-              <div className="space-y-1">
-                {hotel.room_inventory.slice(0, 2).map((room, idx) => (
-                  <div key={idx} className="flex justify-between text-xs">
-                    <span className="text-white/50">{room.type}</span>
-                    <span className="text-cyan-400">${room.price_per_night}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
-                <MapPin className="w-3 h-3 text-white/40" />
-                <span className="text-xs text-white/40 truncate">
-                  {hotel.geospatial_coordinates.lat.toFixed(2)}, {hotel.geospatial_coordinates.lng.toFixed(2)}
-                </span>
-              </div>
-            </div>
-          </TiltCard>
-        ))}
+            </TiltCard>
+          ))
+        ) : (
+          <div className="col-span-5 py-12 text-center text-white/50">
+            No hotels match your current filters. Try adjusting the search matrix.
+          </div>
+        )}
       </div>
 
       {selectedHotel && (
@@ -1258,7 +1018,7 @@ const ExpediaIntegration: React.FC = () => {
               <h4 className="text-lg font-bold text-white">{selectedHotel.property_metadata.name}</h4>
               <p className="text-sm text-white/50">{selectedHotel.property_metadata.address}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {selectedHotel.property_metadata.amenities.map((amenity, idx) => (
                 <Badge key={idx} variant="outline" className="text-xs border-white/20 text-white/60">
                   {amenity}
@@ -1330,6 +1090,84 @@ const HeroSection: React.FC = () => {
 
 function App() {
   const [currencyPanelOpen, setCurrencyPanelOpen] = useState(false);
+  const [mode, setMode] = useState<'hotels' | 'flights' | 'cars'>('hotels');
+  const [filters, setFilters] = useState<SearchFilters>({
+    priceRange: [100, 2000],
+    amenities: {
+      wifi: true,
+      pool: false,
+      spa: false,
+      gym: true,
+      restaurant: false,
+      bar: false
+    },
+    neighborhoods: {
+      downtown: true,
+      beachfront: false,
+      airport: false,
+      historic: true,
+      business: false
+    },
+    safetyScore: 7
+  });
+
+  const [hotels] = useState<HotelData[]>(MOCK_HOTELS);
+
+  useEffect(() => {
+    // Expose for external Light Check
+    (window as any).hotels = hotels;
+
+    const cards = document.querySelectorAll('.hotel-card');
+    const displayCount = document.querySelector('.deals-count');
+
+    if (displayCount) {
+      (displayCount as HTMLElement).innerText = `🟢 Light Check: ${cards.length} deals active`;
+      (displayCount as HTMLElement).style.color = "#00ff00";
+    }
+
+    // Flash the cards to prove connection
+    cards.forEach(card => {
+      (card as HTMLElement).style.outline = "2px solid #00ff00";
+      (card as HTMLElement).style.outlineOffset = "2px";
+      setTimeout(() => {
+        (card as HTMLElement).style.outline = "none";
+      }, 1000);
+    });
+
+    console.log("✅ Connection established. UI updated.");
+  }, [hotels, filters]);
+
+  // Apply filters to hotels at App level
+  const filteredHotels = hotels.filter(hotel => {
+    // Price filter (at least one room must be within range)
+    const minPrice = Math.min(...hotel.room_inventory.map(r => r.price_per_night));
+    if (minPrice > filters.priceRange[1]) return false;
+    
+    // Safety Score filter
+    if (hotel.safety_score < filters.safetyScore) return false;
+
+    // Amenities filter (must have all selected amenities)
+    const activeAmenities = Object.entries(filters.amenities)
+      .filter(([_, active]) => active)
+      .map(([name]) => name.toLowerCase());
+    
+    const hotelAmenities = hotel.property_metadata.amenities.map(a => a.toLowerCase());
+    const hasAmenities = activeAmenities.every(a => hotelAmenities.includes(a));
+    if (!hasAmenities) return false;
+
+    // Neighborhood filter
+    const activeNeighborhoods = Object.entries(filters.neighborhoods)
+      .filter(([_, active]) => active)
+      .map(([name]) => name.toLowerCase());
+    
+    if (activeNeighborhoods.length > 0) {
+      if (!activeNeighborhoods.includes(hotel.property_metadata.neighborhood.toLowerCase())) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-obsidian-deep scanlines">
@@ -1350,15 +1188,27 @@ function App() {
           </div>
           
           <nav className="flex items-center gap-2">
-            <MagneticButton variant="secondary" className="text-sm py-2 px-4">
+            <MagneticButton 
+              variant={mode === 'hotels' ? 'primary' : 'secondary'} 
+              className="text-sm py-2 px-4"
+              onClick={() => setMode('hotels')}
+            >
               <Hotel className="w-4 h-4 mr-2" />
               HOTELS
             </MagneticButton>
-            <MagneticButton variant="secondary" className="text-sm py-2 px-4">
+            <MagneticButton 
+              variant={mode === 'flights' ? 'primary' : 'secondary'} 
+              className="text-sm py-2 px-4"
+              onClick={() => setMode('flights')}
+            >
               <Plane className="w-4 h-4 mr-2" />
               FLIGHTS
             </MagneticButton>
-            <MagneticButton variant="secondary" className="text-sm py-2 px-4">
+            <MagneticButton 
+              variant={mode === 'cars' ? 'primary' : 'secondary'} 
+              className="text-sm py-2 px-4"
+              onClick={() => setMode('cars')}
+            >
               <Car className="w-4 h-4 mr-2" />
               CARS
             </MagneticButton>
@@ -1384,104 +1234,112 @@ function App() {
         {/* Hero */}
         <HeroSection />
 
-        {/* Main Grid Layout */}
-        <div className="grid grid-cols-12 gap-2">
-          {/* Left Column - 8 cols */}
-          <div className="col-span-8 space-y-2">
-            {/* Global Connectivity Hub */}
-            <GlobalConnectivityHub />
-            
-            {/* Search Matrix */}
-            <SearchMatrix onFilterChange={(filters) => console.log(filters)} />
-            
-            {/* Route Visualizer */}
-            <RouteVisualizer />
-            
-            {/* Expedia Integration */}
-            <ExpediaIntegration />
+        <main className="space-y-2">
+          {/* Horizontal Search Matrix Bar - Priority Positioning */}
+          <div className="mb-2">
+            <SearchMatrix 
+              onFilterChange={(newFilters) => setFilters(newFilters)} 
+              filteredCount={filteredHotels.length}
+              mode={mode}
+            />
           </div>
 
-          {/* Right Column - 4 cols */}
-          <div className="col-span-4 space-y-2">
-            {/* Trip Duration & Budget */}
-            <TripDurationBudget />
-            
-            {/* Quick Stats */}
-            <div className="glass-panel rounded-xl p-4">
-              <h3 className="text-sm font-bold text-white/70 mb-3">QUICK STATS</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <TiltCard>
-                  <div className="glass-card rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-cyan-400">2.4M+</div>
-                    <div className="text-xs text-white/50">Hotels</div>
-                  </div>
-                </TiltCard>
-                <TiltCard>
-                  <div className="glass-card rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-fuchsia-400">500+</div>
-                    <div className="text-xs text-white/50">Airlines</div>
-                  </div>
-                </TiltCard>
-                <TiltCard>
-                  <div className="glass-card rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-yellow-400">190+</div>
-                    <div className="text-xs text-white/50">Countries</div>
-                  </div>
-                </TiltCard>
-                <TiltCard>
-                  <div className="glass-card rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-emerald-400">98%</div>
-                    <div className="text-xs text-white/50">Satisfaction</div>
-                  </div>
-                </TiltCard>
-              </div>
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-12 gap-2">
+            {/* Left Column - 8 cols */}
+            <div className="col-span-8 space-y-2">
+              {/* Global Connectivity Hub */}
+              <GlobalConnectivityHub />
+              
+              {/* Route Visualizer */}
+              <RouteVisualizer />
+              
+              {/* Expedia Integration */}
+              <ExpediaIntegration filters={filters} filteredHotels={filteredHotels} />
             </div>
 
-            {/* Featured Destinations */}
-            <div className="glass-panel rounded-xl p-4">
-              <h3 className="text-sm font-bold text-white/70 mb-3">TRENDING DESTINATIONS</h3>
-              <div className="space-y-2">
-                {['Tokyo, Japan', 'Santorini, Greece', 'Bali, Indonesia', 'Paris, France', 'Maldives'].map((dest, idx) => (
-                  <TiltCard key={dest}>
-                    <div className="glass-card rounded-lg p-2 flex items-center justify-between cursor-pointer">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/30 to-violet-500/30 flex items-center justify-center">
-                          <MapPin className="w-4 h-4 text-cyan-400" />
-                        </div>
-                        <span className="text-sm text-white">{dest}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TrendingDown className="w-3 h-3 text-green-400" />
-                        <span className="text-xs text-green-400">-{15 + idx * 5}%</span>
-                      </div>
+            {/* Right Column - 4 cols */}
+            <div className="col-span-4 space-y-2">
+              {/* Trip Duration & Budget */}
+              <TripDurationBudget />
+              
+              {/* Quick Stats */}
+              <div className="glass-panel rounded-xl p-4">
+                <h3 className="text-sm font-bold text-white/70 mb-3">QUICK STATS</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <TiltCard>
+                    <div className="glass-card rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-cyan-400">2.4M+</div>
+                      <div className="text-xs text-white/50">Hotels</div>
                     </div>
                   </TiltCard>
-                ))}
-              </div>
-            </div>
-
-            {/* Recent Searches */}
-            <div className="glass-panel rounded-xl p-4">
-              <h3 className="text-sm font-bold text-white/70 mb-3">RECENT SEARCHES</h3>
-              <div className="space-y-2">
-                {[
-                  { from: 'NYC', to: 'Tokyo', date: 'Mar 15' },
-                  { from: 'London', to: 'Dubai', date: 'Apr 2' },
-                  { from: 'LA', to: 'Paris', date: 'May 10' }
-                ].map((search, idx) => (
-                  <div key={idx} className="glass-card rounded-lg p-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-cyan-400">{search.from}</span>
-                      <Plane className="w-3 h-3 text-white/40" />
-                      <span className="text-sm text-fuchsia-400">{search.to}</span>
+                  <TiltCard>
+                    <div className="glass-card rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-fuchsia-400">500+</div>
+                      <div className="text-xs text-white/50">Airlines</div>
                     </div>
-                    <span className="text-xs text-white/40">{search.date}</span>
-                  </div>
-                ))}
+                  </TiltCard>
+                  <TiltCard>
+                    <div className="glass-card rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-yellow-400">190+</div>
+                      <div className="text-xs text-white/50">Countries</div>
+                    </div>
+                  </TiltCard>
+                  <TiltCard>
+                    <div className="glass-card rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-emerald-400">98%</div>
+                      <div className="text-xs text-white/50">Satisfaction</div>
+                    </div>
+                  </TiltCard>
+                </div>
+              </div>
+
+              {/* Featured Destinations */}
+              <div className="glass-panel rounded-xl p-4">
+                <h3 className="text-sm font-bold text-white/70 mb-3">TRENDING DESTINATIONS</h3>
+                <div className="space-y-2">
+                  {['Tokyo, Japan', 'Santorini, Greece', 'Bali, Indonesia', 'Paris, France', 'Maldives'].map((dest, idx) => (
+                    <TiltCard key={dest}>
+                      <div className="glass-card rounded-lg p-2 flex items-center justify-between cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/30 to-violet-500/30 flex items-center justify-center">
+                            <MapPin className="w-4 h-4 text-cyan-400" />
+                          </div>
+                          <span className="text-sm text-white">{dest}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <TrendingDown className="w-3 h-3 text-green-400" />
+                          <span className="text-xs text-green-400">-{15 + idx * 5}%</span>
+                        </div>
+                      </div>
+                    </TiltCard>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recent Searches */}
+              <div className="glass-panel rounded-xl p-4">
+                <h3 className="text-sm font-bold text-white/70 mb-3">RECENT SEARCHES</h3>
+                <div className="space-y-2">
+                  {[
+                    { from: 'NYC', to: 'Tokyo', date: 'Mar 15' },
+                    { from: 'London', to: 'Dubai', date: 'Apr 2' },
+                    { from: 'LA', to: 'Paris', date: 'May 10' }
+                  ].map((search, idx) => (
+                    <div key={idx} className="glass-card rounded-lg p-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-cyan-400">{search.from}</span>
+                        <Plane className="w-3 h-3 text-white/40" />
+                        <span className="text-sm text-fuchsia-400">{search.to}</span>
+                      </div>
+                      <span className="text-xs text-white/40">{search.date}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
 
         {/* Price Ticker Footer */}
         <div className="mt-2">
