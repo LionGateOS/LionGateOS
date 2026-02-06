@@ -1,1 +1,0 @@
-// Neon focus ring placeholder

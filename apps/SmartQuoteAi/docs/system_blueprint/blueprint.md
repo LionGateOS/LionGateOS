@@ -1,3 +1,0 @@
-## System Blueprint
-
-High-level system guidelines...

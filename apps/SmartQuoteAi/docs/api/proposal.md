@@ -1,3 +1,0 @@
-## Proposal Engine API
-
-Detailed docs...

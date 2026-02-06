@@ -1,3 +1,0 @@
-## Theme Engine API
-
-Detailed docs...

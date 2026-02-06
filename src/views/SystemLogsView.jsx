@@ -1,1 +1,0 @@
-export default function SystemLogsView(){return <div>System Logs</div>;}

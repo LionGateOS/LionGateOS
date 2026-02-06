@@ -1,1 +1,0 @@
-// App grid placeholder

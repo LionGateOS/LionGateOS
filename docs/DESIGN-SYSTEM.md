@@ -1,1 +1,0 @@
-# Full Design System

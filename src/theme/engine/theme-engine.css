@@ -1,6 +1,0 @@
-
-/* Deprecated multi-file theme engine stub.
- * Kept for backward compatibility. All styling is now handled
- * by src/theme/neonshell.theme.css via styles.css import.
- */
-@import "./src/theme/neonshell.theme.css";

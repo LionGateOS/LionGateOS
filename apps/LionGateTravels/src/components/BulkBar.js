@@ -1,2 +1,0 @@
-import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-export const BulkBar = ({ count, actions, onClear }) => (_jsxs("div", { className: "to-bulkbar", role: "region", "aria-label": "Bulk actions", children: [_jsxs("div", { className: "to-bulkbar-left", children: [_jsxs("span", { className: "to-bulk-count", children: [count, " selected"] }), _jsx("button", { className: "to-ghost-btn", onClick: onClear, type: "button", children: "Clear" })] }), _jsx("div", { className: "to-bulkbar-actions", children: actions })] }));

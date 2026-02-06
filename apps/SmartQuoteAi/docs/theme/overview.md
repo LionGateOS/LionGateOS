@@ -1,3 +1,0 @@
-## NeonShell v2.2 Overview
-
-...

@@ -1,8 +1,0 @@
-{
-  "name": "SmartQuoteAi Pro",
-  "description": "A professional invoice generator for contractors and small businesses with AI-powered material cost estimation.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
-}
