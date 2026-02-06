@@ -1,40 +1,16 @@
-/* --- LIONGATE GLOBAL AUTHORITY --- */
-:root {
-  /* AUTHORITY COLORS (CORE) */
-  --lg-bg-deep: #0f0f12;
-  --lg-border-standard: #333;
-  --lg-overlay-soft: rgba(0,0,0,0.3);
-  
-  /* ACCENT SYNC */
-  --lg-accent-primary: #5da9ff;
-  --lg-accent-secondary: #b15dff;
-  --lg-pure-black: #000000;
-  --lg-bg-overlay-deep: rgba(18, 22, 46, 0.9);
-
-  /* TRAVELS MODULE AUTHORITY (NEW) */
-  --lg-travel-bg: var(--lg-travel-bg);     /* Primary Dark Background */
-  --lg-travel-accent: var(--lg-travel-accent); /* Travels Brand Purple */
-  --lg-travel-text-muted: var(--lg-travel-text-muted); /* Muted Descriptive Text */
-
-  /* UI DEFAULTS */
-  --lg-radius: 12px;
-  --lg-glow-spread: 0px;
-  --lg-glow-opacity: 0.0;
-}
-
 /* --- LIONGATE THEMED SCROLLBARS (NUCLEAR OPTION) --- */
 ::-webkit-scrollbar {
   width: 12px !important;
-  background: var(--lg-bg-deep) !important;
+  background: #0f0f12 !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--lg-overlay-soft) !important;
+  background: rgba(0,0,0,0.3) !important;
   border-left: 1px solid rgba(255,255,255,0.05) !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--lg-accent) !important; 
+  background-color: var(--lg-accent) !important; /* SYNC WITH THEME */
   border: 3px solid transparent !important;
   background-clip: content-box !important;
   border-radius: 99px !important;
@@ -44,74 +20,24 @@
   background-color: var(--lg-accent2) !important;
 }
 
+/* Apply Glow to Panels (controlled by slider) */
 /* --- PANEL FRAME CONNECTIONS --- */
+
+/* 1. Defaults */
+:root {
+  --lg-radius: 12px;
+  --lg-glow-spread: 0px;
+  --lg-glow-opacity: 0.0;
+}
+
+/* 2. Apply Radius */
 .panel, .card, .app-card, .sidebar, .modal {
   border-radius: var(--lg-radius) !important;
   transition: border-radius 0.3s ease;
 }
 
-/* Apply Glow */
+/* 3. Apply Glow */
 .panel, .card, .app-card {
   box-shadow: 0 0 var(--lg-glow-spread) var(--lg-accent) !important;
   transition: box-shadow 0.2s ease;
 }
-
-.status {
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    color: var(--lg-accent) !important;
-}
-
-.content {
-    flex: 1 !important;
-    height: 100% !important;
-    overflow: hidden !important;
-}
-
-/* FORCE PANEL VISIBILITY LOGIC */
-.panel { display: none !important; }
-#tab-overview, .panel:first-of-type, .panel.active { display: block !important; }
-
-/* THE HAMMER: OVERRIDE ALL DISPLAYS */
-.hidden { display: none !important; }
-
-@import url('recovery.css');
-
-/* RECOVERY: DRAWER VISIBILITY */
-#drawer {
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 400px;
-    height: 100%;
-    background: var(--lg-bg-deep);
-    border-left: 1px solid var(--lg-border-standard);
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    z-index: 9999;
-}
-
-#drawer.open {
-    transform: translateX(0) !important;
-}
-
-/* --- LIGHT THEME PRESET (FIXED MODIFICATION) --- */
-[data-theme="light"] {
-  --lg-bg0: rgb(232, 235, 248); 
-  --lg-sfc: #ffffff;            
-  --lg-text: #1d1d1f;
-  --lg-muted: #86858b;
-  --lg-accent: #007aff;
-  --lg-accent2: #585dff;
-  --lg-accent3: #ff2d55;
-  --lg-stroke: rgba(0,0,0,0.1);
-  
-  /* Override Authority for Light Mode */
-  --lg-bg-deep: #f0f0f5;
-  --lg-border-standard: #ccc;
-  --lg-travel-bg: #ffffff;
-  --lg-travel-text-muted: #6b7280;
-} 
-
-.glow-controls { display: none !important; }
